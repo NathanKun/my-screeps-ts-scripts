@@ -5,6 +5,8 @@ interface CreepMemory {
   role: string;
   room: string;
   working: boolean;
+  building: boolean;
+  upgrading: boolean;
 }
 
 interface Memory {
@@ -17,4 +19,10 @@ declare namespace NodeJS {
   interface Global {
     log: any;
   }
+}
+
+interface SpawnParam {
+  harvester: number;
+  builder: number;
+  upgrader: number;
 }
