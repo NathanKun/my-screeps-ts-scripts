@@ -1,4 +1,5 @@
 export class RoadMaintainer {
+  private static REPAIR_RATIO: number = 0.7;
 
   /** @param {Creep} creep */
   public static run(creep: Creep) {
@@ -16,13 +17,20 @@ export class RoadMaintainer {
 
     // build construction site
     if (creep.memory.reparing) {
-
       let target: Structure;
+
+      if (creep.memory.reparingTarget !== undefined) {
+        target = Game.getObjectById(creep.memory.reparingTarget) as Structure;
+
+        if (target.hits >= target.hitsMax * RoadMaintainer.REPAIR_RATIO) {
+          creep.memory.reparingTarget = undefined;
+        }
+      }
 
       if (creep.memory.reparingTarget === undefined) {
         const targets = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * 0.5);
+            return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
           }
         });
 
@@ -32,12 +40,10 @@ export class RoadMaintainer {
         } else {
           return; // idle
         }
-      } else {
-        target = Game.getObjectById(creep.memory.reparingTarget) as Structure;
       }
 
-      if (creep.repair(target) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(target, { visualizePathStyle: { stroke: '#88ff88' } });
+      if (creep.repair(target!!) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(target!!, { visualizePathStyle: { stroke: '#88ff88' } });
       }
       idle = false;
     }
