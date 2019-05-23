@@ -13,6 +13,17 @@ CLAIM	600
 
 export class SpawnHelper {
   public static spawn(spawnParam: SpawnParam) {
+
+    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
+    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
+    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
+    const roadReparers = _.filter(Game.creeps, (creep) => creep.memory.role === 'roadReparer');
+
+    console.log('Harvesters: ' + harvesters.length);
+    console.log('Builders: ' + builders.length);
+    console.log('Upgraders: ' + upgraders.length);
+    console.log('RoadRepairers: ' + roadReparers.length);
+
     if (Game.spawns['Spawn1'].spawning) {
       const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
       Game.spawns['Spawn1'].room.visual.text(
@@ -23,9 +34,6 @@ export class SpawnHelper {
     }
 
     /* harvester */
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
-    console.log('Harvesters: ' + harvesters.length);
-
     if (harvesters.length < spawnParam.harvester) {
       Game.spawns['Spawn1'].spawnCreep(
         [WORK, WORK, CARRY, CARRY, MOVE, MOVE],
@@ -35,26 +43,29 @@ export class SpawnHelper {
     }
 
     /* builder */
-    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
-    console.log('Builders: ' + builders.length);
-
     if (builders.length < spawnParam.builder) {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, MOVE, MOVE, MOVE],
+        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;
     }
 
     /* upgrader */
-    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
-    console.log('Upgraders: ' + upgraders.length);
-
     if (upgraders.length < spawnParam.upgrader) {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
+      return;
+    }
+
+    /* road reparer */
+    if (roadReparers.length < spawnParam.roadReparer) {
+      Game.spawns['Spawn1'].spawnCreep(
+        [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE],
+        'RoadRepairer' + Game.time,
+        { memory: { role: 'roadReparer' } } as SpawnOptions);
       return;
     }
   }

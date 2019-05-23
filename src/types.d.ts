@@ -7,6 +7,8 @@ interface CreepMemory {
   working: boolean;
   building: boolean;
   upgrading: boolean;
+  reparing: boolean;
+  reparingTarget: Structure | undefined;
 }
 
 interface Memory {
@@ -25,4 +27,5 @@ interface SpawnParam {
   harvester: number;
   builder: number;
   upgrader: number;
+  roadReparer: number;
 }
