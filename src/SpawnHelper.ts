@@ -89,7 +89,7 @@ export class SpawnHelper {
     /* upgrader */
     else if (toSpawn === "upgrader") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
       return;

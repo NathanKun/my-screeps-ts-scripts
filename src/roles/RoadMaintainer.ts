@@ -15,7 +15,7 @@ export class RoadMaintainer {
       creep.say('🚧 repair');
     }
 
-    // build construction site
+    // repair roads
     if (creep.memory.reparing) {
       let target: Structure;
 
@@ -37,8 +37,12 @@ export class RoadMaintainer {
         if (targets.length) {
           target = targets[0];
           creep.memory.reparingTarget = target.id;
-        } else {
-          return; // idle
+        }
+        // no road needs to be repaired, upgrade controller
+        else {
+          if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+          }
         }
       }
 
@@ -50,8 +54,8 @@ export class RoadMaintainer {
     // harvest
     else {
       const sources = creep.room.find(FIND_SOURCES);
-      if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffffff' } });
+      if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }
