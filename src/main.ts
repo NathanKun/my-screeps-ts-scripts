@@ -1,6 +1,6 @@
 import { Builder } from "roles/Builder";
 import { Harvester } from "roles/Harvester";
-import { RoadRepairer } from "roles/RoadRepairer";
+import { RoadMaintainer } from "roles/RoadMaintainer";
 import { Upgrader } from "roles/Upgrader";
 import { SpawnHelper } from "SpawnHelper";
 import { ErrorMapper } from "utils/ErrorMapper";
@@ -19,7 +19,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
 
   // spawn creeps
-  SpawnHelper.spawn({ 'harvester': 3, 'upgrader': 6, 'builder': 2, 'roadReparer': 2 });
+  SpawnHelper.spawn({ 'harvester': 5, 'builder': 5, 'upgrader': 3, 'roadMaintainer': 2 });
 
   // creeps work
   for (const name in Game.creeps) {
@@ -33,8 +33,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
     if (creep.memory.role === 'upgrader') {
       Upgrader.run(creep);
     }
-    if (creep.memory.role === 'roadReparer') {
-      RoadRepairer.run(creep);
+    if (creep.memory.role === 'roadMaintainer') {
+      RoadMaintainer.run(creep);
     }
   }
 });

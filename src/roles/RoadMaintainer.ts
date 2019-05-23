@@ -1,4 +1,4 @@
-export class RoadRepairer {
+export class RoadMaintainer {
 
   /** @param {Creep} creep */
   public static run(creep: Creep) {
@@ -28,16 +28,16 @@ export class RoadRepairer {
 
         if (targets.length) {
           target = targets[0];
-          creep.memory.reparingTarget = target;
+          creep.memory.reparingTarget = target.id;
         } else {
           return; // idle
         }
       } else {
-        target = creep.memory.reparingTarget;
+        target = Game.getObjectById(creep.memory.reparingTarget) as Structure;
       }
 
       if (creep.repair(target) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+        creep.moveTo(target, { visualizePathStyle: { stroke: '#88ff88' } });
       }
       idle = false;
     }
@@ -45,7 +45,7 @@ export class RoadRepairer {
     else {
       const sources = creep.room.find(FIND_SOURCES);
       if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
+        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }

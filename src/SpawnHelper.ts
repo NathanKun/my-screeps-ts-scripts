@@ -17,55 +17,76 @@ export class SpawnHelper {
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
-    const roadReparers = _.filter(Game.creeps, (creep) => creep.memory.role === 'roadReparer');
+    const roadMaintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'roadMaintainer');
 
     console.log('Harvesters: ' + harvesters.length);
     console.log('Builders: ' + builders.length);
     console.log('Upgraders: ' + upgraders.length);
-    console.log('RoadRepairers: ' + roadReparers.length);
+    console.log('RoadMaintainers: ' + roadMaintainers.length);
+
+    let max = spawnParam.harvester - harvesters.length;
+    let toSpawn = "harvester";
+
+    if (spawnParam.builder - builders.length > max) {
+      max = spawnParam.builder - builders.length;
+      toSpawn = "builder";
+    }
+    if (spawnParam.upgrader - upgraders.length > max) {
+      max = spawnParam.upgrader - upgraders.length;
+      toSpawn = "upgrader";
+    }
+    if (spawnParam.roadMaintainer - roadMaintainers.length > max) {
+      max = spawnParam.roadMaintainer - roadMaintainers.length;
+      toSpawn = "roadMaintainer";
+    }
 
     if (Game.spawns['Spawn1'].spawning) {
       const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
-      Game.spawns['Spawn1'].room.visual.text(
-        '🛠️' + spawningCreep.memory.role,
-        Game.spawns['Spawn1'].pos.x + 1,
-        Game.spawns['Spawn1'].pos.y,
-        { align: 'left', opacity: 0.8 });
+      console.log("Spawning: " + spawningCreep.memory.role);
     }
+    console.log('Next spawn: ' + toSpawn);
 
     /* harvester */
-    if (harvesters.length < spawnParam.harvester) {
-      Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, MOVE, MOVE],
-        'Harvester' + Game.time,
-        { memory: { role: 'harvester' } } as SpawnOptions);
-      return;
+    if (toSpawn === "harvester") {
+      if (harvesters.length < 3) {
+        Game.spawns['Spawn1'].spawnCreep(
+          [WORK, CARRY, MOVE],
+          'Harvester' + Game.time,
+          { memory: { role: 'harvester' } } as SpawnOptions);
+        return;
+      } else {
+        Game.spawns['Spawn1'].spawnCreep(
+          [WORK, WORK, WORK, CARRY, MOVE, MOVE],
+          'Harvester' + Game.time,
+          { memory: { role: 'harvester' } } as SpawnOptions);
+        return;
+      }
     }
 
     /* builder */
-    if (builders.length < spawnParam.builder) {
+    else if (toSpawn === "builder") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;
     }
 
     /* upgrader */
-    if (upgraders.length < spawnParam.upgrader) {
+    else if (toSpawn === "upgrader") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
       return;
     }
 
-    /* road reparer */
-    if (roadReparers.length < spawnParam.roadReparer) {
+    /* road maintainer */
+    else if (toSpawn === "roadMaintainer") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE],
-        'RoadRepairer' + Game.time,
-        { memory: { role: 'roadReparer' } } as SpawnOptions);
+        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
+        'RoadMaintainer' + Game.time,
+        { memory: { role: 'roadMaintainer' } } as SpawnOptions);
       return;
     }
   }
