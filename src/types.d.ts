@@ -9,6 +9,7 @@ interface CreepMemory {
   upgrading: boolean;
   reparing: boolean;
   reparingTarget: string | undefined;
+  harvestingSource: string | undefined;
 }
 
 interface Memory {
@@ -24,6 +25,7 @@ declare namespace NodeJS {
 }
 
 interface SpawnParam {
+  spawn: StructureSpawn;
   harvester: number;
   builder: number;
   upgrader: number;

@@ -19,11 +19,16 @@ export class SpawnHelper {
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
     const roadMaintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'roadMaintainer');
 
-    console.log('Harvesters: ' + harvesters.length);
-    console.log('Builders: ' + builders.length);
-    console.log('Upgraders: ' + upgraders.length);
-    console.log('RoadMaintainers: ' + roadMaintainers.length);
+    /* Auto spawn builders if there is construction site */
+    if (spawnParam.builder === -1) {
+      if (spawnParam.spawn.room.find(FIND_CONSTRUCTION_SITES).length !== 0) {
+        spawnParam.builder = 3;
+      } else {
+        spawnParam.builder = 0;
+      }
+    }
 
+    /* Find role most needed to spawn */
     let max = spawnParam.harvester - harvesters.length;
     let toSpawn = "harvester";
 
@@ -40,9 +45,18 @@ export class SpawnHelper {
       toSpawn = "roadMaintainer";
     }
 
+    /* Logs */
+    console.log('Harvesters:      \t' + harvesters.length      + " Missing: \t" + (spawnParam.harvester - harvesters.length));
+    console.log('Builders:        \t' + builders.length        + " Missing: \t" + (spawnParam.builder - builders.length));
+    console.log('Upgraders:       \t' + upgraders.length       + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
+    console.log('RoadMaintainers: \t' + roadMaintainers.length + " Missing: \t" + (spawnParam.roadMaintainer - roadMaintainers.length));
+
     if (Game.spawns['Spawn1'].spawning) {
       const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
       console.log("Spawning: " + spawningCreep.memory.role);
+    }
+    if (max <= 0) {
+      return;
     }
     console.log('Next spawn: ' + toSpawn);
 

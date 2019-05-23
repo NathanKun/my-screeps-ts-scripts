@@ -19,7 +19,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
 
   // spawn creeps
-  SpawnHelper.spawn({ 'harvester': 5, 'builder': 5, 'upgrader': 3, 'roadMaintainer': 2 });
+  SpawnHelper.spawn({ 'spawn': Game.spawns['Spawn1'], 'harvester': 5, 'builder': -1, 'upgrader': 3, 'roadMaintainer': 2 });
 
   // creeps work
   for (const name in Game.creeps) {
@@ -28,7 +28,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       Harvester.run(creep);
     }
     if (creep.memory.role === 'builder') {
-      Builder.run(creep);
+      // Builder.run(creep);
+      Upgrader.run(creep);
     }
     if (creep.memory.role === 'upgrader') {
       Upgrader.run(creep);

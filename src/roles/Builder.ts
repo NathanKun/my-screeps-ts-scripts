@@ -34,6 +34,13 @@ export class Builder {
         }
         idle = false;
       }
+      // nothing to build, upgrade room controller
+      else {
+        if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+          idle = false;
+        }
+      }
     }
     // harvest
     else {

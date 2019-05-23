@@ -22,8 +22,11 @@ export class Harvester {
         idle = false;
       }
       else {
-        // stay next to the spwan, do not block the way
-        creep.moveTo(Game.spawns["Spawn1"].pos, { visualizePathStyle: { stroke: '#ff0000' } });
+        // nothing to do, upgrade room controller
+        if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+          idle = false;
+        }
       }
     }
     // harvest
