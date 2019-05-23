@@ -1,3 +1,5 @@
+import { FindSourceUtil } from "utils/FindSourceUtil";
+
 export class Builder {
 
   /** @param {Creep} creep */
@@ -10,7 +12,9 @@ export class Builder {
     }
     if (!creep.memory.building && creep.carry.energy === creep.carryCapacity) {
       creep.memory.building = true;
+      FindSourceUtil.clear(creep);
       creep.say('🚧 build');
+
     }
 
     // build construction site
@@ -44,9 +48,9 @@ export class Builder {
     }
     // harvest
     else {
-      const sources = creep.room.find(FIND_SOURCES);
-      if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(creep);
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }

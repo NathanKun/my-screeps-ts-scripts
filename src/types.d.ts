@@ -9,7 +9,8 @@ interface CreepMemory {
   upgrading: boolean;
   reparing: boolean;
   reparingTarget: string | undefined;
-  harvestingSource: string | undefined;
+  harvestSource: string | undefined;
+  harvesting: boolean;
 }
 
 interface Memory {

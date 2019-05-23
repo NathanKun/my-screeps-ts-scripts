@@ -1,3 +1,5 @@
+import { FindSourceUtil } from "utils/FindSourceUtil";
+
 export class RoadMaintainer {
   private static REPAIR_RATIO: number = 0.7;
 
@@ -12,6 +14,7 @@ export class RoadMaintainer {
     }
     if (!creep.memory.reparing && creep.carry.energy === creep.carryCapacity) {
       creep.memory.reparing = true;
+      FindSourceUtil.clear(creep);
       creep.say('🚧 repair');
     }
 
@@ -53,9 +56,9 @@ export class RoadMaintainer {
     }
     // harvest
     else {
-      const sources = creep.room.find(FIND_SOURCES);
-      if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(creep);
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }

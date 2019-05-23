@@ -3,6 +3,7 @@ import { Harvester } from "roles/Harvester";
 import { RoadMaintainer } from "roles/RoadMaintainer";
 import { Upgrader } from "roles/Upgrader";
 import { SpawnHelper } from "SpawnHelper";
+import { TowerTask } from "TowerTask";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -28,8 +29,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       Harvester.run(creep);
     }
     if (creep.memory.role === 'builder') {
-      // Builder.run(creep);
-      Upgrader.run(creep);
+      Builder.run(creep);
     }
     if (creep.memory.role === 'upgrader') {
       Upgrader.run(creep);
@@ -38,4 +38,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       RoadMaintainer.run(creep);
     }
   }
+
+  // tower defense & repair
+  TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
+
 });

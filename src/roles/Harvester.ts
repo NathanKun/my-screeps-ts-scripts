@@ -1,3 +1,5 @@
+import { FindSourceUtil } from "utils/FindSourceUtil";
+
 export class Harvester {
 
   /** @param {Creep} creep */
@@ -6,6 +8,8 @@ export class Harvester {
 
     // transfer
     if (creep.carry.energy === creep.carryCapacity) {
+      FindSourceUtil.clear(creep);
+
       const targets = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType === STRUCTURE_EXTENSION ||
@@ -31,9 +35,9 @@ export class Harvester {
     }
     // harvest
     else {
-      const sources = creep.room.find(FIND_SOURCES);
-      if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(creep);
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }

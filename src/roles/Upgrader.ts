@@ -1,3 +1,5 @@
+import { FindSourceUtil } from "utils/FindSourceUtil";
+
 export class Upgrader {
 
   /** @param {Creep} creep */
@@ -8,6 +10,7 @@ export class Upgrader {
     }
     if (!creep.memory.upgrading && creep.carry.energy === creep.carryCapacity) {
       creep.memory.upgrading = true;
+      FindSourceUtil.clear(creep);
       creep.say('⚡ upgrade');
     }
 
@@ -19,9 +22,9 @@ export class Upgrader {
     }
     // harvest
     else {
-      const sources = creep.room.find(FIND_SOURCES);
-      if (creep.harvest(sources[1]) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(creep);
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
     }
 
