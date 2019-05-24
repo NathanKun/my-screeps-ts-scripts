@@ -1,6 +1,6 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
 
-export class RoadMaintainer {
+export class Maintainer {
   private static REPAIR_RATIO: number = 0.7;
 
   /** @param {Creep} creep */
@@ -25,7 +25,7 @@ export class RoadMaintainer {
       if (creep.memory.reparingTarget !== undefined) {
         target = Game.getObjectById(creep.memory.reparingTarget) as Structure;
 
-        if (target.hits >= target.hitsMax * RoadMaintainer.REPAIR_RATIO) {
+        if (target.hits >= target.hitsMax * Maintainer.REPAIR_RATIO) {
           creep.memory.reparingTarget = undefined;
         }
       }
@@ -34,7 +34,7 @@ export class RoadMaintainer {
         // rampart
         let targets = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+            return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
           }
         });
 
@@ -42,7 +42,7 @@ export class RoadMaintainer {
         if (targets.length === 0) {
           targets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-              return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+              return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
           });
         }
@@ -50,7 +50,7 @@ export class RoadMaintainer {
         if (targets.length === 0) {
           targets = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-              return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+              return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
           });
         }

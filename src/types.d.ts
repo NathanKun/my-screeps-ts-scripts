@@ -31,5 +31,5 @@ interface SpawnParam {
   harvester: number;
   builder: number;
   upgrader: number;
-  roadMaintainer: number;
+  maintainer: number;
 }

@@ -14,7 +14,7 @@ export class TowerTask {
     });
 
     if (structures.length) {
-      const target = _.sortBy(structures, 'hits')[0];
+      const target = _.sortBy(structures, s => s.hits / s.hitsMax)[0];
       tower.repair(target);
       return;
     }
@@ -24,7 +24,7 @@ export class TowerTask {
       filter: c => c.hits < c.hitsMax
     });
     if (creeps.length) {
-      const target = _.sortBy(creeps, 'hits')[0];
+      const target = _.sortBy(creeps, s => s.hits / s.hitsMax)[0];
       tower.heal(target);
       return;
     }

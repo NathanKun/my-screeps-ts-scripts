@@ -17,7 +17,7 @@ export class SpawnHelper {
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
-    const roadMaintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'roadMaintainer');
+    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer');
 
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder === -1) {
@@ -42,9 +42,9 @@ export class SpawnHelper {
         max = spawnParam.upgrader - upgraders.length;
         toSpawn = "upgrader";
       }
-      if (spawnParam.roadMaintainer - roadMaintainers.length > max) {
-        max = spawnParam.roadMaintainer - roadMaintainers.length;
-        toSpawn = "roadMaintainer";
+      if (spawnParam.maintainer - maintainers.length > max) {
+        max = spawnParam.maintainer - maintainers.length;
+        toSpawn = "maintainer";
       }
     }
 
@@ -53,7 +53,7 @@ export class SpawnHelper {
     console.log('Harvesters:      \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester - harvesters.length));
     console.log('Builders:        \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
     console.log('Upgraders:       \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
-    console.log('RoadMaintainers: \t' + roadMaintainers.length + " Missing: \t" + (spawnParam.roadMaintainer - roadMaintainers.length));
+    console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer - maintainers.length));
 
     if (Game.spawns['Spawn1'].spawning) {
       const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
@@ -99,12 +99,12 @@ export class SpawnHelper {
       return;
     }
 
-    /* road maintainer */
-    else if (toSpawn === "roadMaintainer") {
+    /* maintainer */
+    else if (toSpawn === "maintainer") {
       Game.spawns['Spawn1'].spawnCreep(
         [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-        'RoadMaintainer' + Game.time,
-        { memory: { role: 'roadMaintainer' } } as SpawnOptions);
+        'Maintainer' + Game.time,
+        { memory: { role: 'maintainer' } } as SpawnOptions);
       return;
     }
   }
