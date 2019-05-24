@@ -62,7 +62,7 @@ export class SpawnHelper {
 
     /* harvester */
     if (toSpawn === "harvester") {
-      if (harvesters.length < 2) {
+      if (harvesters.length < 1) {
         Game.spawns['Spawn1'].spawnCreep(
           [WORK, CARRY, MOVE],
           'Harvester' + Game.time,
@@ -80,7 +80,7 @@ export class SpawnHelper {
     /* builder */
     else if (toSpawn === "builder") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;

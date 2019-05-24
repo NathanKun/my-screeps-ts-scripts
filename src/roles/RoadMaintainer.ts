@@ -31,17 +31,35 @@ export class RoadMaintainer {
       }
 
       if (creep.memory.reparingTarget === undefined) {
-        const targets = creep.room.find(FIND_STRUCTURES, {
+        // rampart
+        let targets = creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+            return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
           }
         });
+
+        // wall
+        if (targets.length === 0) {
+          targets = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+              return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+            }
+          });
+        }
+        // roads
+        if (targets.length === 0) {
+          targets = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+              return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * RoadMaintainer.REPAIR_RATIO);
+            }
+          });
+        }
 
         if (targets.length) {
           target = targets[0];
           creep.memory.reparingTarget = target.id;
         }
-        // no road needs to be repaired, upgrade controller
+        // nothing needs to be repaired, upgrade controller
         else {
           if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
             creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });

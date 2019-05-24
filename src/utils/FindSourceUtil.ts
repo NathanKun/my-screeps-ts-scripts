@@ -17,7 +17,9 @@ export class FindSourceUtil {
     if (creep.memory.harvesting) {
       return Game.getObjectById(creep.memory.harvestSource) as Source;
     } else {
-      const sources = creep.room.find(FIND_SOURCES);
+      const sources = creep.room.find(FIND_SOURCES, {
+        filter: s => s.energy > 0
+      });
       const source = sources[Game.time % sources.length];
       creep.memory.harvesting = true;
       creep.memory.harvestSource = source.id;
