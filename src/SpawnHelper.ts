@@ -25,6 +25,7 @@ export class SpawnHelper {
         spawnParam.builder = 3;
       } else {
         spawnParam.builder = 0;
+        spawnParam.upgrader += 2;
       }
     }
 
@@ -32,23 +33,26 @@ export class SpawnHelper {
     let max = spawnParam.harvester - harvesters.length;
     let toSpawn = "harvester";
 
-    if (spawnParam.builder - builders.length > max) {
-      max = spawnParam.builder - builders.length;
-      toSpawn = "builder";
-    }
-    if (spawnParam.upgrader - upgraders.length > max) {
-      max = spawnParam.upgrader - upgraders.length;
-      toSpawn = "upgrader";
-    }
-    if (spawnParam.roadMaintainer - roadMaintainers.length > max) {
-      max = spawnParam.roadMaintainer - roadMaintainers.length;
-      toSpawn = "roadMaintainer";
+    if (max === 0) { // prior harvester
+      if (spawnParam.builder - builders.length > max) {
+        max = spawnParam.builder - builders.length;
+        toSpawn = "builder";
+      }
+      if (spawnParam.upgrader - upgraders.length > max) {
+        max = spawnParam.upgrader - upgraders.length;
+        toSpawn = "upgrader";
+      }
+      if (spawnParam.roadMaintainer - roadMaintainers.length > max) {
+        max = spawnParam.roadMaintainer - roadMaintainers.length;
+        toSpawn = "roadMaintainer";
+      }
     }
 
+
     /* Logs */
-    console.log('Harvesters:      \t' + harvesters.length      + " Missing: \t" + (spawnParam.harvester - harvesters.length));
-    console.log('Builders:        \t' + builders.length        + " Missing: \t" + (spawnParam.builder - builders.length));
-    console.log('Upgraders:       \t' + upgraders.length       + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
+    console.log('Harvesters:      \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester - harvesters.length));
+    console.log('Builders:        \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
+    console.log('Upgraders:       \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
     console.log('RoadMaintainers: \t' + roadMaintainers.length + " Missing: \t" + (spawnParam.roadMaintainer - roadMaintainers.length));
 
     if (Game.spawns['Spawn1'].spawning) {

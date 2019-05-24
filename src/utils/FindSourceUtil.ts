@@ -14,16 +14,35 @@ export class FindSourceUtil {
       }
     }*/
 
+    // already harvesting
     if (creep.memory.harvesting) {
-      return Game.getObjectById(creep.memory.harvestSource) as Source;
-    } else {
+      const source = Game.getObjectById(creep.memory.harvestSource) as Source;
+      // if current source no more energy, find another one
+      if (source.energy === 0) {
+        FindSourceUtil.clear(creep);
+        return FindSourceUtil.findSource(creep);
+      }
+      // else return current source
+      return source;
+    }
+    // not harvesting
+    else {
+      // find sources which have energy
       const sources = creep.room.find(FIND_SOURCES, {
         filter: s => s.energy > 0
       });
-      const source = sources[Game.time % sources.length];
-      creep.memory.harvesting = true;
-      creep.memory.harvestSource = source.id;
-      return source;
+
+      // if found, return a ramdom one
+      if (sources.length) {
+        const source = sources[Game.time % sources.length];
+        creep.memory.harvesting = true;
+        creep.memory.harvestSource = source.id;
+        return source;
+      }
+      // if no source has energy, return the first source of the room
+      else {
+        return creep.room.find(FIND_SOURCES)[0];
+      }
     }
   }
 

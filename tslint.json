@@ -17,6 +17,7 @@
       "allow-pascal-case",
       "allow-leading-underscore"
     ],
-    "no-string-literal": false
+    "no-string-literal": false,
+    "object-literal-sort-keys": false
   }
 }

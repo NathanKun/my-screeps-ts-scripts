@@ -8,26 +8,25 @@ export class TowerTask {
       return;
     }
 
-    for (let ratio = 0.01; ratio <= 1; ratio += 0.01) {
-      // repair
-      const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (structure) =>
-          (structure.hits < structure.hitsMax * ratio) &&
-          (structure.hits >= structure.hitsMax * (ratio - 0.01))
-      });
-      if (closestDamagedStructure) {
-        tower.repair(closestDamagedStructure);
-        return;
-      }
+    // repair
+    const structures = tower.room.find(FIND_STRUCTURES, {
+      filter: structure => structure.hits < structure.hitsMax
+    });
 
-      // heal
-      const closestDamagedCreep = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
-        filter: (c) => (c.hits < c.hitsMax * ratio) && (c.hits >= c.hitsMax * (ratio - 0.01))
-      });
-      if (closestDamagedCreep) {
-        tower.heal(closestDamagedCreep);
-        return;
-      }
+    if (structures.length) {
+      const target = _.sortBy(structures, 'hits')[0];
+      tower.repair(target);
+      return;
+    }
+
+    // heal
+    const creeps = tower.room.find(FIND_MY_CREEPS, {
+      filter: c => c.hits < c.hitsMax
+    });
+    if (creeps.length) {
+      const target = _.sortBy(creeps, 'hits')[0];
+      tower.heal(target);
+      return;
     }
   }
 }
