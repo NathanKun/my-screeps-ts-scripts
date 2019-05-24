@@ -50,9 +50,9 @@ export class SpawnHelper {
 
 
     /* Logs */
-    console.log('Harvesters:      \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester - harvesters.length));
-    console.log('Builders:        \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
-    console.log('Upgraders:       \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
+    console.log('Harvesters:  \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester - harvesters.length));
+    console.log('Builders:    \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
+    console.log('Upgraders:   \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
     console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer - maintainers.length));
 
     if (Game.spawns['Spawn1'].spawning) {
