@@ -36,7 +36,7 @@ export class Maintainer {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
           }
-        });
+        }).sort((s1, s2) => s1.hits - s2.hits);
 
         // wall
         if (targets.length === 0) {
@@ -44,7 +44,7 @@ export class Maintainer {
             filter: (structure) => {
               return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
-          });
+          }).sort((s1, s2) => s1.hits - s2.hits);
         }
         // roads
         if (targets.length === 0) {
