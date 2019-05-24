@@ -11,6 +11,7 @@ interface CreepMemory {
   reparingTarget: string | undefined;
   harvestSource: string | undefined;
   harvesting: boolean;
+  transfering: boolean;
 }
 
 interface Memory {

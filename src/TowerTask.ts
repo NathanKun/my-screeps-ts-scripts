@@ -14,6 +14,16 @@ export class TowerTask {
     });
     if (closestDamagedStructure) {
       tower.repair(closestDamagedStructure);
+      return;
+    }
+
+    // heal
+    const closestDamagedCreep = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
+      filter: (c) => c.hits < c.hitsMax * 0.8
+    });
+    if (closestDamagedCreep) {
+      tower.heal(closestDamagedCreep);
+      return;
     }
 
   }

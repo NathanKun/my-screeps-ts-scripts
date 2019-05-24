@@ -4,12 +4,20 @@ export class Harvester {
 
   /** @param {Creep} creep */
   public static run(creep: Creep) {
+
+    if (creep.memory.transfering && creep.carry.energy === 0) {
+      creep.memory.transfering = false;
+      creep.say('🔄 harvest');
+    }
+    if (!creep.memory.transfering && creep.carry.energy === creep.carryCapacity) {
+      creep.memory.transfering = true;
+      FindSourceUtil.clear(creep);
+      creep.say('🚧 transfer');
+    }
     let idle = true;
 
     // transfer
-    if (creep.carry.energy === creep.carryCapacity) {
-      FindSourceUtil.clear(creep);
-
+    if (creep.memory.transfering) {
       const targets = creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType === STRUCTURE_EXTENSION ||
@@ -25,8 +33,8 @@ export class Harvester {
         }
         idle = false;
       }
+      // nothing to do, upgrade room controller
       else {
-        // nothing to do, upgrade room controller
         if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
           creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
           idle = false;

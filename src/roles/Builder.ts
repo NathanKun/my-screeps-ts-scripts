@@ -14,7 +14,6 @@ export class Builder {
       creep.memory.building = true;
       FindSourceUtil.clear(creep);
       creep.say('🚧 build');
-
     }
 
     // build construction site

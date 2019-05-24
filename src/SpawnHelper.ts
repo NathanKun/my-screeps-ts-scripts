@@ -62,7 +62,7 @@ export class SpawnHelper {
 
     /* harvester */
     if (toSpawn === "harvester") {
-      if (harvesters.length < 3) {
+      if (harvesters.length < 2) {
         Game.spawns['Spawn1'].spawnCreep(
           [WORK, CARRY, MOVE],
           'Harvester' + Game.time,
@@ -70,7 +70,7 @@ export class SpawnHelper {
         return;
       } else {
         Game.spawns['Spawn1'].spawnCreep(
-          [WORK, WORK, WORK, CARRY, MOVE, MOVE],
+          [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
           'Harvester' + Game.time,
           { memory: { role: 'harvester' } } as SpawnOptions);
         return;
@@ -80,7 +80,7 @@ export class SpawnHelper {
     /* builder */
     else if (toSpawn === "builder") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;
@@ -89,7 +89,7 @@ export class SpawnHelper {
     /* upgrader */
     else if (toSpawn === "upgrader") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
       return;

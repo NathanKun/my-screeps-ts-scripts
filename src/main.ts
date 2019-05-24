@@ -20,7 +20,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
 
   // spawn creeps
-  SpawnHelper.spawn({ 'spawn': Game.spawns['Spawn1'], 'harvester': 5, 'builder': -1, 'upgrader': 3, 'roadMaintainer': 2 });
+  SpawnHelper.spawn({ 'spawn': Game.spawns['Spawn1'], 'harvester': 4, 'builder': -1, 'upgrader': 3, 'roadMaintainer': 1 });
 
   // creeps work
   for (const name in Game.creeps) {
