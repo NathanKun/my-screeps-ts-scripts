@@ -1,4 +1,5 @@
 import { Builder } from "roles/Builder";
+import { Collector } from "roles/Collector";
 import { Harvester } from "roles/Harvester";
 import { Maintainer } from "roles/Maintainer";
 import { Upgrader } from "roles/Upgrader";
@@ -19,7 +20,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   // spawn creeps
-  SpawnHelper.spawn({ 'spawn': Game.spawns['Spawn1'], 'harvester': 4, 'builder': -1, 'upgrader': 2, 'maintainer': 1 });
+  SpawnHelper.spawn({
+    'spawn': Game.spawns['Spawn1'],
+    'harvester': 4,
+    'builder': -1,
+    'upgrader': 2,
+    'maintainer': 1,
+    'collector': 1
+  });
 
   // creeps work
   for (const name in Game.creeps) {
@@ -35,6 +43,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
     if (creep.memory.role === 'maintainer') {
       Maintainer.run(creep);
+    }
+    if (creep.memory.role === 'collector') {
+      Collector.run(creep);
     }
   }
 

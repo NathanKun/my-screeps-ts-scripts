@@ -12,6 +12,8 @@ interface CreepMemory {
   harvestSource: string | undefined;
   harvesting: boolean;
   transfering: boolean;
+  collectorStatus: string;
+  collectorTarget: string | undefined;
 }
 
 interface Memory {
@@ -32,4 +34,5 @@ interface SpawnParam {
   builder: number;
   upgrader: number;
   maintainer: number;
+  collector: number;
 }

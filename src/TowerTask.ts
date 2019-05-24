@@ -14,7 +14,13 @@ export class TowerTask {
     // rampart: 3 000k
     // others: 1k - 5k
     const structures = tower.room.find(FIND_STRUCTURES, {
-      filter: structure => structure.hits < structure.hitsMax
+      filter: structure => {
+        if (structure.structureType === STRUCTURE_ROAD && structure.hitsMax === 5000 && structure.hits > 2500) {
+          return false;
+        } else {
+          return structure.hits < structure.hitsMax;
+        }
+      }
     });
 
     if (structures.length) {
@@ -32,9 +38,9 @@ export class TowerTask {
         // console.log(s.structureType + "  \t  " + s.hits + "  \t  " + s.hitsMax + "  \t  " + res);
         return res;
       });
-      sortedStructures.forEach((s, i) => {
+      /*sortedStructures.forEach((s, i) => {
         console.log(s.structureType + "  \t  " + s.hits + "  \t  " + s.hitsMax + "  \t  " + i);
-      });
+      });*/
       const target = sortedStructures[0];
       tower.repair(target);
       return;

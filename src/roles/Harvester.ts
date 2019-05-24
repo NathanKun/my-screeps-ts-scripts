@@ -51,7 +51,7 @@ export class Harvester {
     else {
       const source = FindSourceUtil.findSource(creep);
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
+        creep.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
       }
     }
   }

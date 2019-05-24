@@ -18,6 +18,7 @@ export class SpawnHelper {
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
     const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer');
+    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector');
 
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder === -1) {
@@ -46,6 +47,10 @@ export class SpawnHelper {
         max = spawnParam.maintainer - maintainers.length;
         toSpawn = "maintainer";
       }
+      if (spawnParam.collector - collectors.length > max) {
+        max = spawnParam.collector - collectors.length;
+        toSpawn = "collector";
+      }
     }
 
 
@@ -54,6 +59,7 @@ export class SpawnHelper {
     console.log('Builders:    \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
     console.log('Upgraders:   \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
     console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer - maintainers.length));
+    console.log('Collectors: \t' + collectors.length + " Missing: \t" + (spawnParam.collector - collectors.length));
 
     if (Game.spawns['Spawn1'].spawning) {
       const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
@@ -105,6 +111,15 @@ export class SpawnHelper {
         [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
         'Maintainer' + Game.time,
         { memory: { role: 'maintainer' } } as SpawnOptions);
+      return;
+    }
+
+    /* collector */
+    else if (toSpawn === "collector") {
+      Game.spawns['Spawn1'].spawnCreep(
+        [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+        'Collector' + Game.time,
+        { memory: { role: 'collector' } } as SpawnOptions);
       return;
     }
   }
