@@ -13,6 +13,8 @@ export class Collector {
       creep.memory.collectorStatus = Collector.STATUS_IDLE;
     } else if (creep.memory.collectorStatus === Collector.STATUS_TRANSFERING && creep.carry.energy === 0) {
       creep.memory.collectorStatus = Collector.STATUS_IDLE;
+    } else if (creep.carry.energy === creep.carryCapacity) {
+      creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
     }
 
     // Idle
