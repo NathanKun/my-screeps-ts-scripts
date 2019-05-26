@@ -8,14 +8,37 @@ export class TowerTask {
       return;
     }
 
+    // heal
+    // stop healing if energy < 100
+    if (tower.energy < 350) {
+      return;
+    }
+    const creeps = tower.room.find(FIND_MY_CREEPS, {
+      filter: c => c.hits < c.hitsMax
+    });
+    if (creeps.length) {
+      const target = _.sortBy(creeps, s => s.hits / s.hitsMax)[0];
+      tower.heal(target);
+      return;
+    }
+
     // repair
+    // stop repairing if energy < 200
+    if (tower.energy < 500) {
+      return;
+    }
     // Hits:
     // wall: 300 000k
     // rampart: 3 000k
     // others: 1k - 5k
     const structures = tower.room.find(FIND_STRUCTURES, {
       filter: structure => {
+        // do not repair normal roads with hits > 2500
         if (structure.structureType === STRUCTURE_ROAD && structure.hitsMax === 5000 && structure.hits > 2500) {
+          return false;
+        }
+        // do not repair walls with hits >= 1M
+        else if (structure.structureType === STRUCTURE_WALL && structure.hits >= 1000000) {
           return false;
         } else {
           return structure.hits < structure.hitsMax;
@@ -43,16 +66,6 @@ export class TowerTask {
       });*/
       const target = sortedStructures[0];
       tower.repair(target);
-      return;
-    }
-
-    // heal
-    const creeps = tower.room.find(FIND_MY_CREEPS, {
-      filter: c => c.hits < c.hitsMax
-    });
-    if (creeps.length) {
-      const target = _.sortBy(creeps, s => s.hits / s.hitsMax)[0];
-      tower.heal(target);
       return;
     }
   }

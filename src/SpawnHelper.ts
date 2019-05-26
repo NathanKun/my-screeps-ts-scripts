@@ -26,7 +26,7 @@ export class SpawnHelper {
         spawnParam.builder = 3;
       } else {
         spawnParam.builder = 0;
-        spawnParam.upgrader += 2;
+        spawnParam.upgrader += 3;
       }
     }
 
@@ -34,7 +34,7 @@ export class SpawnHelper {
     let max = spawnParam.harvester - harvesters.length;
     let toSpawn = "harvester";
 
-    if (max === 0) { // prior harvester
+    if (max <= 0) { // prior harvester
       if (spawnParam.builder - builders.length > max) {
         max = spawnParam.builder - builders.length;
         toSpawn = "builder";
@@ -80,7 +80,9 @@ export class SpawnHelper {
         return;
       } else {
         Game.spawns['Spawn1'].spawnCreep(
-          [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+          [WORK, WORK, WORK, WORK,
+            CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+            MOVE, MOVE, MOVE, MOVE, MOVE],
           'Harvester' + Game.time,
           { memory: { role: 'harvester' } } as SpawnOptions);
         return;
@@ -90,7 +92,9 @@ export class SpawnHelper {
     /* builder */
     else if (toSpawn === "builder") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;
@@ -99,7 +103,9 @@ export class SpawnHelper {
     /* upgrader */
     else if (toSpawn === "upgrader") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        [WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
       return;

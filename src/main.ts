@@ -22,18 +22,21 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // spawn creeps
   SpawnHelper.spawn({
     'spawn': Game.spawns['Spawn1'],
-    'harvester': 4,
+    'harvester': 3,
     'builder': -1,
     'upgrader': 2,
-    'maintainer': 1,
+    'maintainer': 0,
     'collector': 1
   });
+
+  // hostile creeps in room
+  const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
 
   // creeps work
   for (const name in Game.creeps) {
     const creep = Game.creeps[name];
     if (creep.memory.role === 'harvester') {
-      Harvester.run(creep);
+      Harvester.run(creep, hasHostile);
     }
     if (creep.memory.role === 'builder') {
       Builder.run(creep);
