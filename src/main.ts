@@ -54,5 +54,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // tower defense & repair
   TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
+  TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
 
 });
