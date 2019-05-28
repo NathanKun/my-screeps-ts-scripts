@@ -1,3 +1,4 @@
+import { BaseCreep } from "roles/BaseCreep";
 import { Builder } from "roles/Builder";
 import { Collector } from "roles/Collector";
 import { Harvester } from "roles/Harvester";
@@ -32,25 +33,52 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // hostile creeps in room
   const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
 
+  const waitingRepairCreeps: BaseCreep[] = [];
+  let beingRepairedCreep: BaseCreep | undefined;
+
   // creeps work
   for (const name in Game.creeps) {
-    const creep = Game.creeps[name];
-    if (creep.memory.role === 'harvester') {
-      Harvester.run(creep, hasHostile);
+    const role = Game.creeps[name].memory.role;
+    let creep: BaseCreep | null = null;
+
+    if (role === 'harvester') {
+      creep = new Harvester(Game.creeps[name], hasHostile);
     }
-    if (creep.memory.role === 'builder') {
-      Builder.run(creep);
+    else if (role === 'builder') {
+      creep = new Builder(Game.creeps[name]);
     }
-    if (creep.memory.role === 'upgrader') {
-      Upgrader.run(creep);
+    else if (role === 'upgrader') {
+      creep = new Upgrader(Game.creeps[name]);
     }
-    if (creep.memory.role === 'maintainer') {
-      Maintainer.run(creep);
+    else if (role === 'maintainer') {
+      creep = new Maintainer(Game.creeps[name]);
     }
-    if (creep.memory.role === 'collector') {
-      Collector.run(creep);
+    else if (role === 'collector') {
+      creep = new Collector(Game.creeps[name]);
+    }
+
+    if (creep !== null) {
+      creep.work();
+
+      if (creep.memory.waitingRepair) {
+        waitingRepairCreeps.push(creep)
+      } else if (creep.memory.beingRepaired) {
+        beingRepairedCreep = creep;
+      }
     }
   }
+      // renew creeps
+  if (!Game.spawns['Spawn1'].spawning) {
+    if (beingRepairedCreep !== undefined) {
+      Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
+    } else if (waitingRepairCreeps.length) {
+      beingRepairedCreep = waitingRepairCreeps[0];
+      beingRepairedCreep.memory.beingRepaired = true;
+      beingRepairedCreep.memory.waitingRepair = false;
+      Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
+    }
+  }
+
 
   // tower defense & repair
   TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);

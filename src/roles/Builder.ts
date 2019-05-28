@@ -1,26 +1,26 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
+import { BaseCreep } from "./BaseCreep";
 
-export class Builder {
+export class Builder extends BaseCreep {
 
-  /** @param {Creep} creep */
-  public static run(creep: Creep) {
+  protected run() {
     let idle = true;
 
-    if (creep.memory.building && creep.carry.energy === 0) {
-      creep.memory.building = false;
-      creep.say('🔄 harvest');
+    if (this.creep.memory.building && this.creep.carry.energy === 0) {
+      this.creep.memory.building = false;
+      this.creep.say('🔄 harvest');
     }
-    if (!creep.memory.building && creep.carry.energy === creep.carryCapacity) {
-      creep.memory.building = true;
-      FindSourceUtil.clear(creep);
-      creep.say('🚧 build');
+    if (!this.creep.memory.building && this.creep.carry.energy === this.creep.carryCapacity) {
+      this.creep.memory.building = true;
+      FindSourceUtil.clear(this.creep);
+      this.creep.say('🚧 build');
     }
 
     // build construction site
-    if (creep.memory.building) {
+    if (this.creep.memory.building) {
 
       // build extension and spawn first
-      let targets = creep.room.find(FIND_CONSTRUCTION_SITES, {
+      let targets = this.creep.room.find(FIND_CONSTRUCTION_SITES, {
         filter: (structure) => {
           return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN);
         }
@@ -28,28 +28,28 @@ export class Builder {
 
       // then build others
       if (targets.length === 0) {
-        targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+        targets = this.creep.room.find(FIND_CONSTRUCTION_SITES);
       }
 
       if (targets.length) {
-        if (creep.build(targets[0]) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffff66' } });
+        if (this.creep.build(targets[0]) === ERR_NOT_IN_RANGE) {
+          this.creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffff66' } });
         }
         idle = false;
       }
       // nothing to build, upgrade room controller
       else {
-        if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+        if (this.creep.upgradeController(this.creep.room.controller!!) === ERR_NOT_IN_RANGE) {
+          this.creep.moveTo(this.creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
           idle = false;
         }
       }
     }
     // harvest
     else {
-      const source = FindSourceUtil.findSource(creep);
-      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(this.creep);
+      if (this.creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        this.creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
       idle = false;
     }

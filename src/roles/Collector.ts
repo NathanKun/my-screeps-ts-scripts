@@ -1,4 +1,6 @@
-export class Collector {
+import { BaseCreep } from "./BaseCreep";
+
+export class Collector extends BaseCreep {
   private static IDLE_X = 14;
   private static IDLE_Y = 13;
 
@@ -7,76 +9,75 @@ export class Collector {
   private static STATUS_COLLECTING_TOMBSTONE = "collectingTombstone";
   private static STATUS_TRANSFERING = "transfering";
 
-  /** @param {Creep} creep */
-  public static run(creep: Creep) {
-    if (!creep.memory.collectorStatus) {
-      creep.memory.collectorStatus = Collector.STATUS_IDLE;
-    } else if (creep.memory.collectorStatus === Collector.STATUS_TRANSFERING && creep.carry.energy === 0) {
-      creep.memory.collectorStatus = Collector.STATUS_IDLE;
-    } else if (creep.carry.energy === creep.carryCapacity) {
-      creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+  protected run() {
+    if (!this.creep.memory.collectorStatus) {
+      this.creep.memory.collectorStatus = Collector.STATUS_IDLE;
+    } else if (this.creep.memory.collectorStatus === Collector.STATUS_TRANSFERING && this.creep.carry.energy === 0) {
+      this.creep.memory.collectorStatus = Collector.STATUS_IDLE;
+    } else if (this.creep.carry.energy === this.creep.carryCapacity) {
+      this.creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
     }
 
     // Idle
-    if (creep.memory.collectorStatus === Collector.STATUS_IDLE) {
+    if (this.creep.memory.collectorStatus === Collector.STATUS_IDLE) {
       // find resource
-      const droppedResources = creep.room.find(FIND_DROPPED_RESOURCES, {
+      const droppedResources = this.creep.room.find(FIND_DROPPED_RESOURCES, {
         filter: r => r.resourceType === RESOURCE_ENERGY
       }).sort((r1, r2) => r2.amount - r1.amount);
 
       if (droppedResources.length) {
-        creep.memory.collectorTarget = droppedResources[0].id;
-        creep.memory.collectorStatus = Collector.STATUS_COLLECTING_RESOURCE;
+        this.creep.memory.collectorTarget = droppedResources[0].id;
+        this.creep.memory.collectorStatus = Collector.STATUS_COLLECTING_RESOURCE;
         return;
       }
 
       // find tombstone
-      const tombstones = creep.room.find(FIND_TOMBSTONES, {
+      const tombstones = this.creep.room.find(FIND_TOMBSTONES, {
         filter: t => t.store.energy > 0
       }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
 
       if (tombstones.length) {
-        creep.memory.collectorTarget = tombstones[0].id;
-        creep.memory.collectorStatus = Collector.STATUS_COLLECTING_TOMBSTONE;
+        this.creep.memory.collectorTarget = tombstones[0].id;
+        this.creep.memory.collectorStatus = Collector.STATUS_COLLECTING_TOMBSTONE;
         return;
       }
 
       // move to idle location
-      if (creep.pos.x !== Collector.IDLE_X || creep.pos.y !== Collector.IDLE_Y) {
-        creep.moveTo(Collector.IDLE_X, Collector.IDLE_Y);
+      if (this.creep.pos.x !== Collector.IDLE_X || this.creep.pos.y !== Collector.IDLE_Y) {
+        this.creep.moveTo(Collector.IDLE_X, Collector.IDLE_Y);
       }
     }
 
     // Collecting Resource
-    else if (creep.memory.collectorStatus === Collector.STATUS_COLLECTING_RESOURCE) {
-      const resource = Game.getObjectById(creep.memory.collectorTarget) as Resource | undefined;
+    else if (this.creep.memory.collectorStatus === Collector.STATUS_COLLECTING_RESOURCE) {
+      const resource = Game.getObjectById(this.creep.memory.collectorTarget) as Resource | undefined;
       if (resource === undefined || resource === null || resource.amount === 0) {
-        creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+        this.creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
         return;
       }
-      if (creep.pickup(resource!!) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(resource!!, { reusePath: 0 });
+      if (this.creep.pickup(resource!!) === ERR_NOT_IN_RANGE) {
+        this.creep.moveTo(resource!!, { reusePath: 0 });
       }
     }
 
     // Collecting Tombstone
-    else if (creep.memory.collectorStatus === Collector.STATUS_COLLECTING_TOMBSTONE) {
-      const tombstone = Game.getObjectById(creep.memory.collectorTarget) as Tombstone;
+    else if (this.creep.memory.collectorStatus === Collector.STATUS_COLLECTING_TOMBSTONE) {
+      const tombstone = Game.getObjectById(this.creep.memory.collectorTarget) as Tombstone;
       if (tombstone === undefined || tombstone === null || tombstone.store.energy === 0) {
-        creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+        this.creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
         return;
       }
-      if (creep.withdraw(tombstone, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(tombstone, { reusePath: 0 });
+      if (this.creep.withdraw(tombstone, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        this.creep.moveTo(tombstone, { reusePath: 0 });
       }
     }
 
     // Transfering
-    else if (creep.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
-      creep.memory.collectorTarget = undefined;
+    else if (this.creep.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
+      this.creep.memory.collectorTarget = undefined;
 
       // spwan and Extensions
-      let targets = creep.room.find(FIND_STRUCTURES, {
+      let targets = this.creep.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
           return (structure.structureType === STRUCTURE_EXTENSION ||
             structure.structureType === STRUCTURE_SPAWN) &&
@@ -86,7 +87,7 @@ export class Collector {
 
       // tower
       if (targets.length === 0) {
-        targets = creep.room.find(FIND_STRUCTURES, {
+        targets = this.creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return structure.structureType === STRUCTURE_TOWER &&
               structure.energy < structure.energyCapacity;
@@ -95,8 +96,8 @@ export class Collector {
       }
 
       if (targets.length) {
-        if (creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
+        if (this.creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          this.creep.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
         }
         return;
       }

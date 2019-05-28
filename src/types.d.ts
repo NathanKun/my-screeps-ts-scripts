@@ -15,6 +15,8 @@ interface CreepMemory {
   transferTarget: string | undefined;
   collectorStatus: string;
   collectorTarget: string | undefined;
+  waitingRepair: boolean;
+  beingRepaired: boolean;
 }
 
 interface Memory {
