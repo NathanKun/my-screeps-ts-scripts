@@ -52,7 +52,7 @@ export class Harvester extends BaseCreep {
 
         // find towers
         if (targets.length === 0) {
-          targets = this.findTowers(this.creep);
+          targets = this.findTowers(this.creep).sort((t1, t2) => t1.energy - t2.energy);
         }
 
         // find storages
@@ -75,9 +75,27 @@ export class Harvester extends BaseCreep {
     }
     // harvest
     else {
-      const source = FindSourceUtil.findSource(this.creep);
-      if (this.creep.harvest(source) === ERR_NOT_IN_RANGE) {
-        this.creep.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
+      // harvest in base room
+      if (this.memory.harvesterRoom === undefined || this.memory.harvesterRoom === 'base') {
+        const source = FindSourceUtil.findSource(this.creep);
+        if (this.creep.harvest(source) === ERR_NOT_IN_RANGE) {
+          this.creep.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
+        }
+      }
+      // harvest in an other room
+      else {
+        // move to the room to gain visibility
+        if (this.creep.room.name !== this.memory.harvesterRoom) {
+          this.creep.moveTo(new RoomPosition(20, 20, this.memory.harvesterRoom))
+        }
+        else {
+          const source = FindSourceUtil.findSource(this.creep);
+          if (this.creep.harvest(source) === ERR_NOT_IN_RANGE) {
+            this.creep.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
+          } else {
+            console.log(this.creep.harvest(source))
+          }
+        }
       }
     }
   }

@@ -18,6 +18,7 @@ interface CreepMemory {
   collectorTarget: string | undefined;
   waitingRepair: boolean;
   beingRepaired: boolean;
+  harvesterRoom: string;
 }
 
 interface Memory {
@@ -34,9 +35,13 @@ declare namespace NodeJS {
 
 interface SpawnParam {
   spawn: StructureSpawn;
-  harvester: number;
   builder: number;
   upgrader: number;
   maintainer: number;
   collector: number;
+  claimer: number;
+  harvesterConfig: {
+    base: number;
+    W9S6: number;
+  }
 }
