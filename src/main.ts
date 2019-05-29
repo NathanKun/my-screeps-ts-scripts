@@ -67,7 +67,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
     }
   }
-      // renew creeps
+
+  // renew creeps
   if (!Game.spawns['Spawn1'].spawning) {
     if (beingRepairedCreep !== undefined) {
       Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
@@ -78,7 +79,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
       Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
     }
   }
-
 
   // tower defense & repair
   TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);

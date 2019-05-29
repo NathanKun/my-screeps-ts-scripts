@@ -95,18 +95,22 @@ export class Collector extends BaseCreep {
         });
       }
 
+      // storage
+      if (targets.length === 0) {
+        targets = this.creep.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return structure.structureType === STRUCTURE_STORAGE &&
+              structure.store.energy < structure.storeCapacity;
+          }
+        });
+      }
+
       if (targets.length) {
         if (this.creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           this.creep.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
         }
         return;
       }
-
-      // controller
-      // no work body part
-      /*if (creep.upgradeController(creep.room.controller!!) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(creep.room.controller!!, { reusePath: 2, visualizePathStyle: { stroke: '#66ccff' } });
-      }*/
     }
   }
 };

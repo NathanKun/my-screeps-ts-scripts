@@ -114,7 +114,7 @@ export class SpawnHelper {
     /* maintainer */
     else if (toSpawn === "maintainer") {
       Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
+        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
         'Maintainer' + Game.time,
         { memory: { role: 'maintainer' } } as SpawnOptions);
       return;

@@ -26,7 +26,7 @@ export class Harvester extends BaseCreep {
       // has hostile: charge towers
       if (this.hasHostile) {
         if (this.creep.memory.transferTarget === undefined) {
-          const towers = Harvester.findTowers(this.creep).sort((t1, t2) => t1.energy - t2.energy);
+          const towers = this.findTowers(this.creep).sort((t1, t2) => t1.energy - t2.energy);
           this.creep.memory.transferTarget = towers[0].id;
         }
         const tower = Game.getObjectById(this.creep.memory.transferTarget) as StructureTower;
@@ -39,16 +39,16 @@ export class Harvester extends BaseCreep {
         let targets: AnyStructure[];
 
         // prior find spwans and extensions
-        targets = Harvester.findSpawnsAndExtensions(this.creep);
-
-        // find storages
-        if (targets.length === 0) {
-          targets = Harvester.findStorages(this.creep);
-        }
+        targets = this.findSpawnsAndExtensions(this.creep);
 
         // find towers
         if (targets.length === 0) {
-          targets = Harvester.findTowers(this.creep);
+          targets = this.findTowers(this.creep);
+        }
+
+        // find storages
+        if (targets.length === 0) {
+          targets = this.findStorages(this.creep);
         }
 
         if (targets.length > 0) {
@@ -73,7 +73,7 @@ export class Harvester extends BaseCreep {
     }
   }
 
-  private static findSpawnsAndExtensions(creep: Creep) {
+  private findSpawnsAndExtensions(creep: Creep) {
     return creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return (structure.structureType === STRUCTURE_EXTENSION ||
@@ -83,7 +83,7 @@ export class Harvester extends BaseCreep {
     });
   }
 
-  private static findStorages(creep: Creep) {
+  private findStorages(creep: Creep) {
     return creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_STORAGE &&
@@ -92,7 +92,7 @@ export class Harvester extends BaseCreep {
     });
   }
 
-  private static findTowers(creep: Creep): StructureTower[] {
+  private findTowers(creep: Creep): StructureTower[] {
     return creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER &&
