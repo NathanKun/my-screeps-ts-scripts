@@ -13,6 +13,7 @@ interface CreepMemory {
   harvesting: boolean;
   transfering: boolean;
   transferTarget: string | undefined;
+  preferTransferStructure: string;
   collectorStatus: string;
   collectorTarget: string | undefined;
   waitingRepair: boolean;

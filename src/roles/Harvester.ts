@@ -41,6 +41,15 @@ export class Harvester extends BaseCreep {
         // prior find spwans and extensions
         targets = this.findSpawnsAndExtensions(this.creep);
 
+        // find prefer transfer structure
+        if (targets.length === 0) {
+          if (this.memory.preferTransferStructure === 'tower') {
+            targets = this.findTowers(this.creep);
+          } else if (this.memory.preferTransferStructure === 'storage') {
+            targets = this.findStorages(this.creep);
+          }
+        }
+
         // find towers
         if (targets.length === 0) {
           targets = this.findTowers(this.creep);

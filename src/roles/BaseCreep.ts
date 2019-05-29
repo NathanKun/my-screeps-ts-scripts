@@ -18,7 +18,7 @@ export abstract class BaseCreep {
     if (this.creep.ticksToLive!! < 100) {
       this.creep.moveTo(Game.spawns['Spawn1']);
       this.creep.memory.waitingRepair = true;
-    } else if (this.creep.ticksToLive!! > 1400) {
+    } else if (this.creep.ticksToLive!! > 1450) {
       this.creep.memory.beingRepaired = false;
     }
   }

@@ -84,7 +84,7 @@ export class SpawnHelper {
             CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
             MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
           'Harvester' + Game.time,
-          { memory: { role: 'harvester' } } as SpawnOptions);
+          { memory: { role: 'harvester', preferTransferStructure: 'tower' } } as SpawnOptions);
         return;
       }
     }
