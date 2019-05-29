@@ -54,17 +54,17 @@ export class Attack {
     }
   }
 
-  public static moveRole(x: number, y: number, role: string) {
+  public static moveRole(targetRoom: string, x: number, y: number, role: string) {
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === role) {
-        creep.moveTo(new RoomPosition(x, y, 'W9S6'));
+        creep.moveTo(new RoomPosition(x, y, targetRoom));
       }
     }
   }
 
-  public static moveOne(x: number, y: number, name: string) {
-    Game.creeps[name].moveTo(new RoomPosition(x, y, 'W9S6'));
+  public static moveOne(targetRoom: string, x: number, y: number, name: string) {
+    Game.creeps[name].moveTo(new RoomPosition(x, y, targetRoom));
   }
 
   public static attack(target: Structure) {
@@ -78,15 +78,15 @@ export class Attack {
     }
   }
 
-  public static attackCreeps(): boolean {
+  public static attackCreeps(targetRoom: string): boolean {
     let hasTarget = false;
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === 'a') {
-        if (creep.room.name !== 'W9S6' ||
-          (creep.room.name === 'W9S6' &&
+        if (creep.room.name !== targetRoom ||
+          (creep.room.name === targetRoom &&
             (creep.pos.x === 49 || creep.pos.y === 49 || creep.pos.x === 0 || creep.pos.y === 0))) {
-          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+          creep.moveTo(new RoomPosition(14, 47, targetRoom));
         } else {
           const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
           if (target) {
@@ -102,13 +102,13 @@ export class Attack {
     return hasTarget;
   }
 
-  public static attackSpawn(): boolean {
+  public static attackSpawn(targetRoom: string): boolean {
     let hasTarget = false;
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === 'a') {
-        if (creep.room.name !== 'W9S6') {
-          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+        if (creep.room.name !== targetRoom) {
+          creep.moveTo(new RoomPosition(14, 47, targetRoom));
         } else {
           const targets = creep.room.find(FIND_HOSTILE_SPAWNS);
           if (targets.length) {
@@ -124,13 +124,13 @@ export class Attack {
     return hasTarget;
   }
 
-  public static attackStructures(): boolean {
+  public static attackStructures(targetRoom: string): boolean {
     let hasTarget = false;
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === 'a') {
-        if (creep.room.name !== 'W9S6') {
-          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+        if (creep.room.name !== targetRoom) {
+          creep.moveTo(new RoomPosition(14, 47, targetRoom));
         } else {
           const target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
             filter: s =>

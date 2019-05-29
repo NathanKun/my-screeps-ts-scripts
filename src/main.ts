@@ -22,6 +22,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  let collectorWithdrawStorageMode = false;
+
+  // hostile creeps in room
+  const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
+
   // spawn creeps
   SpawnHelper.spawn({
     spawn: Game.spawns['Spawn1'],
@@ -36,23 +41,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
     claimer: 1
   });
 
-  const collectorWithdrawStorageMode = false;
-
-  // Attack.spawn('t', 3);
-  // Attack.spawn('h', 1);
-  // Attack.moveRole(23, 17, 't');
-  // Attack.moveRole(23, 17, 'h');
-  // Attack.moveRole(14, 47, 'a');
-
-  Attack.spawn('a', 1);
-  if (!Attack.attackCreeps()) {
-    if (!Attack.attackSpawn()) {
-      Attack.attackStructures();
-    }
+  // auto spawn attack creep and defense
+  if (hasHostile) {
+    Attack.spawn('a', 1);
+    Attack.attackCreeps(Game.spawns['Spawn1'].room.name);
+    collectorWithdrawStorageMode = true;
   }
-
-  // hostile creeps in room
-  const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
 
   const waitingRepairCreeps: BaseCreep[] = [];
   let beingRepairedCreep: BaseCreep | undefined;
