@@ -30,11 +30,9 @@ export class Attack {
         TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     } else if (type === 'a') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]
     } else if (type === 'h') {
       parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
         TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
@@ -78,6 +76,50 @@ export class Attack {
         }
       }
     }
+  }
+
+  public static attackCreeps(): boolean {
+    let hasTarget = false;
+    for (const name in Game.creeps) {
+      const creep = Game.creeps[name];
+      if (creep.memory.role === 'a') {
+        if (creep.room.name !== 'W9S6') {
+          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+        } else {
+          const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+          if (target) {
+            if (creep.attack(target) === ERR_NOT_IN_RANGE) {
+              creep.moveTo(target);
+            }
+            hasTarget = true;
+          }
+        }
+      }
+    }
+
+    return hasTarget;
+  }
+
+  public static attackSpawn(): boolean {
+    let hasTarget = false;
+    for (const name in Game.creeps) {
+      const creep = Game.creeps[name];
+      if (creep.memory.role === 'a') {
+        if (creep.room.name !== 'W9S6') {
+          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+        } else {
+          const target = creep.room.find(FIND_HOSTILE_SPAWNS);
+          if (target) {
+            if (creep.attack(target[0]) === ERR_NOT_IN_RANGE) {
+              creep.moveTo(target[0]);
+            }
+            hasTarget = true;
+          }
+        }
+      }
+    }
+
+    return hasTarget;
   }
 
   public static heal(targetName: string) {
