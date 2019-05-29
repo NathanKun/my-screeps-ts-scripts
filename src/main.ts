@@ -29,12 +29,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       base: 3,
       W9S6: 0
     },
-    builder: 0,
-    upgrader: 5,
+    builder: -1,
+    upgrader: 2,
     maintainer: 0,
     collector: 0,
     claimer: 1
   });
+
+  const collectorWithdrawStorageMode = false;
 
   // Attack.spawn('t', 3);
   // Attack.spawn('h', 1);
@@ -44,7 +46,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   Attack.spawn('a', 1);
   if (!Attack.attackCreeps()) {
-    Attack.attackSpawn();
+    if (!Attack.attackSpawn()) {
+      Attack.attackStructures();
+    }
   }
 
   // hostile creeps in room
@@ -72,7 +76,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
     else if (role === 'collector') {
       creep = new Collector(Game.creeps[name]);
-      (creep as Collector).withdrawStorageMode = false;
+      (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode;
     } else if (role === 'claimer') {
       creep = new Claimer(Game.creeps[name]);
     }

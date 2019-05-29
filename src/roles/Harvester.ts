@@ -61,6 +61,9 @@ export class Harvester extends BaseCreep {
         }
 
         if (targets.length > 0) {
+          targets = targets.sort((s1, s2) =>
+            this.creep.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.creep.pos.getRangeTo(s2.pos.x, s2.pos.y));
+
           if (this.creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.creep.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
           }

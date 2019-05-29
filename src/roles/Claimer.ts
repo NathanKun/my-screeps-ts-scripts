@@ -2,6 +2,10 @@ import { BaseCreep } from "./BaseCreep";
 
 export class Claimer extends BaseCreep {
 
+  public work(): void {
+    this.run();
+  }
+
   protected run() {
     const targetController = Game.getObjectById('5bbcac629099fc012e63560a') as StructureController
     const result = this.creep.attackController(targetController);

@@ -29,7 +29,21 @@ export class FindSourceUtil {
     else {
       // find sources which have energy
       const sources = creep.room.find(FIND_SOURCES, {
-        filter: s => s.energy > 0
+        filter: s => {
+          if (s.energy === 0) {
+            return false;
+          }
+
+          const x = s.pos.x;
+          const y = s.pos.y;
+          
+          const left = x === 0 ? 0 : x - 1;
+          const right = x === 49 ? 49 : x + 1;
+          const top = y === 0 ? 0 : y - 1;
+          const bottom = y === 49 ? 49 : y + 1;
+
+          return creep.room.lookForAtArea(LOOK_CREEPS, top, left, bottom, right, true).length < 4;
+        }
       });
 
       // if found, return a ramdom one
