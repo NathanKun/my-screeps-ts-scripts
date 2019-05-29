@@ -1,5 +1,7 @@
+import { Attack } from "Attack";
 import { BaseCreep } from "roles/BaseCreep";
 import { Builder } from "roles/Builder";
+import { Claimer } from "roles/Claimer";
 import { Collector } from "roles/Collector";
 import { Harvester } from "roles/Harvester";
 import { Maintainer } from "roles/Maintainer";
@@ -22,13 +24,28 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // spawn creeps
   SpawnHelper.spawn({
-    'spawn': Game.spawns['Spawn1'],
-    'harvester': 3,
-    'builder': -1,
-    'upgrader': 2,
-    'maintainer': 0,
-    'collector': 1
+    spawn: Game.spawns['Spawn1'],
+    harvesterConfig: {
+      base: 3,
+      W9S6: 0
+    },
+    builder: 0,
+    upgrader: 5,
+    maintainer: 0,
+    collector: 0,
+    claimer: 1
   });
+
+  // Attack.spawn('t', 3);
+  // Attack.spawn('h', 1);
+  // Attack.moveRole(23, 17, 't');
+  // Attack.moveRole(23, 17, 'h');
+  // Attack.moveRole(14, 47, 'a');
+
+  Attack.spawn('a', 1);
+  if (!Attack.attackCreeps()) {
+    Attack.attackSpawn();
+  }
 
   // hostile creeps in room
   const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
@@ -55,6 +72,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
     else if (role === 'collector') {
       creep = new Collector(Game.creeps[name]);
+      (creep as Collector).withdrawStorageMode = false;
+    } else if (role === 'claimer') {
+      creep = new Claimer(Game.creeps[name]);
     }
 
     if (creep !== null) {
