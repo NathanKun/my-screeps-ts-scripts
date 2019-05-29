@@ -31,8 +31,8 @@ export class Attack {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     } else if (type === 'a') {
       parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK]
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK]
     } else if (type === 'h') {
       parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
         TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
@@ -83,7 +83,9 @@ export class Attack {
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === 'a') {
-        if (creep.room.name !== 'W9S6') {
+        if (creep.room.name !== 'W9S6' ||
+          (creep.room.name === 'W9S6' &&
+            (creep.pos.x === 49 || creep.pos.y === 49 || creep.pos.x === 0 || creep.pos.y === 0))) {
           creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
         } else {
           const target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
@@ -108,10 +110,37 @@ export class Attack {
         if (creep.room.name !== 'W9S6') {
           creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
         } else {
-          const target = creep.room.find(FIND_HOSTILE_SPAWNS);
+          const targets = creep.room.find(FIND_HOSTILE_SPAWNS);
+          if (targets.length) {
+            if (creep.attack(targets[0]) === ERR_NOT_IN_RANGE) {
+              creep.moveTo(targets[0]);
+            }
+            hasTarget = true;
+          }
+        }
+      }
+    }
+
+    return hasTarget;
+  }
+
+  public static attackStructures(): boolean {
+    let hasTarget = false;
+    for (const name in Game.creeps) {
+      const creep = Game.creeps[name];
+      if (creep.memory.role === 'a') {
+        if (creep.room.name !== 'W9S6') {
+          creep.moveTo(new RoomPosition(14, 47, 'W9S6'));
+        } else {
+          const target = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+            filter: s =>
+              s.structureType !== STRUCTURE_CONTROLLER &&
+              s.structureType !== STRUCTURE_RAMPART
+          });
+
           if (target) {
-            if (creep.attack(target[0]) === ERR_NOT_IN_RANGE) {
-              creep.moveTo(target[0]);
+            if (creep.attack(target) === ERR_NOT_IN_RANGE) {
+              creep.moveTo(target);
             }
             hasTarget = true;
           }
