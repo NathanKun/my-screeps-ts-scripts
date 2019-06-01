@@ -2,7 +2,7 @@ import { FindSourceUtil } from "utils/FindSourceUtil";
 import { BaseCreep } from "./BaseCreep";
 
 export class Maintainer extends BaseCreep {
-  private static REPAIR_RATIO: number = 0.7;
+  private static REPAIR_RATIO: number = 0.9;
 
   protected run() {
     let idle = true;
@@ -18,7 +18,6 @@ export class Maintainer extends BaseCreep {
       this.creep.say('🚧 repair');
     }
 
-    // repair roads
     if (this.creep.memory.reparing) {
       let target: Structure;
 
@@ -52,7 +51,7 @@ export class Maintainer extends BaseCreep {
             filter: (structure) => {
               return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
-          });
+          }).sort((s1, s2) => s1.hits - s2.hits);
         }
 
         if (targets.length) {

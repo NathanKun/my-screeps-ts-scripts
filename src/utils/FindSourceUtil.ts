@@ -36,7 +36,7 @@ export class FindSourceUtil {
 
           const x = s.pos.x;
           const y = s.pos.y;
-          
+
           const left = x === 0 ? 0 : x - 1;
           const right = x === 49 ? 49 : x + 1;
           const top = y === 0 ? 0 : y - 1;

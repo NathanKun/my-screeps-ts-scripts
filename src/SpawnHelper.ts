@@ -14,63 +14,62 @@ CLAIM	600
 export class SpawnHelper {
   public static spawn(spawnParam: SpawnParam) {
 
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
-    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder');
-    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader');
-    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer');
-    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector');
+    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawn.room.name);
+    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawn.room.name);
+    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawn.room.name);
+    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawn.room.name);
+    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawn.room.name);
+    // count claimer globally
     const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer');
 
     /* Auto spawn builders if there is construction site */
-    if (spawnParam.builder === -1) {
+    if (spawnParam.builder.count === -1) {
       if (spawnParam.spawn.room.find(FIND_CONSTRUCTION_SITES).length !== 0) {
-        spawnParam.builder = 3;
+        spawnParam.builder.count = 3;
       } else {
-        spawnParam.builder = 0;
-        spawnParam.upgrader += 3;
+        spawnParam.builder.count = 0;
+        spawnParam.upgrader.count += 3;
       }
     }
 
-    const spawnParamHarvester = spawnParam.harvesterConfig.base + spawnParam.harvesterConfig.W9S6;
-
     /* Find role most needed to spawn */
-    let max = spawnParamHarvester - harvesters.length;
+    let max = spawnParam.harvester.count - harvesters.length;
     let toSpawn = "harvester";
 
     if (max <= 0) { // prior harvester
-      if (spawnParam.builder - builders.length > max) {
-        max = spawnParam.builder - builders.length;
+      if (spawnParam.builder.count - builders.length > max) {
+        max = spawnParam.builder.count - builders.length;
         toSpawn = "builder";
       }
-      if (spawnParam.upgrader - upgraders.length > max) {
-        max = spawnParam.upgrader - upgraders.length;
+      if (spawnParam.upgrader.count - upgraders.length > max) {
+        max = spawnParam.upgrader.count - upgraders.length;
         toSpawn = "upgrader";
       }
-      if (spawnParam.maintainer - maintainers.length > max) {
-        max = spawnParam.maintainer - maintainers.length;
+      if (spawnParam.maintainer.count - maintainers.length > max) {
+        max = spawnParam.maintainer.count - maintainers.length;
         toSpawn = "maintainer";
       }
-      if (spawnParam.collector - collectors.length > max) {
-        max = spawnParam.collector - collectors.length;
+      if (spawnParam.collector.count - collectors.length > max) {
+        max = spawnParam.collector.count - collectors.length;
         toSpawn = "collector";
       }
-      if (spawnParam.claimer - claimers.length > max) {
-        max = spawnParam.claimer - claimers.length;
+      if (spawnParam.claimer.count - claimers.length > max) {
+        max = spawnParam.claimer.count - claimers.length;
         toSpawn = "claimer";
       }
     }
 
 
     /* Logs */
-    console.log('Harvesters:  \t' + harvesters.length + " Missing: \t" + (spawnParamHarvester - harvesters.length));
-    console.log('Builders:    \t' + builders.length + " Missing: \t" + (spawnParam.builder - builders.length));
-    console.log('Upgraders:   \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader - upgraders.length));
-    console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer - maintainers.length));
-    console.log('Collectors: \t' + collectors.length + " Missing: \t" + (spawnParam.collector - collectors.length));
-    console.log('Claimers: \t' + claimers.length + " Missing: \t" + (spawnParam.claimer - claimers.length));
+    console.log('Harvesters:  \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester.count - harvesters.length));
+    console.log('Builders:    \t' + builders.length + " Missing: \t" + (spawnParam.builder.count - builders.length));
+    console.log('Upgraders:   \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader.count - upgraders.length));
+    console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer.count - maintainers.length));
+    console.log('Collectors: \t' + collectors.length + " Missing: \t" + (spawnParam.collector.count - collectors.length));
+    console.log('Claimers: \t' + claimers.length + " Missing: \t" + (spawnParam.claimer.count - claimers.length));
 
-    if (Game.spawns['Spawn1'].spawning) {
-      const spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning!!.name];
+    if (spawnParam.spawn.spawning) {
+      const spawningCreep = Game.creeps[spawnParam.spawn.spawning!!.name];
       console.log("Spawning: " + spawningCreep.memory.role);
     }
     if (max <= 0) {
@@ -82,8 +81,8 @@ export class SpawnHelper {
     if (toSpawn === "harvester") {
       // spawn basic harvester
       if (harvesters.length < 1) {
-        Game.spawns['Spawn1'].spawnCreep(
-          [WORK, CARRY, MOVE],
+        spawnParam.spawn.spawnCreep(
+          [WORK, CARRY, CARRY, MOVE],
           'Harvester' + Game.time,
           {
             memory: {
@@ -96,40 +95,13 @@ export class SpawnHelper {
       }
       // spawn advance harvester
       else {
-        // define harvest room
-        const config = spawnParam.harvesterConfig;
-        let baseCount = 0;
-        let w9s6Count = 0;
-
-        for (const name in Game.creeps) {
-          const creep = Game.creeps[name];
-          if (creep.memory.role === 'harvester') {
-            if (creep.memory.harvesterRoom === undefined || creep.memory.harvesterRoom === 'base') {
-              baseCount++;
-            } else if (creep.memory.harvesterRoom === 'W9S6') {
-              w9s6Count++;
-            }
-          }
-        }
-
-        let room;
-        if (baseCount < config.base) {
-          room = 'base';
-        } else if (w9s6Count < config.W9S6) {
-          room = 'W9S6';
-        }
-
-        // spawn
-        Game.spawns['Spawn1'].spawnCreep(
-          [WORK, WORK,
-            CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-            MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        spawnParam.spawn.spawnCreep(
+          spawnParam.harvester.parts,
           'Harvester' + Game.time,
           {
             memory: {
               role: 'harvester',
-              preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
-              harvesterRoom: room
+              preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage'
             }
           } as SpawnOptions);
         return;
@@ -138,10 +110,8 @@ export class SpawnHelper {
 
     /* builder */
     else if (toSpawn === "builder") {
-      Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      spawnParam.spawn.spawnCreep(
+        spawnParam.builder.parts,
         'Builder' + Game.time,
         { memory: { role: 'builder' } } as SpawnOptions);
       return;
@@ -149,10 +119,8 @@ export class SpawnHelper {
 
     /* upgrader */
     else if (toSpawn === "upgrader") {
-      Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      spawnParam.spawn.spawnCreep(
+        spawnParam.upgrader.parts,
         'Upgrader' + Game.time,
         { memory: { role: 'upgrader' } } as SpawnOptions);
       return;
@@ -160,8 +128,8 @@ export class SpawnHelper {
 
     /* maintainer */
     else if (toSpawn === "maintainer") {
-      Game.spawns['Spawn1'].spawnCreep(
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE],
+      spawnParam.spawn.spawnCreep(
+        spawnParam.maintainer.parts,
         'Maintainer' + Game.time,
         { memory: { role: 'maintainer' } } as SpawnOptions);
       return;
@@ -169,8 +137,8 @@ export class SpawnHelper {
 
     /* collector */
     else if (toSpawn === "collector") {
-      Game.spawns['Spawn1'].spawnCreep(
-        [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
+      spawnParam.spawn.spawnCreep(
+        spawnParam.collector.parts,
         'Collector' + Game.time,
         { memory: { role: 'collector' } } as SpawnOptions);
       return;
@@ -178,8 +146,8 @@ export class SpawnHelper {
 
     /* claimer */
     else if (toSpawn === "claimer") {
-      Game.spawns['Spawn1'].spawnCreep(
-        [CLAIM, CLAIM, MOVE],
+      spawnParam.spawn.spawnCreep(
+        spawnParam.claimer.parts,
         'Claimer' + Game.time,
         { memory: { role: 'claimer' } } as SpawnOptions);
       return;

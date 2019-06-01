@@ -126,7 +126,7 @@ export class Harvester extends BaseCreep {
     return creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER &&
-          structure.energy < (structure.energyCapacity - creep.carry.energy);
+          structure.energy < 850;
       }
     }) as StructureTower[];
   }

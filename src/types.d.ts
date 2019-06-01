@@ -35,13 +35,28 @@ declare namespace NodeJS {
 
 interface SpawnParam {
   spawn: StructureSpawn;
-  builder: number;
-  upgrader: number;
-  maintainer: number;
-  collector: number;
-  claimer: number;
-  harvesterConfig: {
-    base: number;
-    W9S6: number;
+  builder: {
+    count: number,
+    parts: BodyPartConstant[]
+  };
+  upgrader: {
+    count: number,
+    parts: BodyPartConstant[]
+  };
+  maintainer: {
+    count: number,
+    parts: BodyPartConstant[]
+  };
+  collector: {
+    count: number,
+    parts: BodyPartConstant[]
+  };
+  claimer: {
+    count: number,
+    parts: BodyPartConstant[]
+  };
+  harvester: {
+    count: number,
+    parts: BodyPartConstant[]
   }
 }

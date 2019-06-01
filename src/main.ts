@@ -22,7 +22,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  let collectorWithdrawStorageMode = false;
+  let collectorWithdrawStorageMode = true;
 
   // hostile creeps in room
   const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
@@ -30,15 +30,65 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // spawn creeps
   SpawnHelper.spawn({
     spawn: Game.spawns['Spawn1'],
-    harvesterConfig: {
-      base: 3,
-      W9S6: 0
+    harvester: {
+      count: 3,
+      parts: [WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
-    builder: -1,
-    upgrader: 2,
-    maintainer: 0,
-    collector: 0,
-    claimer: 1
+    builder: {
+      count: -1,
+      parts: [WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+    upgrader: {
+      count: 2,
+      parts: [WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+    maintainer: {
+      count: 0,
+      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    },
+    collector: {
+      count: 0,
+      parts: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+    claimer: {
+      count: 0,
+      parts: [CLAIM, MOVE]
+    }
+  });
+
+  // spawn creeps
+  SpawnHelper.spawn({
+    spawn: Game.spawns['Spawn2'],
+    harvester: {
+      count: 1,
+      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+    },
+    builder: {
+      count: 1,
+      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+    },
+    upgrader: {
+      count: 1,
+      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+    },
+    maintainer: {
+      count: 0,
+      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    },
+    collector: {
+      count: 0,
+      parts: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+    claimer: {
+      count: 0,
+      parts: [CLAIM, MOVE]
+    }
   });
 
   // auto spawn attack creep and defense
@@ -48,8 +98,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
     collectorWithdrawStorageMode = true;
   }
 
-  const waitingRepairCreeps: BaseCreep[] = [];
-  let beingRepairedCreep: BaseCreep | undefined;
+  const waitingRepairCreeps = new Map<string, BaseCreep[]>();
+  const beingRepairedCreeps = new Map<string, BaseCreep>();
 
   // creeps work
   for (const name in Game.creeps) {
@@ -79,22 +129,30 @@ export const loop = ErrorMapper.wrapLoop(() => {
       creep.work();
 
       if (creep.memory.waitingRepair) {
-        waitingRepairCreeps.push(creep)
+        if (!waitingRepairCreeps.has(creep.roomName)) {
+          waitingRepairCreeps.set(creep.roomName, []);
+        }
+        waitingRepairCreeps.get(creep.roomName)!!.push(creep);
       } else if (creep.memory.beingRepaired) {
-        beingRepairedCreep = creep;
+        beingRepairedCreeps.set(creep.roomName, creep);
       }
     }
   }
 
   // renew creeps
-  if (!Game.spawns['Spawn1'].spawning) {
+  for (const roomName in beingRepairedCreeps) {
+    let beingRepairedCreep = beingRepairedCreeps.get(roomName);
     if (beingRepairedCreep !== undefined) {
-      Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
-    } else if (waitingRepairCreeps.length) {
-      beingRepairedCreep = waitingRepairCreeps[0];
+      const spawn = beingRepairedCreep.creep.pos.findClosestByRange(FIND_MY_SPAWNS);
+      if (spawn) {
+        if (spawn.renewCreep(beingRepairedCreep.creep) === ERR_NOT_ENOUGH_ENERGY) {
+          beingRepairedCreep.memory.waitingRepair = false;
+        }
+      }
+    } else if (waitingRepairCreeps.has(roomName) && waitingRepairCreeps.get(roomName)!!.length) {
+      beingRepairedCreep = waitingRepairCreeps.get(roomName)!![0];
       beingRepairedCreep.memory.beingRepaired = true;
       beingRepairedCreep.memory.waitingRepair = false;
-      Game.spawns['Spawn1'].renewCreep(beingRepairedCreep.creep);
     }
   }
 

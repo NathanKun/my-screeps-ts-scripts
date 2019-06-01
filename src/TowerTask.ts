@@ -33,15 +33,16 @@ export class TowerTask {
     // others: 1 000 - 5 000
     const structures = tower.room.find(FIND_STRUCTURES, {
       filter: structure => {
-        // do not repair normal roads with hits > maxHits / 2 or hits > 250 000
+        // do not repair roads with hits > maxHits / 2
         if (structure.structureType === STRUCTURE_ROAD &&
-          (structure.hits / structure.hitsMax) > 0.5 || structure.hits > 250000) {
+          (structure.hits / structure.hitsMax) > 0.5) {
           return false;
         }
-        // do not repair walls and ramparts with hits >= 500 000
+        // do not repair walls >= 300 000 and ramparts with hits >= 500 000
         else if (
-          (structure.structureType === STRUCTURE_WALL || structure.structureType === STRUCTURE_RAMPART) &&
-          structure.hits >= 500000) {
+          ((structure.structureType === STRUCTURE_WALL && structure.hits >= 300000) ||
+            (structure.structureType === STRUCTURE_RAMPART && structure.hits >= 500000))
+        ) {
           return false;
         } else {
           return structure.hits < structure.hitsMax;

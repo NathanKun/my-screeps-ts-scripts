@@ -4,6 +4,11 @@ import { BaseCreep } from "./BaseCreep";
 export class Builder extends BaseCreep {
 
   protected run() {
+    if (this.creep.memory.harvesterRoom === 'W9S5' && this.creep.room.name !== 'W9S5') {
+      this.creep.moveTo(new RoomPosition(20, 20, 'W9S5'));
+      return;
+    }
+
     let idle = true;
 
     if (this.creep.memory.building && this.creep.carry.energy === 0) {
