@@ -27,7 +27,5 @@ export class Upgrader extends BaseCreep{
         this.creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
     }
-
-    return false; // idle false, upgrader won't idle
   }
 };

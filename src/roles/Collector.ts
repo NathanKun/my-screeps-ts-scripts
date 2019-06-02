@@ -114,7 +114,8 @@ export class Collector extends BaseCreep {
               structure.structureType === STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
           }
-        });
+        }).sort((s1, s2) =>
+          this.creep.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.creep.pos.getRangeTo(s2.pos.x, s2.pos.y));
 
         // tower
         if (targets.length === 0) {

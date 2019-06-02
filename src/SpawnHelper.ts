@@ -32,6 +32,18 @@ export class SpawnHelper {
       }
     }
 
+    /* Auto spawn maintainer */
+    const spawnMaintainerRatio = 0.5
+    if (spawnParam.maintainer.count === -1) {
+      if (spawnParam.spawn.room.find(FIND_STRUCTURES, {
+        filter: s => s.structureType === STRUCTURE_ROAD && ((s.hits / s.hitsMax) < spawnMaintainerRatio)
+      }).length !== 0) {
+        spawnParam.maintainer.count = 1;
+      } else {
+        spawnParam.maintainer.count = 0;
+      }
+    }
+
     /* Find role most needed to spawn */
     let max = spawnParam.harvester.count - harvesters.length;
     let toSpawn = "harvester";
