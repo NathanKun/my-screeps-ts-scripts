@@ -1,31 +1,22 @@
-export abstract class BaseCreep {
-  public creep: Creep;
-  public memory: CreepMemory;
-  public roomName: string;
-
-  constructor(c: Creep) {
-    this.creep = c;
-    this.memory = c.memory;
-    this.roomName = c.room.name;
-  }
+export abstract class BaseCreep extends Creep{
 
   public work(): void {
-    this.repair();
-    if (!(this.creep.memory.beingRepaired || this.creep.memory.waitingRepair)) {
+    this.repairCheck();
+    if (!(this.memory.beingRepaired || this.memory.waitingRepair)) {
       this.run();
     }
   }
 
-  protected repair(): void {
-    if (this.creep.ticksToLive!! < 100) {
-      const spawn = this.creep.pos.findClosestByPath(FIND_MY_SPAWNS);
+  protected repairCheck(): void {
+    if (this.ticksToLive!! < 100) {
+      const spawn = this.pos.findClosestByPath(FIND_MY_SPAWNS);
       if (spawn) {
-        this.creep.moveTo(spawn);
-        this.creep.memory.waitingRepair = true;
+        this.moveTo(spawn);
+        this.memory.waitingRepair = true;
       }
-    } else if (this.creep.ticksToLive!! > 1400) {
-      this.creep.memory.beingRepaired = false;
-      this.creep.memory.waitingRepair = false;
+    } else if (this.ticksToLive!! > 1400) {
+      this.memory.beingRepaired = false;
+      this.memory.waitingRepair = false;
     }
   }
 

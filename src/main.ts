@@ -124,43 +124,45 @@ export const loop = ErrorMapper.wrapLoop(() => {
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = new Harvester(Game.creeps[name], hasHostile);
+        creep = Game.creeps[name] as Harvester;
+        (creep as Harvester).hasHostile = hasHostile;
       }
       else if (role === 'builder') {
-        creep = new Builder(Game.creeps[name]);
+        creep = Game.creeps[name] as Builder;
       }
       else if (role === 'upgrader') {
-        creep = new Upgrader(Game.creeps[name]);
+        creep = Game.creeps[name] as Upgrader;
       }
       else if (role === 'maintainer') {
-        creep = new Maintainer(Game.creeps[name]);
+        creep = Game.creeps[name] as Maintainer;
       }
       else if (role === 'collector') {
-        creep = new Collector(Game.creeps[name]);
+        creep = Game.creeps[name] as Collector;
         (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode;
         if (collectorWithdrawStorageMode) {
-          creep.creep.say("Withdraw")
+          creep.say("Withdraw")
         }
       } else if (role === 'claimer') {
-        creep = new Claimer(Game.creeps[name]);
+        creep = Game.creeps[name] as Claimer;
       }
 
-      if (creep !== null) {
+      if (creep) {
         creep.work();
 
         if (creep.memory.beingRepaired) {
-          beingRepairedCreeps.set(creep.roomName, creep);
+          beingRepairedCreeps.set(creep.room.name, creep);
         }
         else if (creep.memory.waitingRepair) {
-          let rooms = waitingRepairCreeps.get(creep.roomName);
+          let rooms = waitingRepairCreeps.get(creep.room.name);
           if (rooms === undefined) {
             rooms = [];
           }
           rooms.push(creep);
-          waitingRepairCreeps.set(creep.roomName, rooms);
+          waitingRepairCreeps.set(creep.room.name, rooms);
         }
       }
     } catch (e) {
+      Game.notify('Game.time = ' + Game.time);
       Game.notify('Creeps for loop error');
       Game.notify('Creep name = ' + name);
       Game.notify('Creep role = ' + Game.creeps[name].memory.role);
@@ -173,9 +175,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
   for (const roomName in Game.rooms) {
     let beingRepairedCreep = beingRepairedCreeps.get(roomName);
     if (beingRepairedCreep !== undefined) {
-      const spawn = beingRepairedCreep.creep.pos.findClosestByRange(FIND_MY_SPAWNS);
+      const spawn = beingRepairedCreep.pos.findClosestByRange(FIND_MY_SPAWNS);
       if (spawn) {
-        if (spawn.renewCreep(beingRepairedCreep.creep) === ERR_NOT_ENOUGH_ENERGY) {
+        if (spawn.renewCreep(beingRepairedCreep) === ERR_NOT_ENOUGH_ENERGY) {
           beingRepairedCreep.memory.waitingRepair = false;
           beingRepairedCreep.memory.beingRepaired = false;
         }

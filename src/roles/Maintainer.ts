@@ -5,30 +5,30 @@ export class Maintainer extends BaseCreep {
   private static REPAIR_RATIO: number = 0.8;
 
   protected run() {
-    if (this.creep.memory.reparing && this.creep.carry.energy === 0) {
-      this.creep.memory.reparing = false;
-      this.creep.memory.reparingTarget = undefined;
-      this.creep.say('🔄 harvest');
+    if (this.memory.reparing && this.carry.energy === 0) {
+      this.memory.reparing = false;
+      this.memory.reparingTarget = undefined;
+      this.say('🔄 harvest');
     }
-    if (!this.creep.memory.reparing && this.creep.carry.energy === this.creep.carryCapacity) {
-      this.creep.memory.reparing = true;
-      FindSourceUtil.clear(this.creep);
-      this.creep.say('🚧 repair');
+    if (!this.memory.reparing && this.carry.energy === this.carryCapacity) {
+      this.memory.reparing = true;
+      FindSourceUtil.clear(this);
+      this.say('🚧 repair');
     }
 
-    if (this.creep.memory.reparing) {
+    if (this.memory.reparing) {
       let target: Structure;
 
-      if (this.creep.memory.reparingTarget !== undefined) {
-        target = Game.getObjectById(this.creep.memory.reparingTarget) as Structure;
+      if (this.memory.reparingTarget !== undefined) {
+        target = Game.getObjectById(this.memory.reparingTarget) as Structure;
         if (target && target.hits >= target.hitsMax * Maintainer.REPAIR_RATIO) {
-          this.creep.memory.reparingTarget = undefined;
+          this.memory.reparingTarget = undefined;
         }
       }
 
-      if (this.creep.memory.reparingTarget === undefined) {
+      if (this.memory.reparingTarget === undefined) {
         // rampart
-        /*let targets = this.creep.room.find(FIND_STRUCTURES, {
+        /*let targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
           }
@@ -36,7 +36,7 @@ export class Maintainer extends BaseCreep {
 
         // wall
         if (targets.length === 0) {
-          targets = this.creep.room.find(FIND_STRUCTURES, {
+          targets = this.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
               return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
@@ -44,7 +44,7 @@ export class Maintainer extends BaseCreep {
         }*/
         // roads
         // if (targets.length === 0) {
-          const targets = this.creep.room.find(FIND_STRUCTURES, {
+          const targets = this.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
               return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
@@ -53,25 +53,25 @@ export class Maintainer extends BaseCreep {
 
         if (targets.length) {
           target = targets[0];
-          this.creep.memory.reparingTarget = target.id;
+          this.memory.reparingTarget = target.id;
         }
         // nothing needs to be repaired, upgrade controller
         else {
-          if (this.creep.upgradeController(this.creep.room.controller!!) === ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(this.creep.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+          if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
+            this.moveTo(this.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
           }
         }
       }
 
-      if (this.creep.repair(target!!) === ERR_NOT_IN_RANGE) {
-        this.creep.moveTo(target!!, { visualizePathStyle: { stroke: '#88ff88' } });
+      if (this.repair(target!!) === ERR_NOT_IN_RANGE) {
+        this.moveTo(target!!, { visualizePathStyle: { stroke: '#88ff88' } });
       }
     }
     // harvest
     else {
-      const source = FindSourceUtil.findSource(this.creep);
-      if (this.creep.harvest(source) === ERR_NOT_IN_RANGE) {
-        this.creep.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
+      const source = FindSourceUtil.findSource(this);
+      if (this.harvest(source) === ERR_NOT_IN_RANGE) {
+        this.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
     }
   }
