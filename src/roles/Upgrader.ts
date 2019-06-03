@@ -1,7 +1,9 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
 import { BaseCreep } from "./BaseCreep";
 
-export class Upgrader extends BaseCreep{
+export class Upgrader extends BaseCreep {
+
+  public link: StructureLink | null = null;
 
   protected run() {
     if (this.memory.upgrading && this.carry.energy === 0) {

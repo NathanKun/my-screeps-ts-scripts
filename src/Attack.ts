@@ -16,11 +16,7 @@ hCreep: 15 tough + 5 heal + 10 move
 */
 
 export class Attack {
-
-  public static targetSpawn = Game.getObjectById('5cd0cad609716b07dcfc9639') as StructureSpawn;
-  public static targetTower = Game.getObjectById('5cd1948ab5e4b70b929915b2') as StructureTower;
-  public static targetController = Game.getObjectById('5bbcac629099fc012e63560a') as StructureController;
-
+  
   public static spawn(type: string, count: number) {
     let parts;
     if (type === 't') {
