@@ -27,10 +27,12 @@ export class Harvester extends BaseCreep {
       if (this.hasHostile) {
         if (this.creep.memory.transferTarget === undefined) {
           const towers = this.findTowers(this.creep).sort((t1, t2) => t1.energy - t2.energy);
-          this.creep.memory.transferTarget = towers[0].id;
+          if (towers.length) {
+            this.creep.memory.transferTarget = towers[0].id;
+          }
         }
-        const tower = Game.getObjectById(this.creep.memory.transferTarget) as StructureTower;
-        if (this.creep.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        const tower = Game.getObjectById(this.creep.memory.transferTarget) as (StructureTower | null);
+        if (tower && this.creep.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           this.creep.moveTo(tower, { reusePath: 2, visualizePathStyle: { stroke: '#ff0000' } });
         }
       }

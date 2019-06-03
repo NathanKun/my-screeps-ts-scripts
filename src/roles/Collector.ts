@@ -81,7 +81,7 @@ export class Collector extends BaseCreep {
 
       // Collecting Resource
       else if (this.creep.memory.collectorStatus === Collector.STATUS_COLLECTING_RESOURCE) {
-        const resource = Game.getObjectById(this.creep.memory.collectorTarget) as Resource | undefined;
+        const resource = Game.getObjectById(this.creep.memory.collectorTarget) as (Resource | null);
         if (resource === undefined || resource === null || resource.amount === 0) {
           this.creep.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;

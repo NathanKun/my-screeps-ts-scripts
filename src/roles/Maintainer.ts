@@ -21,8 +21,7 @@ export class Maintainer extends BaseCreep {
 
       if (this.creep.memory.reparingTarget !== undefined) {
         target = Game.getObjectById(this.creep.memory.reparingTarget) as Structure;
-
-        if (target.hits >= target.hitsMax * Maintainer.REPAIR_RATIO) {
+        if (target && target.hits >= target.hitsMax * Maintainer.REPAIR_RATIO) {
           this.creep.memory.reparingTarget = undefined;
         }
       }
