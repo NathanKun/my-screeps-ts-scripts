@@ -19,6 +19,7 @@ interface CreepMemory {
   waitingRepair: boolean;
   beingRepaired: boolean;
   harvesterRoom: string;
+  upgraderLinkTarget: string | undefined;
 }
 
 interface Memory {

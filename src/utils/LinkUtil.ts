@@ -1,26 +1,35 @@
+interface LinkPair {
+  sender: StructureLink;
+  receiver: StructureLink
+}
 
-interface RoomLink {
+interface RoomLinks {
   room: Room;
-  outLinks: StructureLink[];
-  inLink: StructureLink
+  links: LinkPair[]
 }
 
 export class LinkUtil {
-  public static roomLinks: RoomLink[] = [
+  public static roomLinks: RoomLinks[] = [
     {
       room: Game.rooms['W9S7'],
-      outLinks: [
-        Game.getObjectById('') as StructureLink,
-        Game.getObjectById('') as StructureLink
-      ],
-      inLink: Game.getObjectById('') as StructureLink
+      links: [
+        {
+          sender: Game.getObjectById('') as StructureLink,
+          receiver: Game.getObjectById('') as StructureLink
+        }, {
+          sender: Game.getObjectById('') as StructureLink,
+          receiver: Game.getObjectById('') as StructureLink
+        }
+      ]
     }
   ];
 
   public static transfer() {
     for (const roomLink of LinkUtil.roomLinks) {
-      for (const out of roomLink.outLinks) {
-        //
+      for (const links of roomLink.links) {
+        if (links.sender && links.receiver && links.sender.energy > 0 && links.sender.cooldown === 0) {
+          links.sender.transferEnergy(links.receiver);
+        }
       }
     }
   }

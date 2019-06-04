@@ -1,4 +1,5 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
+import { LinkUtil } from "utils/LinkUtil";
 import { BaseCreep } from "./BaseCreep";
 
 export class Harvester extends BaseCreep {
@@ -21,7 +22,7 @@ export class Harvester extends BaseCreep {
       // has hostile: charge towers
       if (this.hasHostile) {
         if (this.memory.transferTarget === undefined) {
-          const towers = this.findTowers(this).sort((t1, t2) => t1.energy - t2.energy);
+          const towers = this.findTowers(1000).sort((t1, t2) => t1.energy - t2.energy);
           if (towers.length) {
             this.memory.transferTarget = towers[0].id;
           }
@@ -36,25 +37,35 @@ export class Harvester extends BaseCreep {
         let targets: AnyStructure[];
 
         // prior find spwans and extensions
-        targets = this.findSpawnsAndExtensions(this);
+        targets = this.findSpawnsAndExtensions();
 
         // find prefer transfer structure
         if (targets.length === 0) {
           if (this.memory.preferTransferStructure === 'tower') {
-            targets = this.findTowers(this);
+            targets = this.findTowers(850);
           } else if (this.memory.preferTransferStructure === 'storage') {
-            targets = this.findStorages(this);
+            targets = this.findStorages();
           }
         }
 
-        // find towers
+        // find low energy towers
         if (targets.length === 0) {
-          targets = this.findTowers(this).sort((t1, t2) => t1.energy - t2.energy);
+          targets = this.findTowers(500).sort((t1, t2) => t1.energy - t2.energy);
+        }
+
+        // find link
+        if (targets.length === 0) {
+          targets = this.findLinks();
+        }
+
+        // find high energy towers
+        if (targets.length === 0) {
+          targets = this.findTowers(850).sort((t1, t2) => t1.energy - t2.energy);
         }
 
         // find storages
         if (targets.length === 0) {
-          targets = this.findStorages(this);
+          targets = this.findStorages();
         }
 
         if (targets.length > 0) {
@@ -100,8 +111,8 @@ export class Harvester extends BaseCreep {
     }
   }
 
-  private findSpawnsAndExtensions(creep: Creep) {
-    return creep.room.find(FIND_STRUCTURES, {
+  private findSpawnsAndExtensions() {
+    return this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return (structure.structureType === STRUCTURE_EXTENSION ||
           structure.structureType === STRUCTURE_SPAWN) &&
@@ -110,8 +121,8 @@ export class Harvester extends BaseCreep {
     });
   }
 
-  private findStorages(creep: Creep) {
-    return creep.room.find(FIND_STRUCTURES, {
+  private findStorages() {
+    return this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_STORAGE &&
           structure.store.energy < structure.storeCapacity;
@@ -119,12 +130,28 @@ export class Harvester extends BaseCreep {
     });
   }
 
-  private findTowers(creep: Creep): StructureTower[] {
-    return creep.room.find(FIND_STRUCTURES, {
+  private findTowers(maxEnergy: number): StructureTower[] {
+    return this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER &&
-          structure.energy < 850;
+          structure.energy <= maxEnergy;
       }
     }) as StructureTower[];
+  }
+
+  private findLinks(): StructureLink[] {
+    const res: StructureLink[] = []
+
+    for (const roomLinks of LinkUtil.roomLinks) {
+      if (roomLinks.room.name === this.room.name) {
+        for (const links of roomLinks.links) {
+          if (links.sender && links.sender.energy < links.sender.energyCapacity) {
+            res.push(links.sender);
+          }
+        }
+      }
+    }
+
+    return res.sort((l1, l2) => l1.cooldown - l2.cooldown);
   }
 };
