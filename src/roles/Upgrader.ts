@@ -49,8 +49,12 @@ export class Upgrader extends BaseCreep {
       // withdraw or move to link
       if (this.memory.upgraderLinkTarget) {
         const link = Game.getObjectById(this.memory.upgraderLinkTarget) as StructureLink;
-        if (this.withdraw(link, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        const res = this.withdraw(link, RESOURCE_ENERGY);
+        if (res === ERR_NOT_IN_RANGE) {
           this.moveTo(link);
+        } else if (res === OK) {
+          this.memory.upgrading = true;
+          this.say('⚡ upgrade');
         }
       }
       // harvest

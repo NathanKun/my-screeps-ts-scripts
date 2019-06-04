@@ -193,6 +193,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // links
   LinkUtil.transfer();
 
+  console.log('Tick ended')
+
 
   function getCollectorWithdrawStorageMode(spawn: StructureSpawn): boolean {
     try {
