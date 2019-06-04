@@ -25,7 +25,7 @@ export class Upgrader extends BaseCreep {
     // upgrade room controller
     if (this.memory.upgrading) {
       if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
-        this.moveTo(this.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+        this.moveTo(this.room.controller!!, { maxRooms: 1, visualizePathStyle: { stroke: '#66ccff' } });
       }
     }
     // harvest or withdraw link

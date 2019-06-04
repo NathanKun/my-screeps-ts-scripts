@@ -45,7 +45,7 @@ export class Builder extends BaseCreep {
       // nothing to build, upgrade room controller
       else {
         if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
-          this.moveTo(this.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+          this.moveTo(this.room.controller!!, { maxRooms: 0, visualizePathStyle: { stroke: '#66ccff' } });
           idle = false;
         }
       }
