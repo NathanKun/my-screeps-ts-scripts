@@ -12,7 +12,8 @@ CLAIM	600
 */
 
 export class SpawnHelper {
-  public static spawn(spawnParam: SpawnParam) {
+
+  private static internalSpawn(spawnParam: SpawnParam) {
 
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawn.room.name);
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawn.room.name);
@@ -163,6 +164,15 @@ export class SpawnHelper {
         'Claimer' + Game.time,
         { memory: { role: 'claimer' } } as SpawnOptions);
       return;
+    }
+  }
+  
+  public static spawn(spawnParam: SpawnParam) {
+    try {
+      SpawnHelper.internalSpawn(spawnParam);
+    } catch (e) {
+      Game.notify("Error in SpawnHelper.spwan");
+      Game.notify(e);
     }
   }
 }

@@ -1,6 +1,5 @@
 export class TowerTask {
-  public static run(tower: StructureTower) {
-
+  private static runInternal(tower: StructureTower) {
     // attack
     const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (closestHostile) {
@@ -71,6 +70,15 @@ export class TowerTask {
       const target = sortedStructures[0];
       tower.repair(target);
       return;
+    }
+  }
+
+  public static run(tower: StructureTower) {
+    try {
+      TowerTask.runInternal(tower);
+    } catch (e) {
+      Game.notify("Error in TowerTask " + tower.id);
+      Game.notify(e);
     }
   }
 }
