@@ -9,6 +9,7 @@ import { Upgrader } from "roles/Upgrader";
 import { SpawnHelper } from "SpawnHelper";
 import { TowerTask } from "TowerTask";
 import { ErrorMapper } from "utils/ErrorMapper";
+import { LinkUtil } from "utils/LinkUtil";
 
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -124,26 +125,26 @@ export const loop = ErrorMapper.wrapLoop(() => {
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = Game.creeps[name] as Harvester;
+        creep = new Harvester(Game.creeps[name]);
         (creep as Harvester).hasHostile = hasHostile;
       }
       else if (role === 'builder') {
-        creep = Game.creeps[name] as Builder;
+        creep = new Builder(Game.creeps[name]);
       }
       else if (role === 'upgrader') {
-        creep = Game.creeps[name] as Upgrader;
+        creep = new Upgrader(Game.creeps[name]);
       }
       else if (role === 'maintainer') {
-        creep = Game.creeps[name] as Maintainer;
+        creep = new Maintainer(Game.creeps[name]);
       }
       else if (role === 'collector') {
-        creep = Game.creeps[name] as Collector;
+        creep = new Collector(Game.creeps[name]);
         (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode;
         if (collectorWithdrawStorageMode) {
           creep.say("Withdraw")
         }
       } else if (role === 'claimer') {
-        creep = Game.creeps[name] as Claimer;
+        creep = new Claimer(Game.creeps[name]);
       }
 
       if (creep) {
@@ -189,19 +190,29 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  // links
+  LinkUtil.transfer();
+
 
   function getCollectorWithdrawStorageMode(spawn: StructureSpawn): boolean {
-    let capacity = spawn.energyCapacity;
-    let energy = spawn.energy;
+    try {
 
-    spawn.room.find(FIND_MY_STRUCTURES, {
-      filter: s => s.structureType === STRUCTURE_EXTENSION
-    }).forEach(s => {
-      s = s as StructureExtension;
-      capacity += s.energyCapacity;
-      energy += s.energy;
-    });
+      let capacity = spawn.energyCapacity;
+      let energy = spawn.energy;
 
-    return energy / capacity < 0.2;
+      spawn.room.find(FIND_MY_STRUCTURES, {
+        filter: s => s.structureType === STRUCTURE_EXTENSION
+      }).forEach(s => {
+        s = s as StructureExtension;
+        capacity += s.energyCapacity;
+        energy += s.energy;
+      });
+
+      return energy / capacity < 0.2;
+    } catch (e) {
+      Game.notify("Error in getCollectorWithdrawStorageMode " + spawn.name);
+      Game.notify(e);
+      return false;
+    }
   }
 });

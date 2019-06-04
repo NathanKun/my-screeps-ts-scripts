@@ -1,9 +1,16 @@
-export abstract class BaseCreep extends Creep{
+export abstract class BaseCreep extends Creep {
+  constructor(creep: Creep) {
+    if (!creep.spawning) {
+      super(creep.id)
+    }
+  }
 
   public work(): void {
-    this.repairCheck();
-    if (!(this.memory.beingRepaired || this.memory.waitingRepair)) {
-      this.run();
+    if (!this.spawning) {
+      this.repairCheck();
+      if (!(this.memory.beingRepaired || this.memory.waitingRepair)) {
+        this.run();
+      }
     }
   }
 
