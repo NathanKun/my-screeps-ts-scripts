@@ -27,6 +27,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // collector withdraw storage if low energy
   let collectorWithdrawStorageMode = getCollectorWithdrawStorageMode(Game.spawns['Spawn1']);
 
+  // structure being attack
+  if (Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {
+    filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
+  }).length) {
+    const controller = Game.spawns['Spawn1'].room.controller!!;
+    if (controller.safeMode === undefined && controller.safeModeAvailable > 0) {
+      controller.activateSafeMode();
+    }
+  }
+
   // tower defense & repair
   TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
   TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
@@ -50,7 +60,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     upgrader: {
-      count: 2,
+      count: 1,
       parts: [WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
@@ -75,20 +85,20 @@ export const loop = ErrorMapper.wrapLoop(() => {
   SpawnHelper.spawn({
     spawn: Game.spawns['Spawn2'],
     harvester: {
-      count: 1,
-      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+      count: 2,
+      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
     },
     builder: {
       count: 1,
-      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+      parts: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
     },
     upgrader: {
       count: 2,
-      parts: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
     },
     maintainer: {
       count: -1,
-      parts: [WORK, CARRY, MOVE]
+      parts: [WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
     },
     collector: {
       count: 0,
@@ -115,36 +125,57 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  // links
+  const roomLinks: RoomLinks[] = [
+    {
+      room: Game.rooms['W9S7'],
+      links: [
+        {
+          sender: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+        }, {
+          sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+        }
+      ]
+    }
+  ];
+  LinkUtil.transfer(roomLinks);
+
+  // creeps
   const waitingRepairCreeps = new Map<string, BaseCreep[]>();
   const beingRepairedCreeps = new Map<string, BaseCreep>();
 
-  // creeps work
   for (const name in Game.creeps) {
     try {
-      const role = Game.creeps[name].memory.role;
+      const c = Game.creeps[name];
+      if (c.memory.spawnTime === Game.time) {
+        continue;
+      }
+
+      const role = c.memory.role;
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = new Harvester(Game.creeps[name]);
-        (creep as Harvester).hasHostile = hasHostile;
+        creep = new Harvester(c, hasHostile, roomLinks);
       }
       else if (role === 'builder') {
-        creep = new Builder(Game.creeps[name]);
+        creep = new Builder(c);
       }
       else if (role === 'upgrader') {
-        creep = new Upgrader(Game.creeps[name]);
+        creep = new Upgrader(c, roomLinks);
       }
       else if (role === 'maintainer') {
-        creep = new Maintainer(Game.creeps[name]);
+        creep = new Maintainer(c);
       }
       else if (role === 'collector') {
-        creep = new Collector(Game.creeps[name]);
+        creep = new Collector(c);
         (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode;
         if (collectorWithdrawStorageMode) {
           creep.say("Withdraw")
         }
       } else if (role === 'claimer') {
-        creep = new Claimer(Game.creeps[name]);
+        creep = new Claimer(c);
       }
 
       if (creep) {
@@ -189,9 +220,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
       beingRepairedCreep.memory.waitingRepair = false;
     }
   }
-
-  // links
-  LinkUtil.transfer();
 
   console.log('Tick ended')
 

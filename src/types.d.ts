@@ -3,23 +3,24 @@
 // memory extension samples
 interface CreepMemory {
   role: string;
-  room: string;
-  working: boolean;
-  building: boolean;
-  upgrading: boolean;
-  reparing: boolean;
-  reparingTarget: string | undefined;
-  harvestSource: string | undefined;
-  harvesting: boolean;
-  transfering: boolean;
-  transferTarget: string | undefined;
-  preferTransferStructure: string;
-  collectorStatus: string;
-  collectorTarget: string | undefined;
-  waitingRepair: boolean;
-  beingRepaired: boolean;
-  harvesterRoom: string;
-  upgraderLinkTarget: string | undefined;
+  spawnTime: number;
+  room?: string;
+  working?: boolean;
+  building?: boolean;
+  upgrading?: boolean;
+  reparing?: boolean;
+  reparingTarget?: string;
+  harvestSource?: string;
+  harvesting?: boolean;
+  transfering?: boolean;
+  transferTarget?: string;
+  preferTransferStructure?: string;
+  collectorStatus?: string;
+  collectorTarget?: string;
+  waitingRepair?: boolean;
+  beingRepaired?: boolean;
+  harvesterRoom?: string;
+  upgraderLinkTarget?: string;
 }
 
 interface Memory {
@@ -60,4 +61,14 @@ interface SpawnParam {
     count: number,
     parts: BodyPartConstant[]
   }
+}
+
+interface LinkPair {
+  sender: StructureLink;
+  receiver: StructureLink
+}
+
+interface RoomLinks {
+  room: Room;
+  links: LinkPair[]
 }

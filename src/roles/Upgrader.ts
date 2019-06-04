@@ -1,10 +1,15 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
-import { LinkUtil } from "utils/LinkUtil";
 import { BaseCreep } from "./BaseCreep";
 
 export class Upgrader extends BaseCreep {
 
   public link: StructureLink | null = null;
+  public roomLinks: RoomLinks[];
+
+  constructor(creep: Creep, roomLinks: RoomLinks[]) {
+    super(creep);
+    this.roomLinks = roomLinks;
+  }
 
   protected run() {
     if (this.memory.upgrading && this.carry.energy === 0) {
@@ -35,7 +40,7 @@ export class Upgrader extends BaseCreep {
 
       // find a valid link
       if (this.memory.upgraderLinkTarget === undefined) {
-        for (const roomLink of LinkUtil.roomLinks) {
+        for (const roomLink of this.roomLinks) {
           if (roomLink.room.name === this.room.name) {
             for (const links of roomLink.links) {
               if (links.receiver && links.receiver.energy > 0 && this.pos.getRangeTo(links.receiver.pos) < 10) {
