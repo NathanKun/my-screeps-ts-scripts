@@ -198,8 +198,7 @@ export class SpawnHelper {
     try {
       SpawnHelper.internalSpawn(spawnParam);
     } catch (e) {
-      Game.notify("Error in SpawnHelper.spwan");
-      Game.notify(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' + '\n' + e);
     }
   }
 }

@@ -195,12 +195,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
         }
       }
     } catch (e) {
-      Game.notify('Game.time = ' + Game.time);
-      Game.notify('Creeps for loop error');
-      Game.notify('Creep name = ' + name);
-      Game.notify('Creep role = ' + Game.creeps[name].memory.role);
-      Game.notify('Error: ');
-      Game.notify(e);
+      Game.notify('Game.time = ' + Game.time + '\n' +
+        'Creeps for loop error' + '\n' +
+        'Creep name = ' + name + '\n' +
+        'Creep role = ' + Game.creeps[name].memory.role + '\n' +
+        'Error: ' + '\n' + e);
     }
   }
 
@@ -224,18 +223,18 @@ export const loop = ErrorMapper.wrapLoop(() => {
               const paramParts = roleParam.parts.sort();
               const creepsParts = beingRepairedCreep.body.map(def => def.type).sort();
               if (paramParts.length !== creepsParts.length || paramParts.every((value, index) => value !== creepsParts[index])) {
-                Game.notify("parts check test" + '\n' +
+                /*Game.notify("parts check test" + '\n' +
                   'Creep name = ' + beingRepairedCreep.name + '\n' +
                   "paramParts not equals creepsParts" + '\n' +
                   paramParts.sort().join(' ') + '\n' +
-                  creepsParts.sort().join(' ') + '\n');
+                  creepsParts.sort().join(' ') + '\n');*/
                 beingRepairedCreep.memory.toRecycle = false;
               } else {
-                Game.notify("parts check test" + '\n' +
+                /*Game.notify("parts check test" + '\n' +
                   'Creep name = ' + beingRepairedCreep.name + '\n' +
                   "paramParts equals creepsParts" + '\n' +
                   paramParts.sort().join(' ') + '\n' +
-                  creepsParts.sort().join(' '));
+                  creepsParts.sort().join(' '));*/
                 beingRepairedCreep.memory.toRecycle = true;
               }
               break;
@@ -287,8 +286,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
       return energy / capacity < 0.2;
     } catch (e) {
-      Game.notify("Error in getCollectorWithdrawStorageMode " + spawn.name);
-      Game.notify(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in getCollectorWithdrawStorageMode ' + spawn.name + '\n' + e);
       return false;
     }
   }

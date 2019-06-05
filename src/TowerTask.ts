@@ -77,8 +77,7 @@ export class TowerTask {
     try {
       TowerTask.runInternal(tower);
     } catch (e) {
-      Game.notify("Error in TowerTask " + tower.id);
-      Game.notify(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + tower.id + '\n' + e);
     }
   }
 }
