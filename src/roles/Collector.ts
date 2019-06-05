@@ -113,15 +113,25 @@ export class Collector extends BaseCreep {
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         this.memory.collectorTarget = undefined;
 
-        // spwan and Extensions
+        // Extensions
         let targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return (structure.structureType === STRUCTURE_EXTENSION ||
-              structure.structureType === STRUCTURE_SPAWN) &&
+            return structure.structureType === STRUCTURE_EXTENSION &&
               structure.energy < structure.energyCapacity;
           }
         }).sort((s1, s2) =>
           this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
+
+        // spwan
+        if (targets.length === 0) {
+          targets = this.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+              return structure.structureType === STRUCTURE_SPAWN &&
+                structure.energy < structure.energyCapacity;
+            }
+          }).sort((s1, s2) =>
+            this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
+        }
 
         // tower
         if (targets.length === 0) {

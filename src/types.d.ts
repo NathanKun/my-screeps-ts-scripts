@@ -3,24 +3,25 @@
 // memory extension samples
 interface CreepMemory {
   role: string;
-  room: string;
-  working: boolean;
-  building: boolean;
-  upgrading: boolean;
-  reparing: boolean;
-  reparingTarget: string | undefined;
-  harvestSource: string | undefined;
-  harvesting: boolean;
-  transfering: boolean;
-  transferTarget: string | undefined;
-  preferTransferStructure: string;
-  collectorStatus: string;
-  collectorTarget: string | undefined;
-  waitingRepair: boolean;
-  beingRepaired: boolean;
-  toRecycle: boolean | undefined;
-  harvesterRoom: string;
-  upgraderLinkTarget: string | undefined;
+  spawnTime: number;
+  room?: string;
+  working?: boolean;
+  building?: boolean;
+  upgrading?: boolean;
+  reparing?: boolean;
+  reparingTarget?: string;
+  harvestSource?: string;
+  harvesting?: boolean;
+  transfering?: boolean;
+  transferTarget?: string;
+  preferTransferStructure?: string;
+  collectorStatus?: string;
+  collectorTarget?: string;
+  waitingRepair?: boolean;
+  beingRepaired?: boolean;
+  toRecycle?: boolean;
+  harvesterRoom?: string;
+  upgraderLinkTarget?: string;
 }
 
 interface Memory {
@@ -40,8 +41,6 @@ interface RoleParam {
   parts: BodyPartConstant[]
 }
 
-type Role = "builder" | "upgrader" | "maintainer" | "collector" | "claimer" | "harvester";
-
 interface SpawnParam {
   spawn: StructureSpawn;
   builder: RoleParam;
@@ -50,4 +49,14 @@ interface SpawnParam {
   collector: RoleParam;
   claimer: RoleParam;
   harvester: RoleParam;
+}
+
+interface LinkPair {
+  sender: StructureLink;
+  receiver: StructureLink
+}
+
+interface RoomLinks {
+  room: Room;
+  links: LinkPair[]
 }

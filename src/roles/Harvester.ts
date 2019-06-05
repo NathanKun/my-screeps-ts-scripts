@@ -1,9 +1,15 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
-import { LinkUtil } from "utils/LinkUtil";
 import { BaseCreep } from "./BaseCreep";
 
 export class Harvester extends BaseCreep {
   public hasHostile: boolean = false;
+  public roomLinks: RoomLinks[];
+
+  constructor(creep: Creep, hasHostile: boolean, roomLinks: RoomLinks[]) {
+    super(creep);
+    this.hasHostile = hasHostile;
+    this.roomLinks = roomLinks;
+  }
 
   protected run() {
     if (this.memory.transfering && this.carry.energy === 0) {
@@ -36,42 +42,44 @@ export class Harvester extends BaseCreep {
       else {
         let targets: AnyStructure[];
 
-        // prior find spwans and extensions
-        targets = this.findSpawnsAndExtensions();
+        // prior find extensions
+        targets = this.findExtensions();
+
+        // prior find spawns
+        if (targets.length === 0) {
+          targets = this.findSpawns();
+        }
+
+        // find low energy towers
+        if (targets.length === 0) {
+          targets = this.findTowers(500);
+        }
+
+        // find links
+        if (targets.length === 0) {
+          targets = this.findLinks();
+        }
 
         // find prefer transfer structure
         if (targets.length === 0) {
           if (this.memory.preferTransferStructure === 'tower') {
             targets = this.findTowers(850);
           } else if (this.memory.preferTransferStructure === 'storage') {
-            targets = this.findStorages();
+            targets = this.findStorage();
           }
-        }
-
-        // find low energy towers
-        if (targets.length === 0) {
-          targets = this.findTowers(500).sort((t1, t2) => t1.energy - t2.energy);
-        }
-
-        // find link
-        if (targets.length === 0) {
-          targets = this.findLinks();
         }
 
         // find high energy towers
         if (targets.length === 0) {
-          targets = this.findTowers(850).sort((t1, t2) => t1.energy - t2.energy);
+          targets = this.findTowers(850);
         }
 
         // find storages
         if (targets.length === 0) {
-          targets = this.findStorages();
+          targets = this.findStorage();
         }
 
         if (targets.length > 0) {
-          targets = targets.sort((s1, s2) =>
-            this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
-
           if (this.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
           }
@@ -111,17 +119,27 @@ export class Harvester extends BaseCreep {
     }
   }
 
-  private findSpawnsAndExtensions() {
+  private findExtensions() {
     return this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
-        return (structure.structureType === STRUCTURE_EXTENSION ||
-          structure.structureType === STRUCTURE_SPAWN) &&
+        return structure.structureType === STRUCTURE_EXTENSION &&
           structure.energy < structure.energyCapacity;
       }
-    });
+    }).sort((s1, s2) =>
+      this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 
-  private findStorages() {
+  private findSpawns() {
+    return this.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType === STRUCTURE_SPAWN &&
+          structure.energy < structure.energyCapacity;
+      }
+    }).sort((s1, s2) =>
+      this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
+  }
+
+  private findStorage() {
     return this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_STORAGE &&
@@ -131,18 +149,18 @@ export class Harvester extends BaseCreep {
   }
 
   private findTowers(maxEnergy: number): StructureTower[] {
-    return this.room.find(FIND_STRUCTURES, {
+    return (this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_TOWER &&
           structure.energy <= maxEnergy;
       }
-    }) as StructureTower[];
+    }) as StructureTower[]).sort((t1, t2) => t1.energy - t2.energy);
   }
 
   private findLinks(): StructureLink[] {
     const res: StructureLink[] = []
 
-    for (const roomLinks of LinkUtil.roomLinks) {
+    for (const roomLinks of this.roomLinks) {
       if (roomLinks.room.name === this.room.name) {
         for (const links of roomLinks.links) {
           if (links.sender && links.sender.energy < links.sender.energyCapacity) {

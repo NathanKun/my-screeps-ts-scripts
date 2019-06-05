@@ -1,10 +1,15 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
-import { LinkUtil } from "utils/LinkUtil";
 import { BaseCreep } from "./BaseCreep";
 
 export class Upgrader extends BaseCreep {
 
   public link: StructureLink | null = null;
+  public roomLinks: RoomLinks[];
+
+  constructor(creep: Creep, roomLinks: RoomLinks[]) {
+    super(creep);
+    this.roomLinks = roomLinks;
+  }
 
   protected run() {
     if (this.memory.upgrading && this.carry.energy === 0) {
@@ -20,7 +25,7 @@ export class Upgrader extends BaseCreep {
     // upgrade room controller
     if (this.memory.upgrading) {
       if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
-        this.moveTo(this.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+        this.moveTo(this.room.controller!!, { maxRooms: 1, visualizePathStyle: { stroke: '#66ccff' } });
       }
     }
     // harvest or withdraw link
@@ -35,7 +40,7 @@ export class Upgrader extends BaseCreep {
 
       // find a valid link
       if (this.memory.upgraderLinkTarget === undefined) {
-        for (const roomLink of LinkUtil.roomLinks) {
+        for (const roomLink of this.roomLinks) {
           if (roomLink.room.name === this.room.name) {
             for (const links of roomLink.links) {
               if (links.receiver && links.receiver.energy > 0 && this.pos.getRangeTo(links.receiver.pos) < 10) {
@@ -49,8 +54,12 @@ export class Upgrader extends BaseCreep {
       // withdraw or move to link
       if (this.memory.upgraderLinkTarget) {
         const link = Game.getObjectById(this.memory.upgraderLinkTarget) as StructureLink;
-        if (this.withdraw(link, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        const res = this.withdraw(link, RESOURCE_ENERGY);
+        if (res === ERR_NOT_IN_RANGE) {
           this.moveTo(link);
+        } else if (res === OK) {
+          this.memory.upgrading = true;
+          this.say('⚡ upgrade');
         }
       }
       // harvest

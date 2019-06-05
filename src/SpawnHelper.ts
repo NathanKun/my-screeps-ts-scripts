@@ -101,9 +101,10 @@ export class SpawnHelper {
             memory: {
               role: 'harvester',
               preferTransferStructure: 'tower',
-              harvesterRoom: 'base'
+              harvesterRoom: 'base',
+              spawnTime: Game.time
             }
-          } as SpawnOptions);
+          });
         return;
       }
       // spawn advance harvester
@@ -114,9 +115,10 @@ export class SpawnHelper {
           {
             memory: {
               role: 'harvester',
-              preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage'
+              preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
+              spawnTime: Game.time
             }
-          } as SpawnOptions);
+          });
         return;
       }
     }
@@ -126,7 +128,12 @@ export class SpawnHelper {
       spawnParam.spawn.spawnCreep(
         spawnParam.builder.parts,
         'Builder' + Game.time,
-        { memory: { role: 'builder' } } as SpawnOptions);
+        {
+          memory: {
+            role: 'builder',
+            spawnTime: Game.time
+          }
+        });
       return;
     }
 
@@ -135,7 +142,12 @@ export class SpawnHelper {
       spawnParam.spawn.spawnCreep(
         spawnParam.upgrader.parts,
         'Upgrader' + Game.time,
-        { memory: { role: 'upgrader' } } as SpawnOptions);
+        {
+          memory: {
+            role: 'upgrader',
+            spawnTime: Game.time
+          }
+        });
       return;
     }
 
@@ -144,7 +156,12 @@ export class SpawnHelper {
       spawnParam.spawn.spawnCreep(
         spawnParam.maintainer.parts,
         'Maintainer' + Game.time,
-        { memory: { role: 'maintainer' } } as SpawnOptions);
+        {
+          memory: {
+            role: 'maintainer',
+            spawnTime: Game.time
+          }
+        });
       return;
     }
 
@@ -153,7 +170,12 @@ export class SpawnHelper {
       spawnParam.spawn.spawnCreep(
         spawnParam.collector.parts,
         'Collector' + Game.time,
-        { memory: { role: 'collector' } } as SpawnOptions);
+        {
+          memory: {
+            role: 'collector',
+            spawnTime: Game.time
+          }
+        });
       return;
     }
 
@@ -162,7 +184,12 @@ export class SpawnHelper {
       spawnParam.spawn.spawnCreep(
         spawnParam.claimer.parts,
         'Claimer' + Game.time,
-        { memory: { role: 'claimer' } } as SpawnOptions);
+        {
+          memory: {
+            role: 'claimer',
+            spawnTime: Game.time
+          }
+        });
       return;
     }
   }
