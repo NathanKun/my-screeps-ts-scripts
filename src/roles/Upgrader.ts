@@ -66,7 +66,7 @@ export class Upgrader extends BaseCreep {
       else {
         const source = FindSourceUtil.findSource(this);
         if (this.harvest(source) === ERR_NOT_IN_RANGE) {
-          this.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
+          this.moveTo(source, { maxRooms: 1, visualizePathStyle: { stroke: '#ffffff' } });
         }
       }
     }

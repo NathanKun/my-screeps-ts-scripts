@@ -87,7 +87,7 @@ export class Harvester extends BaseCreep {
         // nothing to do, upgrade room controller
         else {
           if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
-            this.moveTo(this.room.controller!!, { visualizePathStyle: { stroke: '#66ccff' } });
+            this.moveTo(this.room.controller!!, { maxRooms: 1, visualizePathStyle: { stroke: '#66ccff' } });
           }
         }
       }
@@ -112,7 +112,7 @@ export class Harvester extends BaseCreep {
           if (this.harvest(source) === ERR_NOT_IN_RANGE) {
             this.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
           } else {
-            console.log(this.harvest(source))
+            this.harvest(source);
           }
         }
       }

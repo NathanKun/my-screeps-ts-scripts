@@ -41,6 +41,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
   TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
 
+  TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
+
   // hostile creeps in room
   const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
 
@@ -228,14 +230,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
                   "paramParts not equals creepsParts" + '\n' +
                   paramParts.sort().join(' ') + '\n' +
                   creepsParts.sort().join(' ') + '\n');*/
-                beingRepairedCreep.memory.toRecycle = false;
+                beingRepairedCreep.memory.toRecycle = true;
               } else {
                 /*Game.notify("parts check test" + '\n' +
                   'Creep name = ' + beingRepairedCreep.name + '\n' +
                   "paramParts equals creepsParts" + '\n' +
                   paramParts.sort().join(' ') + '\n' +
                   creepsParts.sort().join(' '));*/
-                beingRepairedCreep.memory.toRecycle = true;
+                beingRepairedCreep.memory.toRecycle = false;
               }
               break;
             }
