@@ -20,6 +20,7 @@ export abstract class BaseCreep extends Creep {
     } else if (this.ticksToLive && this.ticksToLive > 1400) {
       this.memory.beingRepaired = false;
       this.memory.waitingRepair = false;
+      this.memory.toRecycle = undefined;
     }
   }
 

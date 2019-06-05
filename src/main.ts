@@ -207,9 +207,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // renew creeps
   for (const roomName in Game.rooms) {
     let beingRepairedCreep = beingRepairedCreeps.get(roomName);
+
+    // repair
     if (beingRepairedCreep !== undefined) {
       const spawn = beingRepairedCreep.pos.findClosestByRange(FIND_MY_SPAWNS);
+
       if (spawn) {
+        // recycle check
         if (beingRepairedCreep.memory.toRecycle === undefined) {
           for (const p of spawnParams) {
             if (p.spawn.name === spawn.name) {
@@ -217,18 +221,22 @@ export const loop = ErrorMapper.wrapLoop(() => {
               if (roleParam === null) {
                 continue;
               }
-              const paramParts = roleParam.parts;
-              const creepsParts = beingRepairedCreep.body.flatMap(def => def.type);
-              if (paramParts.length !== creepsParts.length || paramParts.sort().every((value, index) => value === creepsParts.sort()[index])) {
-                Game.notify("parts check test");
-                Game.notify("paramParts not equals creepsParts");
-                Game.notify(paramParts.sort().join(' '));
-                Game.notify(creepsParts.sort().join(' '));
+              const paramParts = roleParam.parts.sort();
+              const creepsParts = beingRepairedCreep.body.map(def => def.type).sort();
+              if (paramParts.length !== creepsParts.length || paramParts.every((value, index) => value !== creepsParts[index])) {
+                Game.notify("parts check test" + '\n' +
+                  'Creep name = ' + beingRepairedCreep.name + '\n' +
+                  "paramParts not equals creepsParts" + '\n' +
+                  paramParts.sort().join(' ') + '\n' +
+                  creepsParts.sort().join(' ') + '\n');
+                beingRepairedCreep.memory.toRecycle = false;
               } else {
-                Game.notify("parts check test");
-                Game.notify("paramParts equals creepsParts");
-                Game.notify(paramParts.sort().join(' '));
-                Game.notify(creepsParts.sort().join(' '));
+                Game.notify("parts check test" + '\n' +
+                  'Creep name = ' + beingRepairedCreep.name + '\n' +
+                  "paramParts equals creepsParts" + '\n' +
+                  paramParts.sort().join(' ') + '\n' +
+                  creepsParts.sort().join(' '));
+                beingRepairedCreep.memory.toRecycle = true;
               }
               break;
             }
@@ -236,12 +244,24 @@ export const loop = ErrorMapper.wrapLoop(() => {
           beingRepairedCreep.memory.toRecycle = true;
         }
 
-        if (spawn.renewCreep(beingRepairedCreep) === ERR_NOT_ENOUGH_ENERGY) {
-          beingRepairedCreep.memory.waitingRepair = false;
-          beingRepairedCreep.memory.beingRepaired = false;
+        // recycle
+        if (beingRepairedCreep.memory.toRecycle === true) {
+          spawn.recycleCreep(beingRepairedCreep);
         }
+        // renew
+        else {
+          if (spawn.renewCreep(beingRepairedCreep) === ERR_NOT_ENOUGH_ENERGY) {
+            beingRepairedCreep.memory.waitingRepair = false;
+            beingRepairedCreep.memory.beingRepaired = false;
+            beingRepairedCreep.memory.toRecycle = undefined
+          }
+        }
+
+
       }
-    } else if (waitingRepairCreeps.has(roomName) && waitingRepairCreeps.get(roomName)!!.length) {
+    }
+    // set beingRepairedCreep
+    else if (waitingRepairCreeps.has(roomName) && waitingRepairCreeps.get(roomName)!!.length) {
       beingRepairedCreep = waitingRepairCreeps.get(roomName)!![0];
       beingRepairedCreep.memory.beingRepaired = true;
       beingRepairedCreep.memory.waitingRepair = false;
