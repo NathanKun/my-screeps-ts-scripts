@@ -8,17 +8,21 @@ export class Collector extends BaseCreep {
   private static STATUS_COLLECTING_RESOURCE = "collectingResource";
   private static STATUS_COLLECTING_TOMBSTONE = "collectingTombstone";
   private static STATUS_TRANSFERING = "transfering";
+  private static STATUS_WITHDRAWING = "withdrawing";
+
+  private static STORAGE_W9S7 = '5ced749d7f5e00234025f1c3';
 
   public withdrawStorageMode: boolean = false;
+
   protected run() {
     if (this.withdrawStorageMode) {
       if (this.carry.energy === this.carryCapacity) {
-        this.memory.collectorStatus = 'transfering';
+        this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
       } else if (this.carry.energy === 0) {
-        this.memory.collectorStatus = 'withdrawing';
+        this.memory.collectorStatus = Collector.STATUS_WITHDRAWING;
       }
 
-      if (this.memory.collectorStatus === 'transfering') {
+      if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         const targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_EXTENSION ||
@@ -34,14 +38,16 @@ export class Collector extends BaseCreep {
           }
           return;
         }
-      } else if (this.memory.collectorStatus === 'withdrawing') {
-        const storage = Game.getObjectById('5ced749d7f5e00234025f1c3') as StructureStorage;
+      } else if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
+        const storage = Game.getObjectById(Collector.STORAGE_W9S7) as StructureStorage;
         if (this.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           this.moveTo(storage);
         }
       }
     } else {
-      if (!this.memory.collectorStatus) {
+      if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
+        this.memory.collectorStatus = Collector.STATUS_IDLE
+      } else if (!this.memory.collectorStatus) {
         this.memory.collectorStatus = Collector.STATUS_IDLE;
       } else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING && this.carry.energy === 0) {
         this.memory.collectorStatus = Collector.STATUS_IDLE;

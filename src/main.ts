@@ -35,13 +35,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
 
   // spawn creeps
-  SpawnHelper.spawn({
+  const spawnParams = [{
     spawn: Game.spawns['Spawn1'],
     harvester: {
-      count: 3,
-      parts: [WORK, WORK,
+      count: 4,
+      parts: [WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     builder: {
       count: -1,
@@ -50,7 +50,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     upgrader: {
-      count: 2,
+      count: 1,
       parts: [WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
@@ -69,10 +69,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 0,
       parts: [CLAIM, MOVE]
     }
-  });
-
-  // spawn creeps
-  SpawnHelper.spawn({
+  }, {
     spawn: Game.spawns['Spawn2'],
     harvester: {
       count: 1,
@@ -98,7 +95,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 0,
       parts: [CLAIM, MOVE]
     }
-  });
+  }];
+
+  for (const p of spawnParams) {
+    SpawnHelper.spawn(p);
+  }
 
   // auto spawn attack creep and defense
   if (hasHostile) {
@@ -178,6 +179,32 @@ export const loop = ErrorMapper.wrapLoop(() => {
     if (beingRepairedCreep !== undefined) {
       const spawn = beingRepairedCreep.pos.findClosestByRange(FIND_MY_SPAWNS);
       if (spawn) {
+        if (beingRepairedCreep.memory.toRecycle === undefined) {
+          for (const p of spawnParams) {
+            if (p.spawn.name === spawn.name) {
+              const roleParam = getRoleSpawnParamByName(beingRepairedCreep.memory.role, p);
+              if (roleParam === null) {
+                continue;
+              }
+              const paramParts = roleParam.parts;
+              const creepsParts = beingRepairedCreep.body.flatMap(def => def.type);
+              if (paramParts.length !== creepsParts.length || paramParts.sort().every((value, index) => value === creepsParts.sort()[index])) {
+                Game.notify("parts check test");
+                Game.notify("paramParts not equals creepsParts");
+                Game.notify(paramParts.sort().join(' '));
+                Game.notify(creepsParts.sort().join(' '));
+              } else {
+                Game.notify("parts check test");
+                Game.notify("paramParts equals creepsParts");
+                Game.notify(paramParts.sort().join(' '));
+                Game.notify(creepsParts.sort().join(' '));
+              }
+              break;
+            }
+          }
+          beingRepairedCreep.memory.toRecycle = true;
+        }
+
         if (spawn.renewCreep(beingRepairedCreep) === ERR_NOT_ENOUGH_ENERGY) {
           beingRepairedCreep.memory.waitingRepair = false;
           beingRepairedCreep.memory.beingRepaired = false;
@@ -214,5 +241,24 @@ export const loop = ErrorMapper.wrapLoop(() => {
       Game.notify(e);
       return false;
     }
+  }
+
+  function getRoleSpawnParamByName(role: string, param: SpawnParam): RoleParam | null {
+    switch (role) {
+      case 'harvester':
+        return param.harvester;
+      case 'builder':
+        return param.builder;
+      case 'upgrader':
+        return param.upgrader;
+      case 'maintainer':
+        return param.maintainer;
+      case 'collector':
+        return param.collector;
+      case 'claimer':
+        return param.claimer;
+    }
+
+    return null;
   }
 });

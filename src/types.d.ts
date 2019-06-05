@@ -18,6 +18,7 @@ interface CreepMemory {
   collectorTarget: string | undefined;
   waitingRepair: boolean;
   beingRepaired: boolean;
+  toRecycle: boolean | undefined;
   harvesterRoom: string;
   upgraderLinkTarget: string | undefined;
 }
@@ -34,30 +35,19 @@ declare namespace NodeJS {
   }
 }
 
+interface RoleParam {
+  count: number,
+  parts: BodyPartConstant[]
+}
+
+type Role = "builder" | "upgrader" | "maintainer" | "collector" | "claimer" | "harvester";
+
 interface SpawnParam {
   spawn: StructureSpawn;
-  builder: {
-    count: number,
-    parts: BodyPartConstant[]
-  };
-  upgrader: {
-    count: number,
-    parts: BodyPartConstant[]
-  };
-  maintainer: {
-    count: number,
-    parts: BodyPartConstant[]
-  };
-  collector: {
-    count: number,
-    parts: BodyPartConstant[]
-  };
-  claimer: {
-    count: number,
-    parts: BodyPartConstant[]
-  };
-  harvester: {
-    count: number,
-    parts: BodyPartConstant[]
-  }
+  builder: RoleParam;
+  upgrader: RoleParam;
+  maintainer: RoleParam;
+  collector: RoleParam;
+  claimer: RoleParam;
+  harvester: RoleParam;
 }

@@ -1,8 +1,6 @@
 export abstract class BaseCreep extends Creep {
   constructor(creep: Creep) {
-    if (!creep.spawning) {
-      super(creep.id)
-    }
+    super(creep.id);
   }
 
   public work(): void {
