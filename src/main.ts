@@ -222,14 +222,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
               if (roleParam === null) {
                 continue;
               }
+
               const paramParts = roleParam.parts.sort();
               const creepsParts = beingRepairedCreep.body.map(def => def.type).sort();
+
               if (paramParts.length !== creepsParts.length || paramParts.every((value, index) => value !== creepsParts[index])) {
-                /*Game.notify("parts check test" + '\n' +
+                Game.notify("Recycle Creep Notification" + '\n' +
                   'Creep name = ' + beingRepairedCreep.name + '\n' +
                   "paramParts not equals creepsParts" + '\n' +
                   paramParts.sort().join(' ') + '\n' +
-                  creepsParts.sort().join(' ') + '\n');*/
+                  creepsParts.sort().join(' '));
                 beingRepairedCreep.memory.toRecycle = true;
               } else {
                 /*Game.notify("parts check test" + '\n' +
@@ -242,7 +244,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
               break;
             }
           }
-          beingRepairedCreep.memory.toRecycle = true;
+
+          if (beingRepairedCreep.memory.toRecycle === undefined) {
+            beingRepairedCreep.memory.toRecycle = true;
+          }
         }
 
         // recycle
@@ -257,8 +262,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
             beingRepairedCreep.memory.toRecycle = undefined
           }
         }
-
-
       }
     }
     // set beingRepairedCreep
