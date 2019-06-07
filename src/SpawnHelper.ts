@@ -26,10 +26,10 @@ export class SpawnHelper {
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder.count === -1) {
       if (spawnParam.spawn.room.find(FIND_CONSTRUCTION_SITES).length !== 0) {
-        spawnParam.builder.count = 2;
+        spawnParam.builder.count = 1;
       } else {
         spawnParam.builder.count = 0;
-        spawnParam.upgrader.count += 2;
+        spawnParam.upgrader.count += 1;
       }
     }
 

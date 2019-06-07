@@ -307,7 +307,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   function getCollectorWithdrawStorageMode(spawn: StructureSpawn): boolean {
     try {
-
       let capacity = spawn.energyCapacity;
       let energy = spawn.energy;
 
@@ -319,7 +318,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
         energy += s.energy;
       });
 
-      return energy / capacity < 0.2;
+      const storageNotEmpty = spawn.room.find(FIND_MY_STRUCTURES, {
+        filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > 0
+      }).length > 0;
+
+      return (energy / capacity < 0.2) && storageNotEmpty;
     } catch (e) {
       Game.notify('Game.time = ' + Game.time + '\n' + 'Error in getCollectorWithdrawStorageMode ' + spawn.name + '\n' + e);
       return false;

@@ -14,7 +14,7 @@ interface CreepMemory {
   harvesting?: boolean;
   transfering?: boolean;
   transferTarget?: string;
-  preferTransferStructure?: string;
+  preferTransferStructure?: 'tower' | 'storage';
   collectorStatus?: string;
   collectorTarget?: string;
   waitingRepair?: boolean;
