@@ -98,23 +98,36 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 0,
       parts: [CLAIM, MOVE]
     }
-  }, {
+  },
+  {
     spawn: Game.spawns['Spawn2'],
     harvester: {
       count: 2,
-      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+      parts: [
+        WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     builder: {
       count: 1,
-      parts: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
+      parts: [
+        WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE]
     },
     upgrader: {
-      count: 2,
-      parts: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+      count: 1,
+      parts: [
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     maintainer: {
       count: -1,
-      parts: [WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
+      parts: [
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     collector: {
       count: 0,
