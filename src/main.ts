@@ -50,7 +50,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const spawnParams = [{
     spawn: Game.spawns['Spawn1'],
     harvester: {
-      count: 3,
+      count: 2,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -80,14 +80,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
       ]
     },
     collector: {
-      count: 1,
+      count: 0,
       parts: [
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,

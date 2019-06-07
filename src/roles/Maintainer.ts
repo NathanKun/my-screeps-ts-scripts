@@ -1,10 +1,19 @@
 import { FindSourceUtil } from "utils/FindSourceUtil";
 import { BaseCreep } from "./BaseCreep";
+import { Collector } from "./Collector";
 
 export class Maintainer extends BaseCreep {
   private static REPAIR_RATIO: number = 0.8;
 
   protected run() {
+    // find if there is a collector work
+    Collector.doIdle(this);
+
+    // if role is become collector, skip the rest code
+    if (this.memory.role !== 'maintainer') {
+      return;
+    }
+
     if (this.memory.reparing && this.carry.energy === 0) {
       this.memory.reparing = false;
       this.memory.reparingTarget = undefined;
@@ -13,10 +22,11 @@ export class Maintainer extends BaseCreep {
     if (!this.memory.reparing && this.carry.energy === this.carryCapacity) {
       this.memory.reparing = true;
       FindSourceUtil.clear(this);
-      this.say('🚧 repair');
     }
 
     if (this.memory.reparing) {
+      this.say('🔧');
+
       let target: Structure;
 
       if (this.memory.reparingTarget !== undefined) {
