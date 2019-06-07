@@ -13,9 +13,11 @@ export abstract class BaseCreep extends Creep {
   protected repairCheck(): void {
     if (this.ticksToLive && this.ticksToLive < 100) {
       const spawn = this.pos.findClosestByPath(FIND_MY_SPAWNS);
-      if (spawn) {
+      if (spawn && !spawn.spawning) {
         this.moveTo(spawn);
         this.memory.waitingRepair = true;
+      } else {
+        this.memory.waitingRepair = false;
       }
     } else if (this.ticksToLive && this.ticksToLive > 1400) {
       this.memory.beingRepaired = false;

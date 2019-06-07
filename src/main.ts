@@ -78,7 +78,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     maintainer: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,

@@ -7,7 +7,7 @@ export class Maintainer extends BaseCreep {
 
   protected run() {
     // find if there is a collector work
-    Collector.doIdle(this);
+    Collector.findCollectable(this);
 
     // if role is become collector, skip the rest code
     if (this.memory.role !== 'maintainer') {

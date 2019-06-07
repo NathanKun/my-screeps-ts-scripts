@@ -58,7 +58,7 @@ export class Collector extends BaseCreep {
 
       // Idle
       if (this.memory.collectorStatus === Collector.STATUS_IDLE) {
-        Collector.doIdle(this);
+        Collector.findCollectable(this);
       }
 
       // Collecting Resource
@@ -145,7 +145,7 @@ export class Collector extends BaseCreep {
   }
 
   // call by Collector and Maintainer
-  public static doIdle(creep: BaseCreep) {
+  public static findCollectable(creep: BaseCreep) {
     creep.memory.role = 'collector';
 
     // find resource
