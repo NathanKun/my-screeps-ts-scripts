@@ -120,16 +120,19 @@ export const loop = ErrorMapper.wrapLoop(() => {
   {
     spawn: Game.spawns['Spawn2'],
     harvester: {
-      count: 2,
+      count: 1,
       parts: [
         WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     harvesterExt: {
-      count: 0,
-      parts: [],
-      harvestRoom: ''
+      count: 3,
+      parts: [
+        WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      harvestRoom: 'W8S5'
     },
     builder: {
       count: 1,
@@ -369,6 +372,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
     switch (role) {
       case 'harvester':
         return param.harvester;
+      case 'harvesterExt':
+        return param.harvesterExt;
       case 'builder':
         return param.builder;
       case 'upgrader':
