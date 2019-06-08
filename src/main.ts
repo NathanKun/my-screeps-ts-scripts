@@ -86,7 +86,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-      ]
+      ],
+      upgraderUseStorageMin: undefined
     },
     maintainer: {
       count: -1,
@@ -146,7 +147,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       parts: [
         WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        upgraderUseStorageMin: 40000
     },
     maintainer: {
       count: -1,

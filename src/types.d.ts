@@ -23,6 +23,7 @@ interface CreepMemory {
   harvestRoom?: string;
   transferRoom?: string;
   upgraderLinkTarget?: string;
+  upgraderUseStorageMin?: number;
 }
 
 interface Memory {
@@ -41,6 +42,7 @@ interface RoleParam {
   count: number;
   parts: BodyPartConstant[];
   harvestRoom?: string;
+  upgraderUseStorageMin?: number;
 }
 
 interface SpawnParam {

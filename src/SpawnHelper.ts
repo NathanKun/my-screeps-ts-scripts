@@ -180,7 +180,8 @@ export class SpawnHelper {
         {
           memory: {
             role: 'upgrader',
-            spawnTime: Game.time
+            spawnTime: Game.time,
+            upgraderUseStorageMin: spawnParam.upgrader.upgraderUseStorageMin
           }
         });
       return;

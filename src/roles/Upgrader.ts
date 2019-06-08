@@ -51,15 +51,27 @@ export class Upgrader extends BaseCreep {
         }
       }
 
-      // withdraw or move to link
+      // withdraw link
       if (this.memory.upgraderLinkTarget) {
         const link = Game.getObjectById(this.memory.upgraderLinkTarget) as StructureLink;
         const res = this.withdraw(link, RESOURCE_ENERGY);
         if (res === ERR_NOT_IN_RANGE) {
-          this.moveTo(link);
+          this.moveTo(link, { visualizePathStyle: { stroke: '#ffffff' } });
         } else if (res === OK) {
           this.memory.upgrading = true;
           this.say('⚡ upgrade');
+        }
+      }
+      // withdraw storage
+      else if (this.memory.upgraderUseStorageMin !== undefined) {
+        const storage = this.room.find(FIND_MY_STRUCTURES, {
+          filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > this.memory.upgraderUseStorageMin!!
+        });
+
+        if (storage.length) {
+          if (this.withdraw(storage[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            this.moveTo(storage[0], { maxRooms: 1, visualizePathStyle: { stroke: '#ffffff' } });
+          }
         }
       }
       // harvest
