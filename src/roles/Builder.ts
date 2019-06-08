@@ -4,7 +4,7 @@ import { BaseCreep } from "./BaseCreep";
 export class Builder extends BaseCreep {
 
   protected run() {
-    if (this.memory.harvesterRoom === 'W9S5' && this.room.name !== 'W9S5') {
+    if (this.memory.harvestRoom === 'W9S5' && this.room.name !== 'W9S5') {
       this.moveTo(new RoomPosition(20, 20, 'W9S5'));
       return;
     }

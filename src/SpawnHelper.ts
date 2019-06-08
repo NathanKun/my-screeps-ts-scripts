@@ -16,6 +16,7 @@ export class SpawnHelper {
   private static internalSpawn(spawnParam: SpawnParam) {
 
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawn.room.name);
+    const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawn.room.name);
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawn.room.name);
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawn.room.name);
     const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawn.room.name);
@@ -35,7 +36,16 @@ export class SpawnHelper {
 
     /* Auto spawn maintainer */
     const spawnMaintainerRatio = 0.5
-    if (spawnParam.maintainer.count === -1) {
+    if (spawnParam.maintainer.count === -1 && spawnParam.collector.count === -1) {
+      if (maintainers.length + collectors.length >= 1) {
+        spawnParam.maintainer.count = 0;
+        spawnParam.collector.count = 0;
+      } else {
+        spawnParam.maintainer.count = 1;
+        spawnParam.collector.count = 0;
+      }
+    }
+    else if (spawnParam.maintainer.count === -1) {
       if (spawnParam.spawn.room.find(FIND_STRUCTURES, {
         filter: s => s.structureType === STRUCTURE_ROAD && ((s.hits / s.hitsMax) < spawnMaintainerRatio)
       }).length !== 0) {
@@ -47,26 +57,30 @@ export class SpawnHelper {
 
     /* Find role most needed to spawn */
     let max = spawnParam.harvester.count - harvesters.length;
-    let toSpawn = "harvester";
+    let toSpawn = "harvester"; // prior harveste
 
-    if (max <= 0) { // prior harvester
-      if (spawnParam.builder.count - builders.length > max) {
-        max = spawnParam.builder.count - builders.length;
-        toSpawn = "builder";
-      }
-      if (spawnParam.upgrader.count - upgraders.length > max) {
-        max = spawnParam.upgrader.count - upgraders.length;
-        toSpawn = "upgrader";
-      }
+    if (max <= 0) {
       if (spawnParam.maintainer.count - maintainers.length > max) {
         max = spawnParam.maintainer.count - maintainers.length;
         toSpawn = "maintainer";
       }
-      if (spawnParam.collector.count - collectors.length > max) {
+      else if (spawnParam.harvesterExt.count - harvesterExts.length > max) {
+        max = spawnParam.harvesterExt.count - harvesterExts.length;
+        toSpawn = "harvesterExt";
+      }
+      else if (spawnParam.builder.count - builders.length > max) {
+        max = spawnParam.builder.count - builders.length;
+        toSpawn = "builder";
+      }
+      else if (spawnParam.upgrader.count - upgraders.length > max) {
+        max = spawnParam.upgrader.count - upgraders.length;
+        toSpawn = "upgrader";
+      }
+      else if (spawnParam.collector.count - collectors.length > max) {
         max = spawnParam.collector.count - collectors.length;
         toSpawn = "collector";
       }
-      if (spawnParam.claimer.count - claimers.length > max) {
+      else if (spawnParam.claimer.count - claimers.length > max) {
         max = spawnParam.claimer.count - claimers.length;
         toSpawn = "claimer";
       }
@@ -74,12 +88,13 @@ export class SpawnHelper {
 
 
     /* Logs */
-    console.log('Harvesters:  \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester.count - harvesters.length));
-    console.log('Builders:    \t' + builders.length + " Missing: \t" + (spawnParam.builder.count - builders.length));
-    console.log('Upgraders:   \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader.count - upgraders.length));
-    console.log('Maintainers: \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer.count - maintainers.length));
-    console.log('Collectors: \t' + collectors.length + " Missing: \t" + (spawnParam.collector.count - collectors.length));
-    console.log('Claimers: \t' + claimers.length + " Missing: \t" + (spawnParam.claimer.count - claimers.length));
+    console.log('Harvesters:    \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester.count - harvesters.length));
+    console.log('HarvesterExts: \t' + harvesterExts.length + " Missing: \t" + (spawnParam.harvesterExt.count - harvesterExts.length));
+    console.log('Builders:      \t' + builders.length + " Missing: \t" + (spawnParam.builder.count - builders.length));
+    console.log('Upgraders:     \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader.count - upgraders.length));
+    console.log('Maintainers:   \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer.count - maintainers.length));
+    console.log('Collectors:    \t' + collectors.length + " Missing: \t" + (spawnParam.collector.count - collectors.length));
+    console.log('Claimers:      \t' + claimers.length + " Missing: \t" + (spawnParam.claimer.count - claimers.length));
 
     if (spawnParam.spawn.spawning) {
       const spawningCreep = Game.creeps[spawnParam.spawn.spawning!!.name];
@@ -101,7 +116,8 @@ export class SpawnHelper {
             memory: {
               role: 'harvester',
               preferTransferStructure: 'tower',
-              harvesterRoom: 'base',
+              harvestRoom: spawnParam.spawn.room.name,
+              transferRoom: spawnParam.spawn.room.name,
               spawnTime: Game.time
             }
           });
@@ -121,6 +137,23 @@ export class SpawnHelper {
           });
         return;
       }
+    }
+
+    /* harvester ext */
+    else if (toSpawn === "harvesterExt") {
+      spawnParam.spawn.spawnCreep(
+        spawnParam.harvesterExt.parts,
+        'HarvesterExt' + Game.time,
+        {
+          memory: {
+            role: 'harvesterExt',
+            preferTransferStructure: 'tower',
+            harvestRoom: spawnParam.spawn.room.name,
+            transferRoom: spawnParam.spawn.room.name,
+            spawnTime: Game.time
+          }
+        });
+      return;
     }
 
     /* builder */

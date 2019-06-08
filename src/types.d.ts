@@ -20,7 +20,8 @@ interface CreepMemory {
   waitingRepair?: boolean;
   beingRepaired?: boolean;
   toRecycle?: boolean;
-  harvesterRoom?: string;
+  harvestRoom?: string;
+  transferRoom?: string;
   upgraderLinkTarget?: string;
 }
 
@@ -37,8 +38,9 @@ declare namespace NodeJS {
 }
 
 interface RoleParam {
-  count: number,
-  parts: BodyPartConstant[]
+  count: number;
+  parts: BodyPartConstant[];
+  harvestRoom?: string;
 }
 
 interface SpawnParam {
@@ -49,14 +51,15 @@ interface SpawnParam {
   collector: RoleParam;
   claimer: RoleParam;
   harvester: RoleParam;
+  harvesterExt: RoleParam;
 }
 
 interface LinkPair {
   sender: StructureLink;
-  receiver: StructureLink
+  receiver: StructureLink;
 }
 
 interface RoomLinks {
   room: Room;
-  links: LinkPair[]
+  links: LinkPair[];
 }

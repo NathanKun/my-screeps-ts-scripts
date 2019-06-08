@@ -26,7 +26,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // collector withdraw storage if low energy
   let collectorWithdrawStorageMode = getCollectorWithdrawStorageMode(Game.spawns['Spawn1']);
-
+collectorWithdrawStorageMode = true;
   // structure being attack
   if (Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {
     filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
@@ -59,6 +59,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE
       ]
     },
+    harvesterExt: {
+      count: 2,
+      parts: [
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE
+      ],
+      harvestRoom: 'W9S6'
+    },
     builder: {
       count: -1,
       parts: [
@@ -78,20 +89,27 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     maintainer: {
-      count: 1,
+      count: -1,
+      parts: [
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE
+      ]
+    },
+    collector: {
+      count: -1,
+      /*parts: [
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+      ]*/
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-      ]
-    },
-    collector: {
-      count: 0,
-      parts: [
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
       ]
     },
     claimer: {
@@ -107,6 +125,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
         WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+    },
+    harvesterExt: {
+      count: 0,
+      parts: [],
+      harvestRoom: ''
     },
     builder: {
       count: 1,
@@ -130,8 +153,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     collector: {
-      count: 0,
-      parts: [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
+      count: -1,
+      /*parts: [
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE]*/
+      parts: [
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     claimer: {
       count: 0,
@@ -150,6 +179,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     collectorWithdrawStorageMode = true;
   } else {
     if (Game.creeps['a1'] !== undefined &&
+      Game.creeps['a1'].room.name === Game.spawns['Spawn1'].room.name &&
       Game.creeps['a1'].ticksToLive !== undefined &&
       Game.creeps['a1'].ticksToLive!! < 1350) {
       if (Game.spawns['Spawn1'].recycleCreep(Game.creeps['a1']) === ERR_NOT_IN_RANGE) {

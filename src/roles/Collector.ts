@@ -91,6 +91,12 @@ export class Collector extends BaseCreep {
 
       // Transfering
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
+        // if no more collectable, change role to maintainer
+        if (!Collector.hasCollectable(this)) {
+          this.memory.role = 'maintainer';
+          return;
+        }
+
         this.say('🚚');
         this.memory.collectorTarget = undefined;
 
@@ -149,9 +155,7 @@ export class Collector extends BaseCreep {
     creep.memory.role = 'collector';
 
     // find resource
-    const droppedResources = creep.room.find(FIND_DROPPED_RESOURCES, {
-      filter: r => r.resourceType === RESOURCE_ENERGY
-    }).sort((r1, r2) => r2.amount - r1.amount);
+    const droppedResources = Collector.findDroppedResources(creep);
 
     if (droppedResources.length) {
       creep.memory.collectorTarget = droppedResources[0].id;
@@ -160,9 +164,7 @@ export class Collector extends BaseCreep {
     }
 
     // find tombstone
-    const tombstones = creep.room.find(FIND_TOMBSTONES, {
-      filter: t => t.store.energy > 0
-    }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
+    const tombstones = Collector.findTombstones(creep);
 
     if (tombstones.length) {
       creep.memory.collectorTarget = tombstones[0].id;
@@ -177,5 +179,21 @@ export class Collector extends BaseCreep {
     }*/
     // idle, work as maintainer
     creep.memory.role = 'maintainer';
+  }
+
+  public static hasCollectable(creep: BaseCreep) {
+    return Collector.findDroppedResources(creep).length || Collector.findTombstones(creep).length;
+  }
+
+  private static findDroppedResources(creep: BaseCreep) {
+    return creep.room.find(FIND_DROPPED_RESOURCES, {
+      filter: r => r.resourceType === RESOURCE_ENERGY
+    }).sort((r1, r2) => r2.amount - r1.amount);
+  }
+
+  private static findTombstones(creep: BaseCreep) {
+    return creep.room.find(FIND_TOMBSTONES, {
+      filter: t => t.store.energy > 0
+    }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
   }
 };

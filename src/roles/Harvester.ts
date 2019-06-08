@@ -25,6 +25,12 @@ export class Harvester extends BaseCreep {
 
     // transfer
     if (this.memory.transfering) {
+      // if harvested in another room
+      if (this.memory.transferRoom && this.room.name !== this.memory.transferRoom) {
+        this.moveTo(new RoomPosition(1, 1, this.memory.transferRoom));
+        return;
+      }
+
       // has hostile: charge towers
       if (this.hasHostile) {
         if (this.memory.transferTarget === undefined) {
@@ -35,7 +41,7 @@ export class Harvester extends BaseCreep {
         }
         const tower = Game.getObjectById(this.memory.transferTarget) as (StructureTower | null);
         if (tower && this.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          this.moveTo(tower, { reusePath: 2, visualizePathStyle: { stroke: '#ff0000' } });
+          this.moveTo(tower, { reusePath: 3, visualizePathStyle: { stroke: '#ff0000' } });
         }
       }
       // no hostile
@@ -81,7 +87,7 @@ export class Harvester extends BaseCreep {
 
         if (targets.length > 0) {
           if (this.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
+            this.moveTo(targets[0], { reusePath: 3, visualizePathStyle: { stroke: '#ffaa00' } });
           }
         }
         // nothing to do, upgrade room controller
@@ -94,27 +100,15 @@ export class Harvester extends BaseCreep {
     }
     // harvest
     else {
-      // harvest in base room
-      if (this.memory.harvesterRoom === undefined || this.memory.harvesterRoom === 'base') {
-        const source = FindSourceUtil.findSource(this);
-        if (this.harvest(source) === ERR_NOT_IN_RANGE) {
-          this.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
-        }
+      // if harvest in another room
+      if (this.memory.harvestRoom && this.room.name !== this.memory.harvestRoom) {
+        this.moveTo(new RoomPosition(20, 20, this.memory.harvestRoom));
+        return;
       }
-      // harvest in an other room
-      else {
-        // move to the room to gain visibility
-        if (this.room.name !== this.memory.harvesterRoom) {
-          this.moveTo(new RoomPosition(20, 20, this.memory.harvesterRoom))
-        }
-        else {
-          const source = FindSourceUtil.findSource(this);
-          if (this.harvest(source) === ERR_NOT_IN_RANGE) {
-            this.moveTo(source, { reusePath: 2, visualizePathStyle: { stroke: '#ffffff' } });
-          } else {
-            this.harvest(source);
-          }
-        }
+
+      const source = FindSourceUtil.findSource(this);
+      if (this.harvest(source) === ERR_NOT_IN_RANGE) {
+        this.moveTo(source, { reusePath: 3, visualizePathStyle: { stroke: '#ffffff' } });
       }
     }
   }
