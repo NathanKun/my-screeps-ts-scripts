@@ -1,3 +1,5 @@
+import { ErrorMapper } from "utils/ErrorMapper";
+
 /*
 MOVE            50      Moves the creep. Reduces creep fatigue by 2/tick. See movement.
 WORK            100     Harvests energy from target source. Gathers 2 energy/tick.
@@ -148,7 +150,7 @@ export class SpawnHelper {
           memory: {
             role: 'harvesterExt',
             preferTransferStructure: 'tower',
-            harvestRoom: spawnParam.spawn.room.name,
+            harvestRoom: spawnParam.harvesterExt.harvestRoom,
             transferRoom: spawnParam.spawn.room.name,
             spawnTime: Game.time
           }
@@ -231,7 +233,9 @@ export class SpawnHelper {
     try {
       SpawnHelper.internalSpawn(spawnParam);
     } catch (e) {
-      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' + '\n' + e);
+      const outText = ErrorMapper.sourceMappedStackTrace(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' +
+        '\n' + e + '\n' + outText);
     }
   }
 }

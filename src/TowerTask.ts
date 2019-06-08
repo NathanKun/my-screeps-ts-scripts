@@ -1,3 +1,5 @@
+import { ErrorMapper } from "utils/ErrorMapper";
+
 export class TowerTask {
   private static runInternal(tower: StructureTower) {
     // attack
@@ -77,7 +79,9 @@ export class TowerTask {
     try {
       TowerTask.runInternal(tower);
     } catch (e) {
-      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + tower.id + '\n' + e);
+      const outText = ErrorMapper.sourceMappedStackTrace(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + tower.id +
+        '\n' + e + '\n' + outText);
     }
   }
 }

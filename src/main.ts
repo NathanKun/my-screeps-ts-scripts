@@ -26,7 +26,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // collector withdraw storage if low energy
   let collectorWithdrawStorageMode = getCollectorWithdrawStorageMode(Game.spawns['Spawn1']);
-collectorWithdrawStorageMode = true;
+
   // structure being attack
   if (Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {
     filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
@@ -222,6 +222,9 @@ collectorWithdrawStorageMode = true;
       if (role === 'harvester') {
         creep = new Harvester(c, hasHostile, roomLinks);
       }
+      else if (role === 'harvesterExt') {
+        creep = new Harvester(c, hasHostile, roomLinks);
+      }
       else if (role === 'builder') {
         creep = new Builder(c);
       }
@@ -257,11 +260,12 @@ collectorWithdrawStorageMode = true;
         }
       }
     } catch (e) {
+      const outText = ErrorMapper.sourceMappedStackTrace(e);
       Game.notify('Game.time = ' + Game.time + '\n' +
         'Creeps for loop error' + '\n' +
         'Creep name = ' + name + '\n' +
         'Creep role = ' + Game.creeps[name].memory.role + '\n' +
-        'Error: ' + '\n' + e);
+        'Error: ' + '\n' + e + '\n' + outText);
     }
   }
 
@@ -354,7 +358,9 @@ collectorWithdrawStorageMode = true;
 
       return (energy / capacity < 0.2) && storageNotEmpty;
     } catch (e) {
-      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in getCollectorWithdrawStorageMode ' + spawn.name + '\n' + e);
+      const outText = ErrorMapper.sourceMappedStackTrace(e);
+      Game.notify('Game.time = ' + Game.time + '\n' +
+        'Error in getCollectorWithdrawStorageMode ' + spawn.name + '\n' + e + '\n ' + outText);
       return false;
     }
   }

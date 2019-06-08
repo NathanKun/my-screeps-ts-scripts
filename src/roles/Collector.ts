@@ -10,8 +10,6 @@ export class Collector extends BaseCreep {
   private static STATUS_TRANSFERING = "transfering";
   private static STATUS_WITHDRAWING = "withdrawing";
 
-  private static STORAGE_W9S7 = '5ced749d7f5e00234025f1c3';
-
   public withdrawStorageMode: boolean = false;
 
   protected run() {
@@ -40,9 +38,11 @@ export class Collector extends BaseCreep {
           return;
         }
       } else if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
-        const storage = Game.getObjectById(Collector.STORAGE_W9S7) as StructureStorage;
-        if (this.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          this.moveTo(storage, { visualizePathStyle: { stroke: '#66ccff' } });
+        const storages = this.room.find(FIND_STRUCTURES, {
+          filter: s => s.structureType === STRUCTURE_STORAGE
+        });
+        if (storages.length && this.withdraw(storages[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          this.moveTo(storages[0], { visualizePathStyle: { stroke: '#66ccff' } });
         }
       }
     } else {
