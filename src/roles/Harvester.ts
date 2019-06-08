@@ -27,7 +27,7 @@ export class Harvester extends BaseCreep {
     if (this.memory.transfering) {
       // if harvested in another room
       if (this.memory.transferRoom && this.room.name !== this.memory.transferRoom) {
-        this.moveTo(new RoomPosition(20, 20, this.memory.transferRoom), { reusePath: 20, visualizePathStyle: { stroke: '#ffaa00' } });
+        this.moveTo(new RoomPosition(20, 20, this.memory.transferRoom), { reusePath: 15, visualizePathStyle: { stroke: '#ffaa00' } });
         return;
       }
 
@@ -102,7 +102,7 @@ export class Harvester extends BaseCreep {
     else {
       // if harvest in another room
       if (this.memory.harvestRoom && this.room.name !== this.memory.harvestRoom) {
-        this.moveTo(new RoomPosition(20, 20, this.memory.harvestRoom), { reusePath: 20, visualizePathStyle: { stroke: '#ffffff' } });
+        this.moveTo(new RoomPosition(20, 20, this.memory.harvestRoom), { reusePath: 15, visualizePathStyle: { stroke: '#ffffff' } });
         return;
       }
 

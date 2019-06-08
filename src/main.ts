@@ -80,14 +80,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     upgrader: {
-      count: 1,
+      count: 2,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
       ],
-      upgraderUseStorageMin: undefined
+      upgraderUseStorageMin: 100000
     },
     maintainer: {
       count: -1,
