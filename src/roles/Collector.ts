@@ -125,7 +125,7 @@ export class Collector extends BaseCreep {
           targets = (this.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
               return structure.structureType === STRUCTURE_TOWER &&
-                structure.energy < structure.energyCapacity;
+                structure.energy < 850;
             }
           }) as StructureTower[]).sort((s1, s2) => s1.energy - s2.energy);
         }

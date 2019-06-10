@@ -25,14 +25,24 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   // collector withdraw storage if low energy
-  let collectorWithdrawStorageMode = getCollectorWithdrawStorageMode(Game.spawns['Spawn1']);
+  const spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn2']];
+  const rooms = ['W9S7', 'W9S5'];
+  const collectorWithdrawStorageMode = spawns.map(s => getCollectorWithdrawStorageMode(s));
 
   // structure being attack
   if (Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {
     filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
   }).length) {
-    const controller = Game.spawns['Spawn1'].room.controller!!;
-    if (controller.safeMode === undefined && controller.safeModeAvailable > 0) {
+    const controller = Game.spawns['Spawn1'].room.controller;
+    if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
+      controller.activateSafeMode();
+    }
+  }
+  if (Game.spawns['Spawn2'].room.find(FIND_MY_STRUCTURES, {
+    filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
+  }).length) {
+    const controller = Game.spawns['Spawn2'].room.controller;
+    if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
       controller.activateSafeMode();
     }
   }
@@ -43,8 +53,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
 
-  // hostile creeps in room
-  const hasHostile = Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0;
+  // hostile creeps in rooms
+  const hasHostile = spawns.map(s => s.room.find(FIND_HOSTILE_CREEPS).length > 0);
 
   // spawn creeps
   const spawnParams = [{
@@ -60,7 +70,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     harvesterExt: {
-      count: 2,
+      count: 4,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -80,7 +90,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     upgrader: {
-      count: 2,
+      count: 3,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -101,75 +111,72 @@ export const loop = ErrorMapper.wrapLoop(() => {
     },
     collector: {
       count: -1,
-      /*parts: [
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-      ]*/
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE
       ]
     },
     claimer: {
-      count: 0,
-      parts: [CLAIM, MOVE]
+      count: 1,
+      parts: [CLAIM, MOVE],
+      claimerRoom: 'W9S6',
+      claimerAction: 'reserve' as ClaimerAction
     }
   },
   {
     spawn: Game.spawns['Spawn2'],
     harvester: {
-      count: 1,
+      count: 2,
       parts: [
-        WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 3,
+      count: 5,
       parts: [
-        WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W8S5'
     },
     builder: {
       count: 1,
       parts: [
-        WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE]
+        WORK, WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     upgrader: {
-      count: 1,
+      count: 2,
       parts: [
         WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
-        upgraderUseStorageMin: 40000
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      upgraderUseStorageMin: 30000
     },
     maintainer: {
       count: -1,
       parts: [
         WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     collector: {
       count: -1,
-      /*parts: [
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE]*/
       parts: [
         WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     claimer: {
-      count: 0,
-      parts: [CLAIM, MOVE]
+      count: 1,
+      parts: [CLAIM, MOVE],
+      claimerRoom: 'W8S5',
+      claimerAction: 'reserve' as ClaimerAction
     }
   }];
 
@@ -178,10 +185,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   // auto spawn attack creep and defense
-  if (hasHostile) {
+  if (hasHostile[0]) {
     Attack.spawn('a', 1);
     Attack.attackCreeps(Game.spawns['Spawn1'].room.name);
-    collectorWithdrawStorageMode = true;
+    collectorWithdrawStorageMode[0] = true;
   } else {
     if (Game.creeps['a1'] !== undefined &&
       Game.creeps['a1'].room.name === Game.spawns['Spawn1'].room.name &&
@@ -225,10 +232,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = new Harvester(c, hasHostile, roomLinks);
+        creep = new Harvester(c, hasHostile[rooms.indexOf(c.memory.room!!)], roomLinks);
       }
       else if (role === 'harvesterExt') {
-        creep = new Harvester(c, hasHostile, roomLinks);
+        creep = new Harvester(c, hasHostile[rooms.indexOf(c.memory.room!!)], roomLinks);
       }
       else if (role === 'builder') {
         creep = new Builder(c);
@@ -241,7 +248,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
       else if (role === 'collector') {
         creep = new Collector(c);
-        (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode;
+        (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode[rooms.indexOf(c.memory.room)];
         if (collectorWithdrawStorageMode) {
           creep.say("Withdraw")
         }
@@ -256,12 +263,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
           beingRepairedCreeps.set(creep.room.name, creep);
         }
         else if (creep.memory.waitingRepair) {
-          let rooms = waitingRepairCreeps.get(creep.room.name);
-          if (rooms === undefined) {
-            rooms = [];
+          let cRooms = waitingRepairCreeps.get(creep.room.name);
+          if (cRooms === undefined) {
+            cRooms = [];
           }
-          rooms.push(creep);
-          waitingRepairCreeps.set(creep.room.name, rooms);
+          cRooms.push(creep);
+          waitingRepairCreeps.set(creep.room.name, cRooms);
         }
       }
     } catch (e) {

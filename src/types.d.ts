@@ -4,7 +4,7 @@
 interface CreepMemory {
   role: string;
   spawnTime: number;
-  room?: string;
+  room: string;
   working?: boolean;
   building?: boolean;
   upgrading?: boolean;
@@ -24,7 +24,11 @@ interface CreepMemory {
   transferRoom?: string;
   upgraderLinkTarget?: string;
   upgraderUseStorageMin?: number;
+  claimerRoom?: string;
+  claimerAction? :ClaimerAction;
 }
+
+type ClaimerAction = 'attack' | 'reserve' | 'claim';
 
 interface Memory {
   uuid: number;
@@ -43,6 +47,8 @@ interface RoleParam {
   parts: BodyPartConstant[];
   harvestRoom?: string;
   upgraderUseStorageMin?: number;
+  claimerRoom?: string;
+  claimerAction? :'attack' | 'reserve' | 'claim';
 }
 
 interface SpawnParam {

@@ -23,8 +23,7 @@ export class SpawnHelper {
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawn.room.name);
     const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawn.room.name);
     const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawn.room.name);
-    // count claimer globally
-    const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer');
+    const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawn.room.name);
 
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder.count === -1) {
@@ -66,6 +65,10 @@ export class SpawnHelper {
         max = spawnParam.maintainer.count - maintainers.length;
         toSpawn = "maintainer";
       }
+      else if (spawnParam.claimer.count - claimers.length > max) {
+        max = spawnParam.claimer.count - claimers.length;
+        toSpawn = "claimer";
+      }
       else if (spawnParam.harvesterExt.count - harvesterExts.length > max) {
         max = spawnParam.harvesterExt.count - harvesterExts.length;
         toSpawn = "harvesterExt";
@@ -81,10 +84,6 @@ export class SpawnHelper {
       else if (spawnParam.collector.count - collectors.length > max) {
         max = spawnParam.collector.count - collectors.length;
         toSpawn = "collector";
-      }
-      else if (spawnParam.claimer.count - claimers.length > max) {
-        max = spawnParam.claimer.count - claimers.length;
-        toSpawn = "claimer";
       }
     }
 
@@ -117,6 +116,7 @@ export class SpawnHelper {
           {
             memory: {
               role: 'harvester',
+              room: spawnParam.spawn.room.name,
               preferTransferStructure: 'tower',
               harvestRoom: spawnParam.spawn.room.name,
               transferRoom: spawnParam.spawn.room.name,
@@ -133,6 +133,7 @@ export class SpawnHelper {
           {
             memory: {
               role: 'harvester',
+              room: spawnParam.spawn.room.name,
               preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
               spawnTime: Game.time
             }
@@ -149,6 +150,7 @@ export class SpawnHelper {
         {
           memory: {
             role: 'harvesterExt',
+            room: spawnParam.spawn.room.name,
             preferTransferStructure: 'tower',
             harvestRoom: spawnParam.harvesterExt.harvestRoom,
             transferRoom: spawnParam.spawn.room.name,
@@ -166,6 +168,7 @@ export class SpawnHelper {
         {
           memory: {
             role: 'builder',
+            room: spawnParam.spawn.room.name,
             spawnTime: Game.time
           }
         });
@@ -180,6 +183,7 @@ export class SpawnHelper {
         {
           memory: {
             role: 'upgrader',
+            room: spawnParam.spawn.room.name,
             spawnTime: Game.time,
             upgraderUseStorageMin: spawnParam.upgrader.upgraderUseStorageMin
           }
@@ -195,6 +199,7 @@ export class SpawnHelper {
         {
           memory: {
             role: 'maintainer',
+            room: spawnParam.spawn.room.name,
             spawnTime: Game.time
           }
         });
@@ -209,6 +214,7 @@ export class SpawnHelper {
         {
           memory: {
             role: 'collector',
+            room: spawnParam.spawn.room.name,
             spawnTime: Game.time
           }
         });
@@ -223,7 +229,10 @@ export class SpawnHelper {
         {
           memory: {
             role: 'claimer',
-            spawnTime: Game.time
+            spawnTime: Game.time,
+            room: spawnParam.spawn.room.name,
+            claimerRoom: spawnParam.claimer.claimerRoom,
+            claimerAction: spawnParam.claimer.claimerAction
           }
         });
       return;
