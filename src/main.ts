@@ -131,46 +131,51 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 2,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 5,
+      count: 4,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W8S5'
     },
     builder: {
       count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     upgrader: {
       count: 2,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     collector: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     claimer: {
       count: 1,
@@ -211,6 +216,15 @@ export const loop = ErrorMapper.wrapLoop(() => {
         }, {
           sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+        }
+      ]
+    },
+    {
+      room: Game.rooms['W9S5'],
+      links: [
+        {
+          sender: Game.getObjectById('5d0061ba63738f09b7810b80') as StructureLink,
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
         }
       ]
     }
