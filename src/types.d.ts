@@ -71,3 +71,10 @@ interface RoomLinks {
   room: Room;
   links: LinkPair[];
 }
+
+interface RoomConfig {
+  room: Room;
+  spawns: StructureSpawn[];
+  hasHostile: boolean;
+  collectorWithdrawStorageMode: boolean;
+}

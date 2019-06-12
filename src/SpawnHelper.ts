@@ -109,7 +109,7 @@ export class SpawnHelper {
     /* harvester */
     if (toSpawn === "harvester") {
       // spawn basic harvester
-      if (harvesters.length < 1) {
+      if (harvesters.length + harvesterExts.length < 1) {
         spawnParam.spawn.spawnCreep(
           [WORK, CARRY, CARRY, MOVE],
           'Harvester' + Game.time,

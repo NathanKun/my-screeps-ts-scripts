@@ -24,26 +24,32 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  // collector withdraw storage if low energy
   const spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn2']];
-  const rooms = ['W9S7', 'W9S5'];
-  const collectorWithdrawStorageMode = spawns.map(s => getCollectorWithdrawStorageMode(s));
+  const rooms: RoomConfig[] = [
+    {
+      room: Game.rooms['W9S7'],
+      spawns: [Game.spawns['Spawn1']],
+      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(Game.spawns['Spawn1']),
+      hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0
+    },
+    {
+      room: Game.rooms['W9S5'],
+      spawns: [Game.spawns['Spawn2']],
+      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(Game.spawns['Spawn2']),
+      hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
+    },
+  ];
 
   // structure being attack
-  if (Game.spawns['Spawn1'].room.find(FIND_MY_STRUCTURES, {
-    filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
-  }).length) {
-    const controller = Game.spawns['Spawn1'].room.controller;
-    if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
-      controller.activateSafeMode();
-    }
-  }
-  if (Game.spawns['Spawn2'].room.find(FIND_MY_STRUCTURES, {
-    filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
-  }).length) {
-    const controller = Game.spawns['Spawn2'].room.controller;
-    if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
-      controller.activateSafeMode();
+  for (const roomConfig of rooms) {
+    const spawn = roomConfig.spawns[0];
+    if (spawn.room.find(FIND_MY_STRUCTURES, {
+      filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
+    }).length) {
+      const controller = spawn.room.controller;
+      if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
+        controller.activateSafeMode();
+      }
     }
   }
 
@@ -52,6 +58,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
 
   TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
+  TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
   // hostile creeps in rooms
   const hasHostile = spawns.map(s => s.room.find(FIND_HOSTILE_CREEPS).length > 0);
@@ -60,7 +67,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const spawnParams = [{
     spawn: Game.spawns['Spawn1'],
     harvester: {
-      count: 2,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -129,7 +136,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   {
     spawn: Game.spawns['Spawn2'],
     harvester: {
-      count: 2,
+      count: 1,
       parts: [
         WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -190,17 +197,28 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   // auto spawn attack creep and defense
-  if (hasHostile[0]) {
-    Attack.spawn('a', 1);
-    Attack.attackCreeps(Game.spawns['Spawn1'].room.name);
-    collectorWithdrawStorageMode[0] = true;
-  } else {
-    if (Game.creeps['a1'] !== undefined &&
-      Game.creeps['a1'].room.name === Game.spawns['Spawn1'].room.name &&
-      Game.creeps['a1'].ticksToLive !== undefined &&
-      Game.creeps['a1'].ticksToLive!! < 1350) {
-      if (Game.spawns['Spawn1'].recycleCreep(Game.creeps['a1']) === ERR_NOT_IN_RANGE) {
-        Game.creeps['a1'].moveTo(Game.spawns['Spawn1']);
+  for (const roomConfig of rooms) {
+    // has hostile, spawn def creep and attack hostile creeps in room
+    if (roomConfig.hasHostile) {
+      Attack.spawn(roomConfig.spawns[0], 'def', 1);
+      Attack.attackCreeps(roomConfig.room.name, 'def');
+      roomConfig.collectorWithdrawStorageMode = true;
+    }
+    // no hostile, recycle def creep
+    else {
+      // def creeps
+      const defCreeps = _.filter(Game.creeps,
+        (creep) => creep.memory.role === 'def' && creep.room.name === roomConfig.room.name);
+
+      // recycle
+      if (defCreeps.length) {
+        for (const defCreep of defCreeps) {
+          if (defCreep.ticksToLive !== undefined && defCreep.ticksToLive!! < 1350) {
+            if (roomConfig.spawns[0].recycleCreep(defCreep) === ERR_NOT_IN_RANGE) {
+              defCreep.moveTo(roomConfig.spawns[0]);
+            }
+          }
+        }
       }
     }
   }
@@ -229,6 +247,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     }
   ];
+
   LinkUtil.transfer(roomLinks);
 
   // creeps
@@ -242,14 +261,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
         continue;
       }
 
+      const creepRoom = _.filter(rooms, roomConfig => roomConfig.room.name === c.memory.room)[0];
+
       const role = c.memory.role;
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = new Harvester(c, hasHostile[rooms.indexOf(c.memory.room!!)], roomLinks);
+        creep = new Harvester(c, creepRoom.hasHostile, roomLinks);
       }
       else if (role === 'harvesterExt') {
-        creep = new Harvester(c, hasHostile[rooms.indexOf(c.memory.room!!)], roomLinks);
+        creep = new Harvester(c, creepRoom.hasHostile, roomLinks);
       }
       else if (role === 'builder') {
         creep = new Builder(c);
@@ -262,8 +283,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
       else if (role === 'collector') {
         creep = new Collector(c);
-        (creep as Collector).withdrawStorageMode = collectorWithdrawStorageMode[rooms.indexOf(c.memory.room)];
-        if (collectorWithdrawStorageMode) {
+        (creep as Collector).withdrawStorageMode = creepRoom.collectorWithdrawStorageMode;
+        if (creepRoom.collectorWithdrawStorageMode) {
           creep.say("Withdraw")
         }
       } else if (role === 'claimer') {
@@ -296,7 +317,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   // renew creeps
-  for (const roomName in Game.rooms) {
+  for (const roomConfig of rooms) {
+    const roomName = roomConfig.room.name;
     let beingRepairedCreep = beingRepairedCreeps.get(roomName);
 
     // repair

@@ -16,8 +16,8 @@ hCreep: 15 tough + 5 heal + 10 move
 */
 
 export class Attack {
-  
-  public static spawn(type: string, count: number) {
+
+  public static spawn(spawn: StructureSpawn, type: string, count: number) {
     let parts;
     if (type === 't') {
       parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
@@ -35,15 +35,19 @@ export class Attack {
         MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE,
         HEAL, HEAL, HEAL, HEAL, HEAL]
+    } else if (type === 'def') {
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK]
     }
 
     if (parts !== undefined) {
       for (let i = 1; i <= count; i++) {
         if (!(type + i in Game.creeps)) {
-          Game.spawns['Spawn1'].spawnCreep(
+          spawn.spawnCreep(
             parts,
             type + i,
-            { memory: { role: type } } as SpawnOptions);
+            { memory: { role: type, room: spawn.room.name, spawnTime: Game.time } });
           return;
         }
       }
@@ -74,11 +78,11 @@ export class Attack {
     }
   }
 
-  public static attackCreeps(targetRoom: string): boolean {
+  public static attackCreeps(targetRoom: string, role: string): boolean {
     let hasTarget = false;
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
-      if (creep.memory.role === 'a') {
+      if (creep.memory.role === role) {
         if (creep.room.name !== targetRoom ||
           (creep.room.name === targetRoom &&
             (creep.pos.x === 49 || creep.pos.y === 49 || creep.pos.x === 0 || creep.pos.y === 0))) {
