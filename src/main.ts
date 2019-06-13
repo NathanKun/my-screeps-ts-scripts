@@ -60,7 +60,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
   // spawn creeps
-  const spawnParams = [{
+  const spawnParams: SpawnParam[] = [{
     spawn: Game.spawns['Spawn1'],
     harvester: {
       count: 1,
@@ -127,7 +127,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 1,
       parts: [CLAIM, MOVE],
       claimerRoom: 'W9S6',
-      claimerAction: 'reserve' as ClaimerAction
+      claimerAction: 'reserve'
     }
   },
   {
@@ -185,7 +185,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 1,
       parts: [CLAIM, MOVE],
       claimerRoom: 'W8S5',
-      claimerAction: 'reserve' as ClaimerAction
+      claimerAction: 'reserve'
     }
   }];
 
