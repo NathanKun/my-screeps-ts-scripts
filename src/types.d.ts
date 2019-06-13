@@ -27,6 +27,7 @@ interface CreepMemory {
   claimerRoom?: string;
   claimerAction? :ClaimerAction;
   cacheTime?: number;
+  withdrawStorageMode?: boolean;
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';

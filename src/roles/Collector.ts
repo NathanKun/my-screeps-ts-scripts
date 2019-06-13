@@ -10,10 +10,8 @@ export class Collector extends BaseCreep {
   private static STATUS_TRANSFERING = "transfering";
   private static STATUS_WITHDRAWING = "withdrawing";
 
-  public withdrawStorageMode: boolean = false;
-
   protected run() {
-    if (this.withdrawStorageMode) {
+    if (this.memory.withdrawStorageMode) {
       this.say('withdraw');
       if (this.carry.energy === this.carryCapacity) {
         this.memory.collectorStatus = Collector.STATUS_TRANSFERING;

@@ -9,6 +9,10 @@ export class Maintainer extends BaseCreep {
     // find if there is a collector work
     Collector.findCollectable(this);
 
+    if (this.memory.withdrawStorageMode) {
+      this.memory.role = 'collector';
+    }
+
     // if role is become collector, skip the rest code
     if (this.memory.role !== 'maintainer') {
       return;

@@ -277,10 +277,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
       else if (role === 'maintainer') {
         creep = new Maintainer(c);
+        creep.memory.withdrawStorageMode = creepRoom.collectorWithdrawStorageMode;
       }
       else if (role === 'collector') {
         creep = new Collector(c);
-        (creep as Collector).withdrawStorageMode = creepRoom.collectorWithdrawStorageMode;
+        creep.memory.withdrawStorageMode = creepRoom.collectorWithdrawStorageMode;
         if (creepRoom.collectorWithdrawStorageMode) {
           creep.say("Withdraw")
         }
