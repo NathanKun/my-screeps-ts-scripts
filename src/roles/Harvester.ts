@@ -48,48 +48,75 @@ export class Harvester extends BaseCreep {
       }
       // no hostile
       else {
-        let targets: AnyStructure[];
+        let target: StructureSpawn | StructureExtension | StructureTower | StructureLink | StructureStorage | StructureContainer | Structure | null | undefined;
 
-        // prior find extensions
-        targets = this.findExtensions();
-
-        // prior find spawns
-        if (targets.length === 0) {
-          targets = this.findSpawns();
-        }
-
-        // find low energy towers
-        if (targets.length === 0) {
-          targets = this.findTowers(500);
-        }
-
-        // find links
-        if (targets.length === 0) {
-          targets = this.findLinks();
-        }
-
-        // find prefer transfer structure
-        if (targets.length === 0) {
-          if (this.memory.preferTransferStructure === 'tower') {
-            targets = this.findTowers(850);
-          } else if (this.memory.preferTransferStructure === 'storage') {
-            targets = this.findStorage();
+        // if has cache
+        if (this.memory.transferTarget && this.memory.cacheTime) {
+          // invalidate old cache > 3 tick
+          if (Game.time - this.memory.cacheTime > 3) {
+            this.memory.transferTarget = undefined;
+            this.memory.cacheTime = undefined;
+          } else {
+            target = Game.getObjectById(this.memory.transferTarget);
           }
         }
 
-        // find high energy towers
-        if (targets.length === 0) {
-          targets = this.findTowers(850);
+        // no cache or cache invalidated
+        if (!target) {
+          let targets: AnyStructure[];
+
+          // prior find extensions
+          targets = this.findExtensions();
+
+          // prior find spawns
+          if (targets.length === 0) {
+            targets = this.findSpawns();
+          }
+
+          // find low energy towers
+          if (targets.length === 0) {
+            targets = this.findTowers(500);
+          }
+
+          // find links
+          if (targets.length === 0) {
+            targets = this.findLinks();
+          }
+
+          // find prefer transfer structure
+          if (targets.length === 0) {
+            if (this.memory.preferTransferStructure === 'tower') {
+              targets = this.findTowers(850);
+            } else if (this.memory.preferTransferStructure === 'storage') {
+              targets = this.findStorage();
+            }
+          }
+
+          // find high energy towers
+          if (targets.length === 0) {
+            targets = this.findTowers(850);
+          }
+
+          // find storages
+          if (targets.length === 0) {
+            targets = this.findStorage();
+          }
+
+          if (targets.length > 0) {
+            target = targets[0];
+            // cache
+            this.memory.transferTarget = target.id;
+            this.memory.cacheTime = Game.time;
+          }
         }
 
-        // find storages
-        if (targets.length === 0) {
-          targets = this.findStorage();
-        }
-
-        if (targets.length > 0) {
-          if (this.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.moveTo(targets[0], { reusePath: 3, visualizePathStyle: { stroke: '#ffaa00' } });
+        if (target) {
+          const res = this.transfer(target, RESOURCE_ENERGY);
+          if (res === ERR_NOT_IN_RANGE) {
+            this.moveTo(target, { reusePath: 3, visualizePathStyle: { stroke: '#ffaa00' } });
+          } else if (res === OK) {
+            this.memory.transferTarget = undefined;
+            this.memory.cacheTime = undefined;
           }
         }
         // nothing to do, upgrade room controller

@@ -24,7 +24,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  const spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn2']];
   const rooms: RoomConfig[] = [
     {
       room: Game.rooms['W9S7'],
@@ -60,9 +59,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
   TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
-  // hostile creeps in rooms
-  const hasHostile = spawns.map(s => s.room.find(FIND_HOSTILE_CREEPS).length > 0);
-
   // spawn creeps
   const spawnParams = [{
     spawn: Game.spawns['Spawn1'],
@@ -88,12 +84,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
       harvestRoom: 'W9S6'
     },
     builder: {
-      count: -1,
+      count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE
       ]
     },
     upgrader: {
