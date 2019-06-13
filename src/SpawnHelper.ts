@@ -61,6 +61,7 @@ export class SpawnHelper {
     let toSpawn = "harvester"; // prior harveste
 
     if (max <= 0) {
+      max = 0;
       if (spawnParam.maintainer.count - maintainers.length > max) {
         max = spawnParam.maintainer.count - maintainers.length;
         toSpawn = "maintainer";
@@ -243,6 +244,7 @@ export class SpawnHelper {
     try {
       SpawnHelper.internalSpawn(spawnParam);
     } catch (e) {
+      console.log('Error in SpawnHelper.spwan: ' + e);
       const outText = ErrorMapper.sourceMappedStackTrace(e);
       Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' +
         '\n' + e + '\n' + outText);
