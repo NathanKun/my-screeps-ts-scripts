@@ -155,7 +155,8 @@ export class SpawnHelper {
             preferTransferStructure: 'tower',
             harvestRoom: spawnParam.harvesterExt.harvestRoom,
             transferRoom: spawnParam.spawn.room.name,
-            spawnTime: Game.time
+            spawnTime: Game.time,
+            canAttack: spawnParam.harvesterExt.canAttack
           }
         });
       return;

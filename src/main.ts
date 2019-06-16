@@ -27,7 +27,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const rooms: RoomConfig[] = [
     {
       room: Game.rooms['W9S7'],
-      spawns: [Game.spawns['Spawn1']],
+      spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(Game.spawns['Spawn1']),
       hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0
     },
@@ -38,6 +38,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
     },
   ];
+
+  // rooms[0].collectorWithdrawStorageMode = true;
+  // rooms[1].collectorWithdrawStorageMode = true;
 
   // structure being attack
   for (const roomConfig of rooms) {
@@ -135,18 +138,19 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 1,
       parts: [
-        WORK, WORK,
+        WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 4,
+      count: 5,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
-      harvestRoom: 'W8S5'
+        ATTACK,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      harvestRoom: 'W8S5',
+      canAttack: true
     },
     builder: {
       count: 1,
@@ -230,6 +234,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
         }, {
           sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+        }, {
+          sender: Game.getObjectById('5d03e47bc2ac6453595fe392') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
         }
       ]

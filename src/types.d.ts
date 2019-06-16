@@ -25,9 +25,10 @@ interface CreepMemory {
   upgraderLinkTarget?: string;
   upgraderUseStorageMin?: number;
   claimerRoom?: string;
-  claimerAction? :ClaimerAction;
+  claimerAction?: ClaimerAction;
   cacheTime?: number;
   withdrawStorageMode?: boolean;
+  canAttack?: boolean;
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
@@ -50,7 +51,8 @@ interface RoleParam {
   harvestRoom?: string;
   upgraderUseStorageMin?: number;
   claimerRoom?: string;
-  claimerAction? :'attack' | 'reserve' | 'claim';
+  claimerAction?: ClaimerAction;
+  canAttack?: boolean;
 }
 
 interface SpawnParam {

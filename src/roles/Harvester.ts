@@ -23,6 +23,18 @@ export class Harvester extends BaseCreep {
       this.say('🚧 transfer');
     }
 
+    // attack near by hostile creep
+    if (this.memory.canAttack) {
+      const hostileCreeps = this.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
+
+      if (hostileCreeps.length) {
+        if (this.attack(hostileCreeps[0]) === ERR_NOT_IN_RANGE) {
+          this.moveTo(hostileCreeps[0]);
+        }
+        return;
+      }
+    }
+
     // transfer
     if (this.memory.transfering) {
       // if harvested in another room
