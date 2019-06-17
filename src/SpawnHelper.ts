@@ -17,17 +17,17 @@ export class SpawnHelper {
 
   private static internalSpawn(spawnParam: SpawnParam) {
 
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawn.room.name);
-    const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawn.room.name);
-    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawn.room.name);
-    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawn.room.name);
-    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawn.room.name);
-    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawn.room.name);
-    const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawn.room.name);
+    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawns[0].room.name);
+    const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name);
+    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawns[0].room.name);
+    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawns[0].room.name);
+    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawns[0].room.name);
+    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawns[0].room.name);
+    const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name);
 
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder.count === -1) {
-      if (spawnParam.spawn.room.find(FIND_CONSTRUCTION_SITES).length !== 0) {
+      if (spawnParam.spawns[0].room.find(FIND_CONSTRUCTION_SITES).length !== 0) {
         spawnParam.builder.count = 1;
       } else {
         spawnParam.builder.count = 0;
@@ -47,7 +47,7 @@ export class SpawnHelper {
       }
     }
     else if (spawnParam.maintainer.count === -1) {
-      if (spawnParam.spawn.room.find(FIND_STRUCTURES, {
+      if (spawnParam.spawns[0].room.find(FIND_STRUCTURES, {
         filter: s => s.structureType === STRUCTURE_ROAD && ((s.hits / s.hitsMax) < spawnMaintainerRatio)
       }).length !== 0) {
         spawnParam.maintainer.count = 1;
@@ -98,29 +98,39 @@ export class SpawnHelper {
     console.log('Collectors:    \t' + collectors.length + " Missing: \t" + (spawnParam.collector.count - collectors.length));
     console.log('Claimers:      \t' + claimers.length + " Missing: \t" + (spawnParam.claimer.count - claimers.length));
 
-    if (spawnParam.spawn.spawning) {
-      const spawningCreep = Game.creeps[spawnParam.spawn.spawning!!.name];
-      console.log("Spawning: " + spawningCreep.memory.role);
-    }
+    const notSpawningSpawns = spawnParam.spawns.filter(s => {
+      if (s.spawning) {
+        const spawningCreep = Game.creeps[s.spawning.name];
+        console.log("Spawning: " + spawningCreep.memory.role);
+        return false;
+      }
+      return true;
+    });
+
     if (max <= 0) {
       return;
     }
+
     console.log('Next spawn: ' + toSpawn);
+
+    if (notSpawningSpawns.length === 0) {
+      return;
+    }
 
     /* harvester */
     if (toSpawn === "harvester") {
       // spawn basic harvester
       if (harvesters.length + harvesterExts.length < 1) {
-        spawnParam.spawn.spawnCreep(
+        spawnParam.spawns[0].spawnCreep(
           [WORK, CARRY, CARRY, MOVE],
           'Harvester' + Game.time,
           {
             memory: {
               role: 'harvester',
-              room: spawnParam.spawn.room.name,
+              room: spawnParam.spawns[0].room.name,
               preferTransferStructure: 'tower',
-              harvestRoom: spawnParam.spawn.room.name,
-              transferRoom: spawnParam.spawn.room.name,
+              harvestRoom: spawnParam.spawns[0].room.name,
+              transferRoom: spawnParam.spawns[0].room.name,
               spawnTime: Game.time
             }
           });
@@ -128,13 +138,13 @@ export class SpawnHelper {
       }
       // spawn advance harvester
       else {
-        spawnParam.spawn.spawnCreep(
+        spawnParam.spawns[0].spawnCreep(
           spawnParam.harvester.parts,
           'Harvester' + Game.time,
           {
             memory: {
               role: 'harvester',
-              room: spawnParam.spawn.room.name,
+              room: spawnParam.spawns[0].room.name,
               preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
               spawnTime: Game.time
             }
@@ -145,16 +155,16 @@ export class SpawnHelper {
 
     /* harvester ext */
     else if (toSpawn === "harvesterExt") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.harvesterExt.parts,
         'HarvesterExt' + Game.time,
         {
           memory: {
             role: 'harvesterExt',
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             preferTransferStructure: 'tower',
             harvestRoom: spawnParam.harvesterExt.harvestRoom,
-            transferRoom: spawnParam.spawn.room.name,
+            transferRoom: spawnParam.spawns[0].room.name,
             spawnTime: Game.time,
             canAttack: spawnParam.harvesterExt.canAttack
           }
@@ -164,13 +174,13 @@ export class SpawnHelper {
 
     /* builder */
     else if (toSpawn === "builder") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.builder.parts,
         'Builder' + Game.time,
         {
           memory: {
             role: 'builder',
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             spawnTime: Game.time
           }
         });
@@ -179,13 +189,13 @@ export class SpawnHelper {
 
     /* upgrader */
     else if (toSpawn === "upgrader") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.upgrader.parts,
         'Upgrader' + Game.time,
         {
           memory: {
             role: 'upgrader',
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             spawnTime: Game.time,
             upgraderUseStorageMin: spawnParam.upgrader.upgraderUseStorageMin
           }
@@ -195,13 +205,13 @@ export class SpawnHelper {
 
     /* maintainer */
     else if (toSpawn === "maintainer") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.maintainer.parts,
         'Maintainer' + Game.time,
         {
           memory: {
             role: 'maintainer',
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             spawnTime: Game.time
           }
         });
@@ -210,13 +220,13 @@ export class SpawnHelper {
 
     /* collector */
     else if (toSpawn === "collector") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.collector.parts,
         'Collector' + Game.time,
         {
           memory: {
             role: 'collector',
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             spawnTime: Game.time
           }
         });
@@ -225,14 +235,14 @@ export class SpawnHelper {
 
     /* claimer */
     else if (toSpawn === "claimer") {
-      spawnParam.spawn.spawnCreep(
+      spawnParam.spawns[0].spawnCreep(
         spawnParam.claimer.parts,
         'Claimer' + Game.time,
         {
           memory: {
             role: 'claimer',
             spawnTime: Game.time,
-            room: spawnParam.spawn.room.name,
+            room: spawnParam.spawns[0].room.name,
             claimerRoom: spawnParam.claimer.claimerRoom,
             claimerAction: spawnParam.claimer.claimerAction
           }

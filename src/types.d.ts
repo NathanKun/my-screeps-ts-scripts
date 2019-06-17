@@ -56,7 +56,7 @@ interface RoleParam {
 }
 
 interface SpawnParam {
-  spawn: StructureSpawn;
+  spawns: StructureSpawn[];
   builder: RoleParam;
   upgrader: RoleParam;
   maintainer: RoleParam;

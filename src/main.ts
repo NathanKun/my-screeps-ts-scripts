@@ -64,7 +64,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // spawn creeps
   const spawnParams: SpawnParam[] = [{
-    spawn: Game.spawns['Spawn1'],
+    spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
     harvester: {
       count: 1,
       parts: [
@@ -135,7 +135,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   },
   {
-    spawn: Game.spawns['Spawn2'],
+    spawns: [Game.spawns['Spawn2']],
     harvester: {
       count: 1,
       parts: [
@@ -335,7 +335,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // recycle check
         if (beingRepairedCreep.memory.toRecycle === undefined) {
           for (const p of spawnParams) {
-            if (p.spawn.name === spawn.name) {
+            if (spawn.name in p.spawns.map(s => s.name)) {
               const roleParam = getRoleSpawnParamByName(beingRepairedCreep.memory.role, p);
               if (roleParam === null) {
                 continue;
