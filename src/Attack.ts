@@ -4,8 +4,8 @@
 tCreep: 40 tough + 10 move => 5000 hits
 	cost: 40 * 10 + 10 * 50 = 900 energy
 
-aCreep: 20 tough + 10 attack + 20 move
-	cost: 20 * 10 + 10 * 80 + 20 * 50 = 2000
+aCreep: 5 tough + 10 attack + 15 move
+	cost: 5 * 10 + 10 * 80 + 15 * 50 = 1600
 
 hCreep: 15 tough + 5 heal + 10 move
 	cost: 15 * 10 + 5 * 250 + 10 * 50 = 1900
