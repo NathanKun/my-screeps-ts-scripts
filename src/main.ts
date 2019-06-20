@@ -139,24 +139,27 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
       count: 5,
       parts: [
-        WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY,
         ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W8S5',
       canAttack: true
     },
     builder: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
@@ -164,7 +167,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     upgrader: {
       count: 2,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
@@ -173,7 +176,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
@@ -181,7 +184,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     collector: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
@@ -247,6 +250,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
       links: [
         {
           sender: Game.getObjectById('5d0061ba63738f09b7810b80') as StructureLink,
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
+        },
+        {
+          sender: Game.getObjectById('5d0a7d41308228440a39201d') as StructureLink,
           receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
         }
       ]
@@ -394,7 +401,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  console.log('Tick ended')
+
+  console.log('Tick ended');
 
 
   function getCollectorWithdrawStorageMode(spawn: StructureSpawn): boolean {
