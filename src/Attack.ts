@@ -67,7 +67,13 @@ export class Attack {
     Game.creeps[name].moveTo(new RoomPosition(x, y, targetRoom));
   }
 
-  public static attack(target: Structure) {
+
+  public static attackById(targetId: string) {
+    const target = Game.getObjectById(targetId) as Creep | PowerCreep | Structure;
+    Attack.attack(target);
+  }
+
+  public static attack(target: Creep | PowerCreep | Structure) {
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];
       if (creep.memory.role === 'a') {
@@ -102,7 +108,7 @@ export class Attack {
     return hasTarget;
   }
 
-  public static attackSpawn(targetRoom: string): boolean {
+  public static attackSpawns(targetRoom: string): boolean {
     let hasTarget = false;
     for (const name in Game.creeps) {
       const creep = Game.creeps[name];

@@ -255,7 +255,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   LinkUtil.transfer(roomLinks);
 
-  // creeps
+  // creeps work
   const waitingRepairCreeps = new Map<string, BaseCreep[]>();
   const beingRepairedCreeps = new Map<string, BaseCreep>();
 
