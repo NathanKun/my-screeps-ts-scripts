@@ -79,7 +79,7 @@ export class Harvester extends BaseCreep {
           const spawnNotRepairing = spawns.every(s => s.memory.renewingCreep === false);
           let targets: AnyStructure[] = [];
 
-          if (spawnNotRepairing) {
+          if (spawnNotRepairing || this.room.memory.energyPercentage < 0.5) {
             // find extensions
             targets = this.findExtensions();
 

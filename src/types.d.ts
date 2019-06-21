@@ -31,6 +31,23 @@ interface CreepMemory {
   canAttack?: boolean;
 }
 
+interface SpawnMemory {
+  renewingCreep: boolean;
+}
+
+interface RoomMemory {
+  energy: number;
+  energyCapacity: number;
+  energyPercentage: number;
+  harvester: number;
+  harvesterExt: number;
+  builder: number;
+  upgrader: number;
+  collector: number;
+  maintainer: number;
+  claimer: number;
+}
+
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
 
 interface Memory {

@@ -25,6 +25,14 @@ export class SpawnHelper {
     const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawns[0].room.name);
     const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name);
 
+    spawnParam.spawns[0].room.memory.harvester = harvesters.length;
+    spawnParam.spawns[0].room.memory.harvesterExt = harvesterExts.length;
+    spawnParam.spawns[0].room.memory.builder = builders.length;
+    spawnParam.spawns[0].room.memory.upgrader = upgraders.length;
+    spawnParam.spawns[0].room.memory.maintainer = maintainers.length;
+    spawnParam.spawns[0].room.memory.collector = collectors.length;
+    spawnParam.spawns[0].room.memory.claimer = claimers.length;
+
     /* Auto spawn builders if there is construction site */
     if (spawnParam.builder.count === -1) {
       if (spawnParam.spawns[0].room.find(FIND_CONSTRUCTION_SITES).length !== 0) {

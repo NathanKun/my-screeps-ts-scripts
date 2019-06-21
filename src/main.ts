@@ -24,45 +24,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  const rooms: RoomConfig[] = [
-    {
-      room: Game.rooms['W9S7'],
-      spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
-      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(Game.spawns['Spawn1']),
-      hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0
-    },
-    {
-      room: Game.rooms['W9S5'],
-      spawns: [Game.spawns['Spawn2']],
-      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(Game.spawns['Spawn2']),
-      hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
-    },
-  ];
-
-  // rooms[0].collectorWithdrawStorageMode = true;
-  // rooms[1].collectorWithdrawStorageMode = true;
-
-  // structure being attack
-  for (const roomConfig of rooms) {
-    const spawn = roomConfig.spawns[0];
-    if (spawn.room.find(FIND_MY_STRUCTURES, {
-      filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
-    }).length) {
-      const controller = spawn.room.controller;
-      if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
-        controller.activateSafeMode();
-      }
-    }
-  }
-
-  // tower defense & repair
-  TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
-  TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
-
-  TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
-  TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
-
-  // spawn creeps
+  // spawn creeps params
   const spawnParams: SpawnParam[] = [{
     spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
     harvester: {
@@ -196,6 +158,61 @@ export const loop = ErrorMapper.wrapLoop(() => {
       claimerAction: 'reserve'
     }
   }];
+
+  const rooms: RoomConfig[] = [
+    {
+      room: Game.rooms['W9S7'],
+      spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
+      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[0]),
+      hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0
+    },
+    {
+      room: Game.rooms['W9S5'],
+      spawns: [Game.spawns['Spawn2']],
+      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
+      hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
+    },
+  ];
+
+  // rooms[0].collectorWithdrawStorageMode = true;
+  // rooms[1].collectorWithdrawStorageMode = true;
+
+  for (const roomConfig of rooms) {
+    // structure being attack
+    const spawn = roomConfig.spawns[0];
+    if (spawn.room.find(FIND_MY_STRUCTURES, {
+      filter: s => s.structureType !== STRUCTURE_RAMPART && s.hits !== s.hitsMax
+    }).length) {
+      const controller = spawn.room.controller;
+      if (controller && controller.safeMode === undefined && controller.safeModeAvailable > 0) {
+        controller.activateSafeMode();
+      }
+    }
+
+    // energy
+    const energyStructures: [StructureExtension, StructureSpawn] = roomConfig.room.find(FIND_MY_STRUCTURES, {
+      filter: s => s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION
+    }) as [StructureExtension, StructureSpawn];
+
+    let energy = 0;
+    let energyCapacity = 0;
+
+    energyStructures.forEach(s => {
+      energy += s.energy;
+      energyCapacity += s.energyCapacity;
+    });
+
+    roomConfig.room.memory.energy = energy;
+    roomConfig.room.memory.energyCapacity = energyCapacity;;
+    roomConfig.room.memory.energyPercentage = energy / energyCapacity;
+  }
+
+  // tower defense & repair
+  TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
+  TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
+
+  TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
+  TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
   for (const p of spawnParams) {
     SpawnHelper.spawn(p);
@@ -382,6 +399,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // recycle
         if (beingRepairedCreep.memory.toRecycle === true) {
           spawn.recycleCreep(beingRepairedCreep);
+          spawn.memory.renewingCreep = false;
         }
         // renew
         else {
@@ -411,24 +429,20 @@ export const loop = ErrorMapper.wrapLoop(() => {
   console.log('Tick ended');
 
 
-  function getCollectorWithdrawStorageMode(spawn: StructureSpawn): boolean {
+  function getCollectorWithdrawStorageMode(spawnParam: SpawnParam): boolean {
+    const spawn = spawnParam.spawns[0];
     try {
-      let capacity = spawn.energyCapacity;
-      let energy = spawn.energy;
-
-      spawn.room.find(FIND_MY_STRUCTURES, {
-        filter: s => s.structureType === STRUCTURE_EXTENSION
-      }).forEach(s => {
-        s = s as StructureExtension;
-        capacity += s.energyCapacity;
-        energy += s.energy;
-      });
+      const capacity = spawn.room.memory.energyCapacity;
+      const energy = spawn.room.memory.energy;
 
       const storageNotEmpty = spawn.room.find(FIND_MY_STRUCTURES, {
         filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > 0
       }).length > 0;
 
-      return (energy / capacity < 0.2) && storageNotEmpty;
+      return ((energy / capacity < 0.2) ||
+        spawn.room.memory.harvester < spawnParam.harvester.count ||
+        spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count)
+        && storageNotEmpty;
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);
       Game.notify('Game.time = ' + Game.time + '\n' +

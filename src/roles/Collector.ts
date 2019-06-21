@@ -17,6 +17,8 @@ export class Collector extends BaseCreep {
         this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
       } else if (this.carry.energy === 0) {
         this.memory.collectorStatus = Collector.STATUS_WITHDRAWING;
+      } else {
+        this.memory.collectorStatus = Collector.STATUS_WITHDRAWING;
       }
 
       if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
