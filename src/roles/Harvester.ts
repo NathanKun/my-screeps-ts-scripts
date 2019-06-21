@@ -75,14 +75,18 @@ export class Harvester extends BaseCreep {
 
         // no cache or cache invalidated
         if (!target) {
-          let targets: AnyStructure[];
+          const spawns = this.findSpawns();
+          const spawnNotRepairing = spawns.every(s => s.memory.renewingCreep === false);
+          let targets: AnyStructure[] = [];
 
-          // prior find extensions
-          targets = this.findExtensions();
+          if (spawnNotRepairing) {
+            // find extensions
+            targets = this.findExtensions();
 
-          // prior find spawns
-          if (targets.length === 0) {
-            targets = this.findSpawns();
+            // find spawns
+            if (targets.length === 0) {
+              targets = spawns;
+            }
           }
 
           // find low energy towers
@@ -166,13 +170,13 @@ export class Harvester extends BaseCreep {
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 
-  private findSpawns() {
-    return this.room.find(FIND_STRUCTURES, {
+  private findSpawns(): StructureSpawn[] {
+    return (this.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_SPAWN &&
           structure.energy < structure.energyCapacity;
       }
-    }).sort((s1, s2) =>
+    }) as StructureSpawn[]).sort((s1, s2) =>
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 

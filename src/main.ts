@@ -385,10 +385,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
         }
         // renew
         else {
-          if (spawn.renewCreep(beingRepairedCreep) === ERR_NOT_ENOUGH_ENERGY) {
-            beingRepairedCreep.memory.waitingRepair = false;
-            beingRepairedCreep.memory.beingRepaired = false;
-            beingRepairedCreep.memory.toRecycle = undefined
+          const renewResult = spawn.renewCreep(beingRepairedCreep);
+          if (renewResult === OK) {
+            spawn.memory.renewingCreep = true;
+          } else {
+            spawn.memory.renewingCreep = false;
+            if (renewResult === ERR_NOT_ENOUGH_ENERGY) {
+              beingRepairedCreep.memory.waitingRepair = false;
+              beingRepairedCreep.memory.beingRepaired = false;
+              beingRepairedCreep.memory.toRecycle = undefined;
+            }
           }
         }
       }
