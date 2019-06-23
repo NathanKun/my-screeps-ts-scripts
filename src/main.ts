@@ -357,16 +357,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
       if (spawn) {
         // recycle check
-        if (beingRepairedCreep.memory.toRecycle === undefined) {
+        /*if (beingRepairedCreep.memory.toRecycle === undefined) {
           for (const p of spawnParams) {
             if (p.spawns.map(s => s.name).indexOf(spawn.name) > -1) {
               const roleParam = getRoleSpawnParamByName(beingRepairedCreep.memory.role, p);
               if (roleParam === null) {
-                /*const log = "roleParam === null with:" +
-                  "beingRepairedCreep.memory.role = " + beingRepairedCreep.memory.role +
-                  "p = " + p;
-                console.log(log);
-                Game.notify(log);*/
                 continue;
               }
 
@@ -384,17 +379,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
                 beingRepairedCreep.memory.toRecycle = false;
               }
               break;
-            }/* else {
-              const log = "spawn.name " + spawn.name + " not found in " + p.spawns.map(s => s.name);
-              console.log(log);
-              Game.notify(log);
-            }*/
+            }
           }
 
           if (beingRepairedCreep.memory.toRecycle === undefined) {
             beingRepairedCreep.memory.toRecycle = true;
           }
-        }
+        }*/
+        beingRepairedCreep.memory.toRecycle = true;
 
         // recycle
         if (beingRepairedCreep.memory.toRecycle === true) {

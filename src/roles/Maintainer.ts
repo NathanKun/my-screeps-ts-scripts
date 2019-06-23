@@ -22,10 +22,14 @@ export class Maintainer extends BaseCreep {
       this.memory.reparing = false;
       this.memory.reparingTarget = undefined;
       this.say('🔄 harvest');
-    }
-    if (!this.memory.reparing && this.carry.energy === this.carryCapacity) {
+    } else if (!this.memory.reparing && this.carry.energy === this.carryCapacity) {
       this.memory.reparing = true;
       FindSourceUtil.clear(this);
+    }
+
+    if (this.memory.reparing === undefined){
+        this.memory.reparing = false;
+        this.memory.reparingTarget = undefined;
     }
 
     if (this.memory.reparing) {

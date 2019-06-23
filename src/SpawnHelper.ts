@@ -129,7 +129,7 @@ export class SpawnHelper {
     if (toSpawn === "harvester") {
       // spawn basic harvester
       if (harvesters.length + harvesterExts.length < 1) {
-        spawnParam.spawns[0].spawnCreep(
+        notSpawningSpawns[0].spawnCreep(
           [WORK, CARRY, CARRY, MOVE],
           'Harvester' + Game.time,
           {
@@ -146,7 +146,7 @@ export class SpawnHelper {
       }
       // spawn advance harvester
       else {
-        spawnParam.spawns[0].spawnCreep(
+        notSpawningSpawns[0].spawnCreep(
           spawnParam.harvester.parts,
           'Harvester' + Game.time,
           {
@@ -163,7 +163,7 @@ export class SpawnHelper {
 
     /* harvester ext */
     else if (toSpawn === "harvesterExt") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.harvesterExt.parts,
         'HarvesterExt' + Game.time,
         {
@@ -182,7 +182,7 @@ export class SpawnHelper {
 
     /* builder */
     else if (toSpawn === "builder") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.builder.parts,
         'Builder' + Game.time,
         {
@@ -197,7 +197,7 @@ export class SpawnHelper {
 
     /* upgrader */
     else if (toSpawn === "upgrader") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.upgrader.parts,
         'Upgrader' + Game.time,
         {
@@ -213,7 +213,7 @@ export class SpawnHelper {
 
     /* maintainer */
     else if (toSpawn === "maintainer") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.maintainer.parts,
         'Maintainer' + Game.time,
         {
@@ -228,7 +228,7 @@ export class SpawnHelper {
 
     /* collector */
     else if (toSpawn === "collector") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.collector.parts,
         'Collector' + Game.time,
         {
@@ -243,7 +243,7 @@ export class SpawnHelper {
 
     /* claimer */
     else if (toSpawn === "claimer") {
-      spawnParam.spawns[0].spawnCreep(
+      notSpawningSpawns[0].spawnCreep(
         spawnParam.claimer.parts,
         'Claimer' + Game.time,
         {

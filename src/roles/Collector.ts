@@ -18,7 +18,7 @@ export class Collector extends BaseCreep {
       } else if (this.carry.energy === 0) {
         this.memory.collectorStatus = Collector.STATUS_WITHDRAWING;
       } else {
-        this.memory.collectorStatus = Collector.STATUS_WITHDRAWING;
+        this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
       }
 
       if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
@@ -100,25 +100,15 @@ export class Collector extends BaseCreep {
         this.say('🚚');
         this.memory.collectorTarget = undefined;
 
-        // Extensions
+        // Extensions or spawns
         let targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return structure.structureType === STRUCTURE_EXTENSION &&
+            return (structure.structureType === STRUCTURE_EXTENSION ||
+              structure.structureType === STRUCTURE_SPAWN) &&
               structure.energy < structure.energyCapacity;
           }
         }).sort((s1, s2) =>
           this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
-
-        // spwan
-        if (targets.length === 0) {
-          targets = this.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-              return structure.structureType === STRUCTURE_SPAWN &&
-                structure.energy < structure.energyCapacity;
-            }
-          }).sort((s1, s2) =>
-            this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
-        }
 
         // tower
         if (targets.length === 0) {

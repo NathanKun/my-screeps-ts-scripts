@@ -11,7 +11,7 @@ export abstract class BaseCreep extends Creep {
   }
 
   protected repairCheck(): void {
-    if (this.ticksToLive && this.ticksToLive < 100) {
+    if (this.ticksToLive && this.ticksToLive < 50) {
       const spawn = this.pos.findClosestByPath(FIND_MY_SPAWNS);
       if (spawn && !spawn.spawning) {
         this.moveTo(spawn);
