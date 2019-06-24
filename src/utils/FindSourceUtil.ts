@@ -1,4 +1,6 @@
 export class FindSourceUtil {
+  private static harvesterLimiteMap: any = {'5bbcac809099fc012e635913': 1};
+
   public static findSource(creep: Creep): Source {
     /*const creeps = Game.creeps;
 
@@ -43,7 +45,9 @@ export class FindSourceUtil {
           const top = y === 0 ? 0 : y - 1;
           const bottom = y === 49 ? 49 : y + 1;
 
-          return creep.room.lookForAtArea(LOOK_CREEPS, top, left, bottom, right, true).length < 4;
+          const harvesterLimite = FindSourceUtil.harvesterLimiteMap.hasOwnProperty(s.id) ? FindSourceUtil.harvesterLimiteMap[s.id] : 4;
+
+          return creep.room.lookForAtArea(LOOK_CREEPS, top, left, bottom, right, true).length < harvesterLimite;
         }
       });
 

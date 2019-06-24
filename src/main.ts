@@ -188,12 +188,18 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: 0,
-      parts: [],
+      count: 1,
+      parts: [
+        WORK,
+        CARRY,
+        MOVE],
     },
     collector: {
-      count: 0,
-      parts: [],
+      count: 1,
+      parts: [
+        WORK,
+        CARRY,
+        MOVE],
     },
     claimer: {
       count: 0,
@@ -215,13 +221,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
       spawns: [Game.spawns['Spawn2']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
-    }/*,
+    },
     {
       room: Game.rooms['W8S6'],
       spawns: [Game.spawns['Spawn3']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[2]),
       hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0
-    }*/
+    }
   ];
 
   // rooms[0].collectorWithdrawStorageMode = true;
