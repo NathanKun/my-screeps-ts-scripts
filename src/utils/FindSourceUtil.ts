@@ -17,8 +17,9 @@ export class FindSourceUtil {
     // already harvesting
     if (creep.memory.harvesting) {
       const source = Game.getObjectById(creep.memory.harvestSource) as Source;
+
       // if current source no more energy, find another one
-      if (source.energy === 0) {
+      if (source === undefined || source.energy === 0) {
         FindSourceUtil.clear(creep);
         return FindSourceUtil.findSource(creep);
       }

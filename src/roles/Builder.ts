@@ -4,12 +4,10 @@ import { BaseCreep } from "./BaseCreep";
 export class Builder extends BaseCreep {
 
   protected run() {
-    if (this.memory.room !== this.room.name) {
+    if (this.memory.room !== this.room.name || this.pos.x === 0 || this.pos.x === 49 || this.pos.x === 0 || this.pos.y === 49) {
       this.moveTo(new RoomPosition(20, 20, this.memory.room));
       return;
     }
-
-    let idle = true;
 
     if (this.memory.building && this.carry.energy === 0) {
       this.memory.building = false;
@@ -40,13 +38,11 @@ export class Builder extends BaseCreep {
         if (this.build(targets[0]) === ERR_NOT_IN_RANGE) {
           this.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffff66' } });
         }
-        idle = false;
       }
       // nothing to build, upgrade room controller
       else {
         if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {
           this.moveTo(this.room.controller!!, { maxRooms: 0, visualizePathStyle: { stroke: '#66ccff' } });
-          idle = false;
         }
       }
     }
@@ -56,9 +52,6 @@ export class Builder extends BaseCreep {
       if (this.harvest(source) === ERR_NOT_IN_RANGE) {
         this.moveTo(source, { visualizePathStyle: { stroke: '#ffffff' } });
       }
-      idle = false;
     }
-
-    return idle;
   }
 };

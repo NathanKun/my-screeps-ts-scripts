@@ -21,10 +21,10 @@ export class Claimer extends BaseCreep {
             result = this.reserveController(targetController);
             break;
           case 'attack':
-            result = this.reserveController(targetController);
+            result = this.attackController(targetController);
             break;
           case 'claim':
-            result = this.reserveController(targetController);
+            result = this.claimController(targetController);
             break;
         }
 

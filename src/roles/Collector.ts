@@ -177,7 +177,7 @@ export class Collector extends BaseCreep {
 
   private static findDroppedResources(creep: BaseCreep) {
     return creep.room.find(FIND_DROPPED_RESOURCES, {
-      filter: r => r.resourceType === RESOURCE_ENERGY
+      filter: r => r.resourceType === RESOURCE_ENERGY && r.amount > 30
     }).sort((r1, r2) => r2.amount - r1.amount);
   }
 

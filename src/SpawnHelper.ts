@@ -17,6 +17,10 @@ export class SpawnHelper {
 
   private static internalSpawn(spawnParam: SpawnParam) {
 
+    if (!spawnParam.spawns[0]) {
+      return;
+    }
+
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawns[0].room.name);
     const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name);
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawns[0].room.name);
@@ -74,13 +78,13 @@ export class SpawnHelper {
         max = spawnParam.maintainer.count - maintainers.length;
         toSpawn = "maintainer";
       }
-      else if (spawnParam.claimer.count - claimers.length > max) {
-        max = spawnParam.claimer.count - claimers.length;
-        toSpawn = "claimer";
-      }
       else if (spawnParam.harvesterExt.count - harvesterExts.length > max) {
         max = spawnParam.harvesterExt.count - harvesterExts.length;
         toSpawn = "harvesterExt";
+      }
+      else if (spawnParam.claimer.count - claimers.length > max) {
+        max = spawnParam.claimer.count - claimers.length;
+        toSpawn = "claimer";
       }
       else if (spawnParam.builder.count - builders.length > max) {
         max = spawnParam.builder.count - builders.length;

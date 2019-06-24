@@ -112,11 +112,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
-        ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W8S5',
-      canAttack: true
+      canAttack: false
     },
     builder: {
       count: 1,
@@ -157,6 +156,51 @@ export const loop = ErrorMapper.wrapLoop(() => {
       claimerRoom: 'W8S5',
       claimerAction: 'reserve'
     }
+  },
+  {
+    spawns: [Game.spawns['Spawn3']],
+    harvester: {
+      count: 2,
+      parts: [
+        WORK,
+        CARRY,
+        MOVE],
+    },
+    harvesterExt: {
+      count: 0,
+      parts: [],
+      harvestRoom: 'W8S6',
+      canAttack: false
+    },
+    builder: {
+      count: 1,
+      parts: [
+        WORK,
+        CARRY,
+        MOVE],
+    },
+    upgrader: {
+      count: 1,
+      parts: [
+        WORK,
+        CARRY,
+        MOVE,],
+      upgraderUseStorageMin: 30000
+    },
+    maintainer: {
+      count: 0,
+      parts: [],
+    },
+    collector: {
+      count: 0,
+      parts: [],
+    },
+    claimer: {
+      count: 0,
+      parts: [CLAIM, MOVE],
+      claimerRoom: 'W8S5',
+      claimerAction: 'reserve'
+    }
   }];
 
   const rooms: RoomConfig[] = [
@@ -171,7 +215,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
       spawns: [Game.spawns['Spawn2']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
-    },
+    }/*,
+    {
+      room: Game.rooms['W8S6'],
+      spawns: [Game.spawns['Spawn3']],
+      collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[2]),
+      hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0
+    }*/
   ];
 
   // rooms[0].collectorWithdrawStorageMode = true;
@@ -423,6 +473,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   function getCollectorWithdrawStorageMode(spawnParam: SpawnParam): boolean {
     const spawn = spawnParam.spawns[0];
+    if (!spawn) {
+      return false;
+    }
+
     try {
       const capacity = spawn.room.memory.energyCapacity;
       const energy = spawn.room.memory.energy;
