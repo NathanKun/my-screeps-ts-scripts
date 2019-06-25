@@ -1,4 +1,15 @@
 // example declaration file - remove these and add your own custom typings
+interface Memory {
+  uuid: number;
+  log: any;
+}
+
+// `global` extension samples
+declare namespace NodeJS {
+  interface Global {
+    log: any;
+  }
+}
 
 // memory extension samples
 interface CreepMemory {
@@ -39,6 +50,11 @@ interface RoomMemory {
   energy: number;
   energyCapacity: number;
   energyPercentage: number;
+
+  spawnParam: SpawnParam;
+  toSpawn?: string;
+  // roomConfig: RoomConfig;
+
   harvester: number;
   harvesterExt: number;
   builder: number;
@@ -49,18 +65,6 @@ interface RoomMemory {
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
-
-interface Memory {
-  uuid: number;
-  log: any;
-}
-
-// `global` extension samples
-declare namespace NodeJS {
-  interface Global {
-    log: any;
-  }
-}
 
 interface RoleParam {
   count: number;
@@ -74,13 +78,13 @@ interface RoleParam {
 
 interface SpawnParam {
   spawns: StructureSpawn[];
-  builder: RoleParam;
-  upgrader: RoleParam;
-  maintainer: RoleParam;
-  collector: RoleParam;
-  claimer: RoleParam;
-  harvester: RoleParam;
-  harvesterExt: RoleParam;
+    builder: RoleParam;
+    upgrader: RoleParam;
+    maintainer: RoleParam;
+    collector: RoleParam;
+    claimer: RoleParam;
+    harvester: RoleParam;
+    harvesterExt: RoleParam;
 }
 
 interface LinkPair {

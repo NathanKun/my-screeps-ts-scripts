@@ -188,14 +188,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: 1,
+      count: -1,
       parts: [
         WORK,
         CARRY,
         MOVE],
     },
     collector: {
-      count: 1,
+      count: -1,
       parts: [
         WORK,
         CARRY,
@@ -229,6 +229,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
       hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0
     }
   ];
+
+  Game.rooms['W9S7'].memory.spawnParam = spawnParams[0];
+  Game.rooms['W9S5'].memory.spawnParam = spawnParams[1];
+  Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
 
   // rooms[0].collectorWithdrawStorageMode = true;
   // rooms[1].collectorWithdrawStorageMode = true;
@@ -270,9 +274,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
   TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
-  for (const p of spawnParams) {
-    SpawnHelper.spawn(p);
-  }
+  // spawn creeps
+  SpawnHelper.spawn(spawnParams);
 
   // auto spawn attack creep and defense
   for (const roomConfig of rooms) {

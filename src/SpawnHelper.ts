@@ -15,8 +15,7 @@ CLAIM	600
 
 export class SpawnHelper {
 
-  private static internalSpawn(spawnParam: SpawnParam) {
-
+  private static internalSpawnOne(spawnParam: SpawnParam) {
     if (!spawnParam.spawns[0]) {
       return;
     }
@@ -100,30 +99,14 @@ export class SpawnHelper {
       }
     }
 
-
-    /* Logs */
-    console.log('Harvesters:    \t' + harvesters.length + " Missing: \t" + (spawnParam.harvester.count - harvesters.length));
-    console.log('HarvesterExts: \t' + harvesterExts.length + " Missing: \t" + (spawnParam.harvesterExt.count - harvesterExts.length));
-    console.log('Builders:      \t' + builders.length + " Missing: \t" + (spawnParam.builder.count - builders.length));
-    console.log('Upgraders:     \t' + upgraders.length + " Missing: \t" + (spawnParam.upgrader.count - upgraders.length));
-    console.log('Maintainers:   \t' + maintainers.length + " Missing: \t" + (spawnParam.maintainer.count - maintainers.length));
-    console.log('Collectors:    \t' + collectors.length + " Missing: \t" + (spawnParam.collector.count - collectors.length));
-    console.log('Claimers:      \t' + claimers.length + " Missing: \t" + (spawnParam.claimer.count - claimers.length));
-
-    const notSpawningSpawns = spawnParam.spawns.filter(s => {
-      if (s.spawning) {
-        const spawningCreep = Game.creeps[s.spawning.name];
-        console.log("Spawning: " + spawningCreep.memory.role);
-        return false;
-      }
-      return true;
-    });
+    const notSpawningSpawns = spawnParam.spawns.filter(s => !s.spawning);
 
     if (max <= 0) {
+      spawnParam.spawns[0].room.memory.toSpawn = undefined;
       return;
+    } else {
+      spawnParam.spawns[0].room.memory.toSpawn = toSpawn;
     }
-
-    console.log('Next spawn: ' + toSpawn);
 
     if (notSpawningSpawns.length === 0) {
       return;
@@ -263,9 +246,74 @@ export class SpawnHelper {
     }
   }
 
-  public static spawn(spawnParam: SpawnParam) {
+  private static printStat(spawnParams: SpawnParam[]) {
+    let room = 'Room           \t';
+    let spawning = 'Spawning      \t';
+    let nextSpawn = 'Next Spawn    \t';
+    let harvester = 'Harvesters:    \t';
+    let harvesterExt = 'HarvesterExts: \t';
+    let builder = 'Builders:      \t';
+    let upgrader = 'Upgraders:     \t';
+    let maintainer = 'Maintainers:   \t';
+    let collector = 'Collectors:    \t';
+    let claimer = 'Claimers:      \t';
+
+    for (const spawnParam of spawnParams) {
+      if (spawnParam.spawns[0] === undefined) {
+        continue;
+      }
+
+      let spawningCount = 0;
+      for (const spawn of spawnParam.spawns) {
+        if (spawn.spawning) {
+          spawning += Game.creeps[spawn.spawning.name].memory.role + ' ';
+          spawningCount++;
+        }
+      }
+
+      if (spawningCount === 0) {
+        spawning += '\t\t';
+      } else if (spawningCount === 1) {
+        spawning += '\t';
+      } else {
+        spawning += ' | ';
+      }
+
+      nextSpawn += spawnParam.spawns[0].room.memory.toSpawn ? spawnParam.spawns[0].room.memory.toSpawn + '\t' : '\t\t';
+
+      room += spawnParam.spawns[0].room.name + '\t\t'
+      harvester += spawnParam.spawns[0].room.memory.harvester + '\t' + (spawnParam.harvester.count - spawnParam.spawns[0].room.memory.harvester) + '\t';
+      harvesterExt += spawnParam.spawns[0].room.memory.harvesterExt + '\t' + (spawnParam.harvesterExt.count - spawnParam.spawns[0].room.memory.harvesterExt) + '\t';
+      builder += spawnParam.spawns[0].room.memory.builder + '\t' + (spawnParam.builder.count - spawnParam.spawns[0].room.memory.builder) + '\t';
+      upgrader += spawnParam.spawns[0].room.memory.upgrader + '\t' + (spawnParam.upgrader.count - spawnParam.spawns[0].room.memory.upgrader) + '\t';
+      maintainer += spawnParam.spawns[0].room.memory.maintainer + '\t' + (spawnParam.maintainer.count - spawnParam.spawns[0].room.memory.maintainer) + '\t';
+      collector += spawnParam.spawns[0].room.memory.collector + '\t' + (spawnParam.collector.count - spawnParam.spawns[0].room.memory.collector) + '\t';
+      claimer += spawnParam.spawns[0].room.memory.claimer + '\t' + (spawnParam.claimer.count - spawnParam.spawns[0].room.memory.claimer) + '\t';
+    }
+
+    console.log(room);
+    console.log(spawning);
+    console.log(nextSpawn);
+    console.log(harvester);
+    console.log(harvesterExt);
+    console.log(builder);
+    console.log(upgrader);
+    console.log(maintainer);
+    console.log(collector);
+    console.log(claimer);
+  }
+
+  private static internalSpawn(spawnParams: SpawnParam[]) {
+    for (const spawnParam of spawnParams) {
+      SpawnHelper.internalSpawnOne(spawnParam);
+    }
+
+    SpawnHelper.printStat(spawnParams);
+  }
+
+  public static spawn(spawnParams: SpawnParam[]) {
     try {
-      SpawnHelper.internalSpawn(spawnParam);
+      SpawnHelper.internalSpawn(spawnParams);
     } catch (e) {
       console.log('Error in SpawnHelper.spwan: ' + e);
       const outText = ErrorMapper.sourceMappedStackTrace(e);

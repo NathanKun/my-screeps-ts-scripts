@@ -15,7 +15,7 @@ export abstract class BaseCreep extends Creep {
       this.memory.beingRepaired = false;
       this.memory.waitingRepair = false;
       this.memory.toRecycle = undefined;
-    } else if (this.memory.waitingRepair || (this.ticksToLive && this.ticksToLive < 50)) {
+    } else if (this.memory.waitingRepair || (this.ticksToLive && this.ticksToLive < 75)) {
       if (this.room.name === this.memory.room) {
         const spawn = this.pos.findClosestByPath(FIND_MY_SPAWNS);
         if (spawn && !spawn.spawning) {
