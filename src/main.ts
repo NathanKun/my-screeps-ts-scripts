@@ -107,9 +107,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 5,
+      count: 4,
       parts: [
-        WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
@@ -128,10 +128,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
     upgrader: {
       count: 2,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
@@ -162,9 +161,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 2,
       parts: [
-        WORK,
-        CARRY,
-        MOVE],
+        WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE],
     },
     harvesterExt: {
       count: 0,
@@ -173,33 +172,33 @@ export const loop = ErrorMapper.wrapLoop(() => {
       canAttack: false
     },
     builder: {
-      count: 1,
+      count: 2,
       parts: [
-        WORK,
-        CARRY,
-        MOVE],
+        WORK, WORK, WORK,
+        CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE],
     },
     upgrader: {
       count: 1,
       parts: [
-        WORK,
-        CARRY,
-        MOVE,],
+        WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
       count: -1,
       parts: [
-        WORK,
-        CARRY,
-        MOVE],
+        WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE],
     },
     collector: {
       count: -1,
       parts: [
-        WORK,
-        CARRY,
-        MOVE],
+        WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE],
     },
     claimer: {
       count: 0,

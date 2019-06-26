@@ -272,23 +272,23 @@ export class SpawnHelper {
       }
 
       if (spawningCount === 0) {
-        spawning += '\t\t';
+        spawning += '\t\t\t|\t';
       } else if (spawningCount === 1) {
-        spawning += '\t';
+        spawning += '\t\t|\t';
       } else {
-        spawning += ' | ';
+        spawning += '\t|\t';
       }
 
-      nextSpawn += spawnParam.spawns[0].room.memory.toSpawn ? spawnParam.spawns[0].room.memory.toSpawn + '\t' : '\t\t';
+      nextSpawn += spawnParam.spawns[0].room.memory.toSpawn ? spawnParam.spawns[0].room.memory.toSpawn + '\t\t\t|\t' : '\t\t\t|\t';
 
-      room += spawnParam.spawns[0].room.name + '\t\t'
-      harvester += spawnParam.spawns[0].room.memory.harvester + '\t' + (spawnParam.harvester.count - spawnParam.spawns[0].room.memory.harvester) + '\t';
-      harvesterExt += spawnParam.spawns[0].room.memory.harvesterExt + '\t' + (spawnParam.harvesterExt.count - spawnParam.spawns[0].room.memory.harvesterExt) + '\t';
-      builder += spawnParam.spawns[0].room.memory.builder + '\t' + (spawnParam.builder.count - spawnParam.spawns[0].room.memory.builder) + '\t';
-      upgrader += spawnParam.spawns[0].room.memory.upgrader + '\t' + (spawnParam.upgrader.count - spawnParam.spawns[0].room.memory.upgrader) + '\t';
-      maintainer += spawnParam.spawns[0].room.memory.maintainer + '\t' + (spawnParam.maintainer.count - spawnParam.spawns[0].room.memory.maintainer) + '\t';
-      collector += spawnParam.spawns[0].room.memory.collector + '\t' + (spawnParam.collector.count - spawnParam.spawns[0].room.memory.collector) + '\t';
-      claimer += spawnParam.spawns[0].room.memory.claimer + '\t' + (spawnParam.claimer.count - spawnParam.spawns[0].room.memory.claimer) + '\t';
+      room += spawnParam.spawns[0].room.name + '\t\t\t|\t'
+      harvester += spawnParam.spawns[0].room.memory.harvester + '\t' + (spawnParam.harvester.count - spawnParam.spawns[0].room.memory.harvester) + '\t\t|\t';
+      harvesterExt += spawnParam.spawns[0].room.memory.harvesterExt + '\t' + (spawnParam.harvesterExt.count - spawnParam.spawns[0].room.memory.harvesterExt) + '\t\t|\t';
+      builder += spawnParam.spawns[0].room.memory.builder + '\t' + (spawnParam.builder.count - spawnParam.spawns[0].room.memory.builder) + '\t\t|\t';
+      upgrader += spawnParam.spawns[0].room.memory.upgrader + '\t' + (spawnParam.upgrader.count - spawnParam.spawns[0].room.memory.upgrader) + '\t\t|\t';
+      maintainer += spawnParam.spawns[0].room.memory.maintainer + '\t' + (spawnParam.maintainer.count - spawnParam.spawns[0].room.memory.maintainer) + '\t\t|\t';
+      collector += spawnParam.spawns[0].room.memory.collector + '\t' + (spawnParam.collector.count - spawnParam.spawns[0].room.memory.collector) + '\t\t|\t';
+      claimer += spawnParam.spawns[0].room.memory.claimer + '\t' + (spawnParam.claimer.count - spawnParam.spawns[0].room.memory.claimer) + '\t\t|\t';
     }
 
     console.log(room);
