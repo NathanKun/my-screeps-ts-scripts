@@ -40,6 +40,7 @@ interface CreepMemory {
   cacheTime?: number;
   withdrawStorageMode?: boolean;
   canAttack?: boolean;
+  collectorWithdrawTargets?: CollectorWithdrawTargets;
 }
 
 interface SpawnMemory {
@@ -74,17 +75,18 @@ interface RoleParam {
   claimerRoom?: string;
   claimerAction?: ClaimerAction;
   canAttack?: boolean;
+  collectorWithdrawTargets?: CollectorWithdrawTargets;
 }
 
 interface SpawnParam {
   spawns: StructureSpawn[];
-    builder: RoleParam;
-    upgrader: RoleParam;
-    maintainer: RoleParam;
-    collector: RoleParam;
-    claimer: RoleParam;
-    harvester: RoleParam;
-    harvesterExt: RoleParam;
+  builder: RoleParam;
+  upgrader: RoleParam;
+  maintainer: RoleParam;
+  collector: RoleParam;
+  claimer: RoleParam;
+  harvester: RoleParam;
+  harvesterExt: RoleParam;
 }
 
 interface LinkPair {
@@ -102,4 +104,9 @@ interface RoomConfig {
   spawns: StructureSpawn[];
   hasHostile: boolean;
   collectorWithdrawStorageMode: boolean;
+}
+
+interface CollectorWithdrawTargets {
+  links: string[],
+  containers: string[]
 }

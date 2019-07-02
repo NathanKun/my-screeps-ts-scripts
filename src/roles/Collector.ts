@@ -10,6 +10,15 @@ export class Collector extends BaseCreep {
   private static STATUS_TRANSFERING = "transfering";
   private static STATUS_WITHDRAWING = "withdrawing";
 
+  private droppedResources: Resource[];
+  private tombstones: Tombstone[];
+
+  constructor(creep: Creep) {
+    super(creep);
+    this.droppedResources = Collector.findDroppedResources(this);
+    this.tombstones = Collector.findTombstones(this);
+  }
+
   protected run() {
     if (this.memory.withdrawStorageMode) {
       this.say('withdraw');
@@ -92,7 +101,7 @@ export class Collector extends BaseCreep {
       // Transfering
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         // if no more collectable, change role to maintainer
-        if (!Collector.hasCollectable(this)) {
+        if (!(this.droppedResources.length || this.tombstones.length)) {
           this.memory.role = 'maintainer';
           return;
         }
@@ -141,23 +150,19 @@ export class Collector extends BaseCreep {
   }
 
   // call by Collector and Maintainer
-  public static findCollectable(creep: BaseCreep) {
+  public static findCollectable(creep: Collector) {
     creep.memory.role = 'collector';
 
     // find resource
-    const droppedResources = Collector.findDroppedResources(creep);
-
-    if (droppedResources.length) {
-      creep.memory.collectorTarget = droppedResources[0].id;
+    if (creep.droppedResources.length) {
+      creep.memory.collectorTarget = creep.droppedResources[0].id;
       creep.memory.collectorStatus = Collector.STATUS_COLLECTING_RESOURCE;
       return;
     }
 
     // find tombstone
-    const tombstones = Collector.findTombstones(creep);
-
-    if (tombstones.length) {
-      creep.memory.collectorTarget = tombstones[0].id;
+    if (creep.tombstones.length) {
+      creep.memory.collectorTarget = creep.tombstones[0].id;
       creep.memory.collectorStatus = Collector.STATUS_COLLECTING_TOMBSTONE;
       return;
     }
@@ -169,10 +174,6 @@ export class Collector extends BaseCreep {
     }*/
     // idle, work as maintainer
     creep.memory.role = 'maintainer';
-  }
-
-  public static hasCollectable(creep: BaseCreep) {
-    return Collector.findDroppedResources(creep).length || Collector.findTombstones(creep).length;
   }
 
   private static findDroppedResources(creep: BaseCreep) {

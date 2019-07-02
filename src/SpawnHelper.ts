@@ -222,7 +222,8 @@ export class SpawnHelper {
           memory: {
             role: 'collector',
             room: spawnParam.spawns[0].room.name,
-            spawnTime: Game.time
+            spawnTime: Game.time,
+            collectorWithdrawTargets: spawnParam.collector.collectorWithdrawTargets
           }
         });
       return;

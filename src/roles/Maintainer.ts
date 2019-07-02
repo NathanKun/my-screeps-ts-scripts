@@ -7,7 +7,7 @@ export class Maintainer extends BaseCreep {
 
   protected run() {
     // find if there is a collector work
-    Collector.findCollectable(this);
+    Collector.findCollectable(new Collector(this));
 
     if (this.memory.withdrawStorageMode) {
       this.memory.role = 'collector';
