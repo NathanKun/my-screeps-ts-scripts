@@ -136,18 +136,20 @@ export const loop = ErrorMapper.wrapLoop(() => {
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE],
     },
     collector: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE],
     },
     claimer: {
       count: 1,
@@ -159,51 +161,54 @@ export const loop = ErrorMapper.wrapLoop(() => {
   {
     spawns: [Game.spawns['Spawn3']],
     harvester: {
-      count: 2,
+      count: 1,
       parts: [
-        WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 0,
-      parts: [],
-      harvestRoom: 'W8S6',
+      count: 6,
+      parts: [
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      harvestRoom: 'W7S6',
       canAttack: false
     },
     builder: {
-      count: 2,
+      count: 1,
       parts: [
-        WORK, WORK, WORK,
-        CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     upgrader: {
       count: 1,
       parts: [
-        WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     collector: {
       count: -1,
       parts: [
-        WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     claimer: {
-      count: 0,
+      count: 1,
       parts: [CLAIM, MOVE],
-      claimerRoom: 'W8S5',
+      claimerRoom: 'W7S6',
       claimerAction: 'reserve'
     }
   }];
@@ -272,6 +277,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
   TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
+
+  TowerTask.run(Game.getObjectById('5d17c3713a42dc03d2042956') as StructureTower);
 
   // spawn creeps
   SpawnHelper.spawn(spawnParams);

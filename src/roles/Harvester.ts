@@ -39,9 +39,17 @@ export class Harvester extends BaseCreep {
     if (this.memory.transfering) {
       // if harvested in another room
       if (this.memory.transferRoom && this.room.name !== this.memory.transferRoom) {
-        const exitDir = this.room.findExitTo(this.memory.transferRoom) as (FIND_EXIT_TOP | FIND_EXIT_RIGHT | FIND_EXIT_BOTTOM | FIND_EXIT_LEFT);
-        const exit = this.pos.findClosestByRange(exitDir);
-        this.moveTo(exit!!, { reusePath: 15, visualizePathStyle: { stroke: '#ffaa00' } });
+        const flag = this.room.find(FIND_FLAGS, {
+          filter: f => f.name.startsWith('harvesterExt_')
+        });
+
+        if (flag.length) {
+          this.moveTo(flag[0]);
+        } else {
+          const exitDir = this.room.findExitTo(this.memory.transferRoom) as (FIND_EXIT_TOP | FIND_EXIT_RIGHT | FIND_EXIT_BOTTOM | FIND_EXIT_LEFT);
+          const exit = this.pos.findClosestByRange(exitDir);
+          this.moveTo(exit!!, { reusePath: 15, visualizePathStyle: { stroke: '#ffaa00' } });
+        }
         return;
       }
 
@@ -147,9 +155,17 @@ export class Harvester extends BaseCreep {
     else {
       // if harvest in another room
       if (this.memory.harvestRoom && this.room.name !== this.memory.harvestRoom) {
-        const exitDir = this.room.findExitTo(this.memory.harvestRoom) as (FIND_EXIT_TOP | FIND_EXIT_RIGHT | FIND_EXIT_BOTTOM | FIND_EXIT_LEFT);
-        const exit = this.pos.findClosestByRange(exitDir);
-        this.moveTo(exit!!, { reusePath: 15, visualizePathStyle: { stroke: '#ffffff' } });
+        const flag = this.room.find(FIND_FLAGS, {
+          filter: f => f.name.startsWith('harvesterExt_')
+        });
+
+        if (flag.length) {
+          this.moveTo(flag[0]);
+        } else {
+          const exitDir = this.room.findExitTo(this.memory.harvestRoom) as (FIND_EXIT_TOP | FIND_EXIT_RIGHT | FIND_EXIT_BOTTOM | FIND_EXIT_LEFT);
+          const exit = this.pos.findClosestByRange(exitDir);
+          this.moveTo(exit!!, { reusePath: 15, visualizePathStyle: { stroke: '#ffffff' } });
+        }
         return;
       }
 

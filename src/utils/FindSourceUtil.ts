@@ -51,7 +51,7 @@ export class FindSourceUtil {
         }
       });
 
-      // if found, return a ramdom one
+      // if found, return a random one
       if (sources.length) {
         const source = sources[Game.time % sources.length];
         creep.memory.harvesting = true;
