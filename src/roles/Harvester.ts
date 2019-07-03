@@ -233,7 +233,7 @@ export class Harvester extends BaseCreep {
     for (const roomLinks of this.roomLinks) {
       if (roomLinks.room.name === this.room.name) {
         for (const links of roomLinks.links) {
-          if (links.sender && links.sender.energy < links.sender.energyCapacity) {
+          if (links.sender && links.senderType && links.senderType === "cityCenter" && links.sender.energy < links.sender.energyCapacity) {
             res.push(links.sender);
           }
         }

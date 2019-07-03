@@ -324,13 +324,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
       links: [
         {
           sender: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
-          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
+          senderType: "cityCenter"
         }, {
           sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
-          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
+          senderType: "cityCenter"
         }, {
           sender: Game.getObjectById('5d03e47bc2ac6453595fe392') as StructureLink,
-          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink
+          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
+          senderType: "cityCenter"
         }
       ]
     },
@@ -339,11 +342,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
       links: [
         {
           sender: Game.getObjectById('5d0061ba63738f09b7810b80') as StructureLink,
-          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
+          senderType: "cityCenter"
         },
         {
           sender: Game.getObjectById('5d0a7d41308228440a39201d') as StructureLink,
-          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
+          senderType: "cityCenter"
         }
       ]
     },
@@ -352,7 +357,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       links: [
         {
           sender: Game.getObjectById('5d1bef377df56e6464adbd1c') as StructureLink,
-          receiver: Game.getObjectById('5d1bcab6b88799384c5fc414') as StructureLink
+          receiver: Game.getObjectById('5d1bcab6b88799384c5fc414') as StructureLink,
+          senderType: "nextToExit"
         }
       ]
     }

@@ -89,6 +89,7 @@ interface SpawnParam {
 interface LinkPair {
   sender: StructureLink;
   receiver: StructureLink;
+  senderType: "nextToExit" | "cityCenter"
 }
 
 interface RoomLinks {
