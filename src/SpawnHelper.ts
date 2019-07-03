@@ -141,8 +141,7 @@ export class SpawnHelper {
               role: 'harvester',
               room: spawnParam.spawns[0].room.name,
               preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
-              spawnTime: Game.time,
-              harvesterExtPrimaryTransferTargets: spawnParam.harvesterExt.harvesterExtPrimaryTransferTargets
+              spawnTime: Game.time
             }
           });
         return;
@@ -162,7 +161,8 @@ export class SpawnHelper {
             harvestRoom: spawnParam.harvesterExt.harvestRoom,
             transferRoom: spawnParam.spawns[0].room.name,
             spawnTime: Game.time,
-            canAttack: spawnParam.harvesterExt.canAttack
+            canAttack: spawnParam.harvesterExt.canAttack,
+            harvesterExtPrimaryTransferTargets: spawnParam.harvesterExt.harvesterExtPrimaryTransferTargets
           }
         });
       return;

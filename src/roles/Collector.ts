@@ -108,7 +108,7 @@ export class Collector extends BaseCreep {
         this.say('🏃🏃');
 
         if (this.withdrawableTarget === undefined || this.withdrawableTarget === null
-          || (this.withdrawableTargetType === "StructureLink" && (this.withdrawableTarget as StructureLink).energy === 0)
+          || (this.withdrawableTargetType === "StructureLink" && ((this.withdrawableTarget as StructureLink).energy / (this.withdrawableTarget as StructureLink).energyCapacity < 0.3))
           || (this.withdrawableTargetType === "StructureContainer" && (this.withdrawableTarget as StructureContainer).store.energy === 0)) {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
