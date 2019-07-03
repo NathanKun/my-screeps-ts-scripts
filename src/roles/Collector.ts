@@ -35,6 +35,7 @@ export class Collector extends BaseCreep {
       }
 
       if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
+        // spawns and extensions
         const targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_EXTENSION ||
@@ -120,7 +121,7 @@ export class Collector extends BaseCreep {
       // Transfering
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         // if no more collectable, change role to maintainer
-        if (!(this.droppedResources.length || this.tombstones.length)) {
+        if (!(this.droppedResources.length || this.tombstones.length || this.withdrawableTarget)) {
           this.memory.role = 'maintainer';
           return;
         }

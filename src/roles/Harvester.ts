@@ -85,14 +85,17 @@ export class Harvester extends BaseCreep {
         if (!target) {
           let targets: AnyStructure[] = [];
 
+          // harvester ext link which close to the exit
           if (this.memory.role === "harvesterExt") {
             const mem = this.memory.harvesterExtPrimaryTransferTargets;
             if (mem) {
               if (mem.containers && mem.containers.length) {
-                targets = mem.containers.map(id => Game.getObjectById(id) as (null | StructureContainer)).filter(s => s !== null) as StructureContainer[];
+                targets = mem.containers.map(id => Game.getObjectById(id) as (null | StructureContainer))
+                  .filter(s => s !== null && (s.store.energy / s.storeCapacity) < 0.95 && this.pos.getRangeTo(s) < 10) as StructureContainer[];
               }
-              if (targets.length == 0 && mem.links && mem.links.length) {
-                targets = mem.links.map(id => Game.getObjectById(id) as (null | StructureLink)).filter(s => s !== null) as StructureLink[];
+              if (targets.length === 0 && mem.links && mem.links.length) {
+                targets = mem.links.map(id => Game.getObjectById(id) as (null | StructureLink))
+                  .filter(s => s !== null && (s.energy / s.energyCapacity) < 0.95 && this.pos.getRangeTo(s) < 10) as StructureLink[];
               }
             }
           }
