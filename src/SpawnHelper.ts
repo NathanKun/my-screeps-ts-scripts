@@ -46,17 +46,17 @@ export class SpawnHelper {
       }
     }
 
-    /* Auto spawn maintainer */
     const spawnMaintainerRatio = 0.5
     if (spawnParam.maintainer.count === -1 && spawnParam.collector.count === -1) {
       if (maintainers.length + collectors.length >= 1) {
         spawnParam.maintainer.count = 0;
         spawnParam.collector.count = 0;
       } else {
-        spawnParam.maintainer.count = 1;
-        spawnParam.collector.count = 0;
+        spawnParam.maintainer.count = 0;
+        spawnParam.collector.count = 1;
       }
     }
+    /* Auto spawn maintainer */
     else if (spawnParam.maintainer.count === -1) {
       if (spawnParam.spawns[0].room.find(FIND_STRUCTURES, {
         filter: s => s.structureType === STRUCTURE_ROAD && ((s.hits / s.hitsMax) < spawnMaintainerRatio)
@@ -141,7 +141,8 @@ export class SpawnHelper {
               role: 'harvester',
               room: spawnParam.spawns[0].room.name,
               preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
-              spawnTime: Game.time
+              spawnTime: Game.time,
+              harvesterExtPrimaryTransferTargets: spawnParam.harvesterExt.harvesterExtPrimaryTransferTargets
             }
           });
         return;

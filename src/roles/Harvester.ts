@@ -83,19 +83,29 @@ export class Harvester extends BaseCreep {
 
         // no cache or cache invalidated
         if (!target) {
-          const spawns = this.findSpawns();
-          /*const spawnNotRepairing = spawns.every(s => s.memory.renewingCreep === false);*/
           let targets: AnyStructure[] = [];
 
-          /*if (spawnNotRepairing || this.room.memory.energyPercentage < 0.5) {*/
+          if (this.memory.role === "harvesterExt") {
+            const mem = this.memory.harvesterExtPrimaryTransferTargets;
+            if (mem) {
+              if (mem.containers && mem.containers.length) {
+                targets = mem.containers.map(id => Game.getObjectById(id) as (null | StructureContainer)).filter(s => s !== null) as StructureContainer[];
+              }
+              if (targets.length == 0 && mem.links && mem.links.length) {
+                targets = mem.links.map(id => Game.getObjectById(id) as (null | StructureLink)).filter(s => s !== null) as StructureLink[];
+              }
+            }
+          }
+
           // find extensions
-          targets = this.findExtensions();
+          if (targets.length === 0) {
+            targets = this.findExtensions();
+          }
 
           // find spawns
           if (targets.length === 0) {
-            targets = spawns;
+            targets = this.findSpawns();
           }
-          /*}*/
 
           // find low energy towers
           if (targets.length === 0) {

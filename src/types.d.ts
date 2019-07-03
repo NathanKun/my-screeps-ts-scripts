@@ -11,7 +11,7 @@ declare namespace NodeJS {
 }
 
 // memory extension samples
-interface CreepMemory {
+interface CreepMemory extends CreepBrithMemory {
   role: string;
   spawnTime: number;
   room: string;
@@ -30,16 +30,10 @@ interface CreepMemory {
   waitingRepair?: boolean;
   beingRepaired?: boolean;
   toRecycle?: boolean;
-  harvestRoom?: string;
   transferRoom?: string;
   upgraderLinkTarget?: string;
-  upgraderUseStorageMin?: number;
-  claimerRoom?: string;
-  claimerAction?: ClaimerAction;
   cacheTime?: number;
   withdrawStorageMode?: boolean;
-  canAttack?: boolean;
-  collectorWithdrawTargets?: CollectorWithdrawTargets;
 }
 
 interface SpawnMemory {
@@ -66,15 +60,19 @@ interface RoomMemory {
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
 
-interface RoleParam {
+interface RoleParam extends CreepBrithMemory {
   count: number;
   parts: BodyPartConstant[];
+}
+
+interface CreepBrithMemory {
   harvestRoom?: string;
   upgraderUseStorageMin?: number;
   claimerRoom?: string;
   claimerAction?: ClaimerAction;
   canAttack?: boolean;
   collectorWithdrawTargets?: CollectorWithdrawTargets;
+  harvesterExtPrimaryTransferTargets?: CollectorWithdrawTargets;
 }
 
 interface SpawnParam {
@@ -106,6 +104,6 @@ interface RoomConfig {
 }
 
 interface CollectorWithdrawTargets {
-  links: string[],
-  containers: string[]
+  links?: string[],
+  containers?: string[]
 }

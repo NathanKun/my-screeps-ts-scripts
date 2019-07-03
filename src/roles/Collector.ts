@@ -7,16 +7,20 @@ export class Collector extends BaseCreep {
   private static STATUS_IDLE = "idle";
   private static STATUS_COLLECTING_RESOURCE = "collectingResource";
   private static STATUS_COLLECTING_TOMBSTONE = "collectingTombstone";
+  private static STATUS_COLLECTING_WITHDRAWABLE = "collectingWithdrawable";
   private static STATUS_TRANSFERING = "transfering";
   private static STATUS_WITHDRAWING = "withdrawing";
 
   private droppedResources: Resource[];
   private tombstones: Tombstone[];
+  private withdrawableTarget?: StructureLink | StructureContainer;
+  private withdrawableTargetType?: "StructureLink" | "StructureContainer";
 
   constructor(creep: Creep) {
     super(creep);
     this.droppedResources = Collector.findDroppedResources(this);
     this.tombstones = Collector.findTombstones(this);
+    this.withdrawableTarget = Collector.findWithdrawale(this);
   }
 
   protected run() {
@@ -98,6 +102,21 @@ export class Collector extends BaseCreep {
         }
       }
 
+      // Collecting withdrawable structure
+      else if (this.memory.collectorStatus === Collector.STATUS_COLLECTING_WITHDRAWABLE) {
+        this.say('🏃🏃');
+
+        if (this.withdrawableTarget === undefined || this.withdrawableTarget === null
+          || (this.withdrawableTargetType === "StructureLink" && (this.withdrawableTarget as StructureLink).energy === 0)
+          || (this.withdrawableTargetType === "StructureContainer" && (this.withdrawableTarget as StructureContainer).store.energy === 0)) {
+          this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+          return;
+        }
+        if (this.withdraw(this.withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+        }
+      }
+
       // Transfering
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         // if no more collectable, change role to maintainer
@@ -167,6 +186,11 @@ export class Collector extends BaseCreep {
       return;
     }
 
+    if (creep.withdrawableTarget) {
+      creep.memory.collectorStatus = Collector.STATUS_COLLECTING_WITHDRAWABLE;
+      return;
+    }
+
     /*
     // move to idle location
     if (creep.pos.x !== Collector.IDLE_X || creep.pos.y !== Collector.IDLE_Y) {
@@ -176,15 +200,37 @@ export class Collector extends BaseCreep {
     creep.memory.role = 'maintainer';
   }
 
-  private static findDroppedResources(creep: BaseCreep) {
+  private static findDroppedResources(creep: BaseCreep): Resource[] {
     return creep.room.find(FIND_DROPPED_RESOURCES, {
       filter: r => r.resourceType === RESOURCE_ENERGY && r.amount > 30
     }).sort((r1, r2) => r2.amount - r1.amount);
   }
 
-  private static findTombstones(creep: BaseCreep) {
+  private static findTombstones(creep: BaseCreep): Tombstone[] {
     return creep.room.find(FIND_TOMBSTONES, {
       filter: t => t.store.energy > 0
     }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
+  }
+
+  private static findWithdrawale(creep: Collector): StructureLink | StructureContainer | undefined {
+    const targets = creep.memory.collectorWithdrawTargets;
+    if (targets) {
+      if (targets.containers && targets.containers.length) {
+        const target = Game.getObjectById(targets.containers[0]);
+        if (target != null) {
+          creep.withdrawableTargetType = "StructureContainer";
+          return target as StructureContainer;
+        }
+      }
+      else if (targets.links && targets.links.length) {
+        const target = Game.getObjectById(targets.links[0]);
+        if (target != null) {
+          creep.withdrawableTargetType = "StructureLink";
+          return target as StructureLink;
+        }
+      }
+    }
+
+    return undefined;
   }
 };

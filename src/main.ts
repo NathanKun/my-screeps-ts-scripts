@@ -168,11 +168,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     harvesterExt: {
-      count: 6,
+      count: 4,
       parts: [
-        WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W7S6',
       canAttack: false
     },
@@ -180,30 +181,33 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 1,
       parts: [
         WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     upgrader: {
       count: 1,
       parts: [
         WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     collector: {
       count: -1,
       parts: [
-        WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE],
+        WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+      collectorWithdrawTargets: {
+        links: ["5d1bcab6b88799384c5fc414"]
+      }
     },
     claimer: {
       count: 1,
@@ -337,6 +341,15 @@ export const loop = ErrorMapper.wrapLoop(() => {
         {
           sender: Game.getObjectById('5d0a7d41308228440a39201d') as StructureLink,
           receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink
+        }
+      ]
+    },
+    {
+      room: Game.rooms['W8S6'],
+      links: [
+        {
+          sender: Game.getObjectById('5d1bef377df56e6464adbd1c') as StructureLink,
+          receiver: Game.getObjectById('5d1bcab6b88799384c5fc414') as StructureLink
         }
       ]
     }
