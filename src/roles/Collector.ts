@@ -218,14 +218,18 @@ export class Collector extends BaseCreep {
     if (targets) {
       if (targets.containers && targets.containers.length) {
         const target = Game.getObjectById(targets.containers[0]);
-        if (target != null) {
+        /*
+         * IMPORTANT: this look only StructureContainer.store.energy
+         * But not other resources.
+         */
+        if (target != null && (target as StructureContainer).store.energy !== 0) {
           creep.withdrawableTargetType = "StructureContainer";
           return target as StructureContainer;
         }
       }
       else if (targets.links && targets.links.length) {
         const target = Game.getObjectById(targets.links[0]);
-        if (target != null) {
+        if (target != null && (target as StructureLink).energy !== 0) {
           creep.withdrawableTargetType = "StructureLink";
           return target as StructureLink;
         }
