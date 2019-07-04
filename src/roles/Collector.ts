@@ -1,9 +1,6 @@
 import { BaseCreep } from "./BaseCreep";
 
 export class Collector extends BaseCreep {
-  private static IDLE_X = 14;
-  private static IDLE_Y = 13;
-
   private static STATUS_IDLE = "idle";
   private static STATUS_COLLECTING_RESOURCE = "collectingResource";
   private static STATUS_COLLECTING_TOMBSTONE = "collectingTombstone";
@@ -107,9 +104,7 @@ export class Collector extends BaseCreep {
       else if (this.memory.collectorStatus === Collector.STATUS_COLLECTING_WITHDRAWABLE) {
         this.say('🏃🏃');
 
-        if (this.withdrawableTarget === undefined || this.withdrawableTarget === null
-          || (this.withdrawableTargetType === "StructureLink" && ((this.withdrawableTarget as StructureLink).energy / (this.withdrawableTarget as StructureLink).energyCapacity < 0.3))
-          || (this.withdrawableTargetType === "StructureContainer" && (this.withdrawableTarget as StructureContainer).store.energy === 0)) {
+        if (this.withdrawableTarget === undefined || this.withdrawableTarget === null) {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
         }
@@ -229,7 +224,7 @@ export class Collector extends BaseCreep {
       }
       else if (targets.links && targets.links.length) {
         const target = Game.getObjectById(targets.links[0]);
-        if (target != null && (target as StructureLink).energy !== 0) {
+        if (target != null && ((target as StructureLink).energy / (target as StructureLink).energyCapacity >= 0.3)) {
           creep.withdrawableTargetType = "StructureLink";
           return target as StructureLink;
         }
