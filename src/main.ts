@@ -286,6 +286,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
 
   TowerTask.run(Game.getObjectById('5d17c3713a42dc03d2042956') as StructureTower);
+  TowerTask.run(Game.getObjectById('5d1bbb0b71b41e2a5c844bcb') as StructureTower);
 
   // spawn creeps
   SpawnHelper.spawn(spawnParams);
