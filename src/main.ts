@@ -10,6 +10,7 @@ import { SpawnHelper } from "SpawnHelper";
 import { TowerTask } from "TowerTask";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { LinkUtil } from "utils/LinkUtil";
+import { RoomMemoryUtil } from "utils/RoomMemoryUtil";
 
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -225,19 +226,25 @@ export const loop = ErrorMapper.wrapLoop(() => {
       room: Game.rooms['W9S7'],
       spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[0]),
-      hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0
+      hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0,
+      storage: "5ced749d7f5e00234025f1c3",
+      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa"]
     },
     {
       room: Game.rooms['W9S5'],
       spawns: [Game.spawns['Spawn2']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
-      hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0
+      hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0,
+      storage: "5cfb3d17bcac0c0fd600f74d",
+      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e"]
     },
     {
       room: Game.rooms['W8S6'],
       spawns: [Game.spawns['Spawn3']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[2]),
-      hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0
+      hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
+      storage: "5d1869d8df35e2635a0e1281",
+      towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"]
     }
   ];
 
@@ -260,33 +267,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
     }
 
-    // energy
-    const energyStructures: [StructureExtension, StructureSpawn] = roomConfig.room.find(FIND_MY_STRUCTURES, {
-      filter: s => s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION
-    }) as [StructureExtension, StructureSpawn];
-
-    let energy = 0;
-    let energyCapacity = 0;
-
-    energyStructures.forEach(s => {
-      energy += s.energy;
-      energyCapacity += s.energyCapacity;
-    });
-
-    roomConfig.room.memory.energy = energy;
-    roomConfig.room.memory.energyCapacity = energyCapacity;;
-    roomConfig.room.memory.energyPercentage = energy / energyCapacity;
+    RoomMemoryUtil.initRoomMemory(roomConfig);
   }
 
   // tower defense & repair
-  TowerTask.run(Game.getObjectById('5ce5ab4e9917085da40c257a') as StructureTower);
-  TowerTask.run(Game.getObjectById('5ceb0ce35a7eb776ba2e79fa') as StructureTower);
-
-  TowerTask.run(Game.getObjectById('5cf6d44f1a35fd098d7d7ad5') as StructureTower);
-  TowerTask.run(Game.getObjectById('5d004c75c0d974664ad4d35e') as StructureTower);
-
-  TowerTask.run(Game.getObjectById('5d17c3713a42dc03d2042956') as StructureTower);
-  TowerTask.run(Game.getObjectById('5d1bbb0b71b41e2a5c844bcb') as StructureTower);
+  TowerTask.run(Game.rooms['W9S7'].memory.towers);
+  TowerTask.run(Game.rooms['W9S5'].memory.towers);
+  TowerTask.run(Game.rooms['W8S6'].memory.towers);
 
   // spawn creeps
   SpawnHelper.spawn(spawnParams);
@@ -434,68 +421,15 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  // renew creeps
+  // recycle creeps
   for (const roomConfig of rooms) {
     const roomName = roomConfig.room.name;
     let beingRepairedCreep = beingRepairedCreeps.get(roomName);
 
-    // repair
-    if (beingRepairedCreep !== undefined) {
-      const spawn = beingRepairedCreep.pos.findClosestByRange(FIND_MY_SPAWNS);
-
-      if (spawn) {
-        // recycle check
-        /*if (beingRepairedCreep.memory.toRecycle === undefined) {
-          for (const p of spawnParams) {
-            if (p.spawns.map(s => s.name).indexOf(spawn.name) > -1) {
-              const roleParam = getRoleSpawnParamByName(beingRepairedCreep.memory.role, p);
-              if (roleParam === null) {
-                continue;
-              }
-
-              const paramParts = roleParam.parts.sort();
-              const creepsParts = beingRepairedCreep.body.map(def => def.type).sort();
-
-              if (paramParts.length !== creepsParts.length || paramParts.every((value, index) => value !== creepsParts[index])) {
-                Game.notify("Recycle Creep Notification" + '\n' +
-                  'Creep name = ' + beingRepairedCreep.name + '\n' +
-                  "paramParts not equals creepsParts" + '\n' +
-                  paramParts.sort().join(' ') + '\n' +
-                  creepsParts.sort().join(' '));
-                beingRepairedCreep.memory.toRecycle = true;
-              } else {
-                beingRepairedCreep.memory.toRecycle = false;
-              }
-              break;
-            }
-          }
-
-          if (beingRepairedCreep.memory.toRecycle === undefined) {
-            beingRepairedCreep.memory.toRecycle = true;
-          }
-        }*/
-        beingRepairedCreep.memory.toRecycle = true;
-
-        // recycle
-        if (beingRepairedCreep.memory.toRecycle === true) {
-          spawn.recycleCreep(beingRepairedCreep);
-          spawn.memory.renewingCreep = false;
-        }
-        // renew
-        else {
-          const renewResult = spawn.renewCreep(beingRepairedCreep);
-          if (renewResult === OK) {
-            spawn.memory.renewingCreep = true;
-          } else {
-            spawn.memory.renewingCreep = false;
-            if (renewResult === ERR_NOT_ENOUGH_ENERGY) {
-              beingRepairedCreep.memory.waitingRepair = false;
-              beingRepairedCreep.memory.beingRepaired = false;
-              beingRepairedCreep.memory.toRecycle = undefined;
-            }
-          }
-        }
-      }
+    if (beingRepairedCreep !== undefined && roomConfig.spawns.length) {
+      beingRepairedCreep.memory.toRecycle = true;
+      roomConfig.spawns[0].recycleCreep(beingRepairedCreep);
+      roomConfig.spawns[0].memory.renewingCreep = false;
     }
     // set beingRepairedCreep
     else if (waitingRepairCreeps.has(roomName) && waitingRepairCreeps.get(roomName)!!.length) {
@@ -533,26 +467,5 @@ export const loop = ErrorMapper.wrapLoop(() => {
         'Error in getCollectorWithdrawStorageMode ' + spawn.name + '\n' + e + '\n ' + outText);
       return false;
     }
-  }
-
-  function getRoleSpawnParamByName(role: string, param: SpawnParam): RoleParam | null {
-    switch (role) {
-      case 'harvester':
-        return param.harvester;
-      case 'harvesterExt':
-        return param.harvesterExt;
-      case 'builder':
-        return param.builder;
-      case 'upgrader':
-        return param.upgrader;
-      case 'maintainer':
-        return param.maintainer;
-      case 'collector':
-        return param.collector;
-      case 'claimer':
-        return param.claimer;
-    }
-
-    return null;
   }
 });

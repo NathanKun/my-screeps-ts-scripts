@@ -1,38 +1,42 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 
 export class TowerTask {
-  private static runInternal(tower: StructureTower) {
+  private static runInternal(towers: StructureTower[]) {
     // attack
-    const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    const closestHostile = towers[0].pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (closestHostile) {
-      tower.attack(closestHostile);
+      towers.forEach(t => t.attack(closestHostile));
       return;
     }
 
     // heal
     // stop healing if energy < 100
-    if (tower.energy < 350) {
+    towers = towers.filter(t => t.energy >= 350);
+    if (towers.length === 0) {
       return;
     }
-    const creeps = tower.room.find(FIND_MY_CREEPS, {
+
+    const creeps = towers[0].room.find(FIND_MY_CREEPS, {
       filter: c => c.hits < c.hitsMax
     });
     if (creeps.length) {
       const target = _.sortBy(creeps, s => s.hits / s.hitsMax)[0];
-      tower.heal(target);
+      towers.forEach(t => t.heal(target));
       return;
     }
 
     // repair
     // stop repairing if energy < 200
-    if (tower.energy < 500) {
+    towers = towers.filter(t => t.energy >= 350);
+    if (towers.length === 0) {
       return;
     }
+
     // Hits:
     // wall: 300 000 000
     // rampart: 10 000 000
     // others: 1 000 - 5 000
-    const structures = tower.room.find(FIND_STRUCTURES, {
+    const structures = towers[0].room.find(FIND_STRUCTURES, {
       filter: structure => {
         // do not repair roads with hits > maxHits / 2
         if (structure.structureType === STRUCTURE_ROAD &&
@@ -70,17 +74,21 @@ export class TowerTask {
         console.log(s.structureType + "  \t  " + s.hits + "  \t  " + s.hitsMax + "  \t  " + i);
       });*/
       const target = sortedStructures[0];
-      tower.repair(target);
+      towers.forEach(t => t.repair(target));
       return;
     }
   }
 
-  public static run(tower: StructureTower) {
+  public static run(towers: StructureTower[]) {
+    if (towers.length === 0) {
+      return;
+    }
+
     try {
-      TowerTask.runInternal(tower);
+      TowerTask.runInternal(towers);
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);
-      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + tower.id +
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + towers.map(t => t.id).join(" ") +
         '\n' + e + '\n' + outText);
     }
   }

@@ -123,7 +123,6 @@ export class SpawnHelper {
             memory: {
               role: 'harvester',
               room: spawnParam.spawns[0].room.name,
-              preferTransferStructure: 'tower',
               harvestRoom: spawnParam.spawns[0].room.name,
               transferRoom: spawnParam.spawns[0].room.name,
               spawnTime: Game.time
@@ -140,7 +139,6 @@ export class SpawnHelper {
             memory: {
               role: 'harvester',
               room: spawnParam.spawns[0].room.name,
-              preferTransferStructure: Game.time % 2 === 0 ? 'tower' : 'storage',
               spawnTime: Game.time
             }
           });
@@ -157,7 +155,6 @@ export class SpawnHelper {
           memory: {
             role: 'harvesterExt',
             room: spawnParam.spawns[0].room.name,
-            preferTransferStructure: 'tower',
             harvestRoom: spawnParam.harvesterExt.harvestRoom,
             transferRoom: spawnParam.spawns[0].room.name,
             spawnTime: Game.time,

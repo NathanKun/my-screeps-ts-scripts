@@ -117,16 +117,7 @@ export class Harvester extends BaseCreep {
 
           // find links
           if (targets.length === 0) {
-            targets = this.findLinks();
-          }
-
-          // find prefer transfer structure
-          if (targets.length === 0) {
-            if (this.memory.preferTransferStructure === 'tower') {
-              targets = this.findTowers(850);
-            } else if (this.memory.preferTransferStructure === 'storage') {
-              targets = this.findStorage();
-            }
+            targets = this.findCityCenterSenderLinks();
           }
 
           // find high energy towers
@@ -189,45 +180,31 @@ export class Harvester extends BaseCreep {
     }
   }
 
-  private findExtensions() {
-    return this.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_EXTENSION &&
-          structure.energy < structure.energyCapacity;
-      }
-    }).sort((s1, s2) =>
+  private findExtensions(): StructureExtension[] {
+    return this.room.memory.notFullExtensions.sort((s1, s2) =>
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 
   private findSpawns(): StructureSpawn[] {
-    return (this.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_SPAWN &&
-          structure.energy < structure.energyCapacity;
-      }
-    }) as StructureSpawn[]).sort((s1, s2) =>
+    return this.room.memory.notFullSpawns.sort((s1, s2) =>
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 
-  private findStorage() {
-    return this.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_STORAGE &&
-          structure.store.energy < structure.storeCapacity;
-      }
-    });
+  private findStorage(): StructureStorage[] {
+    const storage = this.room.memory.storage;
+    if (storage) {
+      return [storage];
+    }
+    return [];
   }
 
   private findTowers(maxEnergy: number): StructureTower[] {
-    return (this.room.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_TOWER &&
-          structure.energy <= maxEnergy;
-      }
-    }) as StructureTower[]).sort((t1, t2) => t1.energy - t2.energy);
+    return this.room.memory.towers.filter(
+      structure => structure.structureType === STRUCTURE_TOWER && structure.energy <= maxEnergy
+    ).sort((s1, s2) => s1.energy - s2.energy);
   }
 
-  private findLinks(): StructureLink[] {
+  private findCityCenterSenderLinks(): StructureLink[] {
     const res: StructureLink[] = []
 
     for (const roomLinks of this.roomLinks) {

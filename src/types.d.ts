@@ -24,7 +24,6 @@ interface CreepMemory extends CreepBrithMemory {
   harvesting?: boolean;
   transfering?: boolean;
   transferTarget?: string;
-  preferTransferStructure?: 'tower' | 'storage';
   collectorStatus?: string;
   collectorTarget?: string;
   waitingRepair?: boolean;
@@ -56,6 +55,20 @@ interface RoomMemory {
   collector: number;
   maintainer: number;
   claimer: number;
+
+  notFullExtensions: StructureExtension[];
+  notFullSpawns: StructureSpawn[];
+  storage: StructureStorage | null;
+  towers: StructureTower[];
+}
+
+interface RoomConfig {
+  room: Room;
+  spawns: StructureSpawn[];
+  hasHostile: boolean;
+  collectorWithdrawStorageMode: boolean;
+  storage: string;
+  towers: string[];
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
@@ -95,13 +108,6 @@ interface LinkPair {
 interface RoomLinks {
   room: Room;
   links: LinkPair[];
-}
-
-interface RoomConfig {
-  room: Room;
-  spawns: StructureSpawn[];
-  hasHostile: boolean;
-  collectorWithdrawStorageMode: boolean;
 }
 
 interface CollectorWithdrawTargets {

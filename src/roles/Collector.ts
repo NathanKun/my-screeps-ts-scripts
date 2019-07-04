@@ -10,8 +10,7 @@ export class Collector extends BaseCreep {
 
   private droppedResources: Resource[];
   private tombstones: Tombstone[];
-  private withdrawableTarget?: StructureLink | StructureContainer;
-  private withdrawableTargetType?: "StructureLink" | "StructureContainer";
+  private withdrawableTarget: StructureLink | StructureContainer | null;
 
   constructor(creep: Creep) {
     super(creep);
@@ -102,9 +101,9 @@ export class Collector extends BaseCreep {
 
       // Collecting withdrawable structure
       else if (this.memory.collectorStatus === Collector.STATUS_COLLECTING_WITHDRAWABLE) {
-        this.say('🏃🏃');
+        this.say('🏃📦');
 
-        if (this.withdrawableTarget === undefined || this.withdrawableTarget === null) {
+        if (this.withdrawableTarget === null) {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
         }
@@ -125,33 +124,23 @@ export class Collector extends BaseCreep {
         this.memory.collectorTarget = undefined;
 
         // Extensions or spawns
-        let targets = this.room.find(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (structure.structureType === STRUCTURE_EXTENSION ||
-              structure.structureType === STRUCTURE_SPAWN) &&
-              structure.energy < structure.energyCapacity;
-          }
-        }).sort((s1, s2) =>
-          this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
+        let targets: AnyStructure[] = [...this.room.memory.notFullExtensions, ...this.room.memory.notFullSpawns]
+          .sort((s1, s2) => this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
 
         // tower
         if (targets.length === 0) {
-          targets = (this.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-              return structure.structureType === STRUCTURE_TOWER &&
-                structure.energy < 850;
-            }
-          }) as StructureTower[]).sort((s1, s2) => s1.energy - s2.energy);
+          targets = this.room.memory.towers.filter(structure => {
+            return structure.structureType === STRUCTURE_TOWER &&
+              structure.energy < 850;
+          }).sort((s1, s2) => s1.energy - s2.energy);
         }
 
         // storage
         if (targets.length === 0) {
-          targets = this.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-              return structure.structureType === STRUCTURE_STORAGE &&
-                structure.store.energy < structure.storeCapacity;
-            }
-          });
+          const storage = this.room.memory.storage;
+          if (storage) {
+            targets = [storage];
+          }
         }
 
         if (targets.length) {
@@ -208,7 +197,7 @@ export class Collector extends BaseCreep {
     }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
   }
 
-  private static findWithdrawale(creep: Collector): StructureLink | StructureContainer | undefined {
+  private static findWithdrawale(creep: Collector): StructureLink | StructureContainer | null {
     const targets = creep.memory.collectorWithdrawTargets;
     if (targets) {
       if (targets.containers && targets.containers.length) {
@@ -218,19 +207,17 @@ export class Collector extends BaseCreep {
          * But not other resources.
          */
         if (target != null && (target as StructureContainer).store.energy !== 0) {
-          creep.withdrawableTargetType = "StructureContainer";
           return target as StructureContainer;
         }
       }
       else if (targets.links && targets.links.length) {
         const target = Game.getObjectById(targets.links[0]);
         if (target != null && ((target as StructureLink).energy / (target as StructureLink).energyCapacity >= 0.3)) {
-          creep.withdrawableTargetType = "StructureLink";
           return target as StructureLink;
         }
       }
     }
 
-    return undefined;
+    return null;
   }
 };
