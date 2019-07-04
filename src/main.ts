@@ -177,7 +177,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       harvestRoom: 'W7S6',
       canAttack: false,
       harvesterExtPrimaryTransferTargets: {
-        links: ["5d1bcab6b88799384c5fc414"]
+        links: ["5d1bef377df56e6464adbd1c"]
       }
     },
     builder: {
