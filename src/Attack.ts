@@ -1,44 +1,32 @@
-/*
-1000 energy => 100 shoots => 15,000 hits
-
-tCreep: 40 tough + 10 move => 5000 hits
-	cost: 40 * 10 + 10 * 50 = 900 energy
-
-aCreep: 5 tough + 10 attack + 15 move
-	cost: 5 * 10 + 10 * 80 + 15 * 50 = 1600
-
-hCreep: 15 tough + 5 heal + 10 move
-	cost: 15 * 10 + 5 * 250 + 10 * 50 = 1900
-
-
-4 * tCreep + 4 * aCreep + 2 * hCreep
-	cost = 3200 + 8000 + 3800 = 15000
-*/
-
 export class Attack {
 
   public static spawn(spawn: StructureSpawn, type: string, count: number) {
     let parts;
     if (type === 't') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
+        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
+        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
+        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE // 500
+      ]
     } else if (type === 'a') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK]
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, // 300
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 650
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 650
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 650
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK // 650
+      ]
     } else if (type === 'h') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-        MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE, MOVE, MOVE,
-        HEAL, HEAL, HEAL, HEAL, HEAL]
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
+        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 50
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, // 500
+        HEAL, HEAL, HEAL, HEAL, HEAL // 250 * 5 = 1250
+      ]
     } else if (type === 'def') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
-        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK]
+      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, // 300
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 650
+        MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK // 650
+      ]
     }
 
     if (parts !== undefined) {
@@ -63,14 +51,20 @@ export class Attack {
     }
   }
 
-  public static moveOne(targetRoom: string, x: number, y: number, name: string) {
-    Game.creeps[name].moveTo(new RoomPosition(x, y, targetRoom));
+  public static moveOne(targetRoom: string, x: number, y: number, creepname: string) {
+    if (Game.creeps[creepname]) {
+      Game.creeps[creepname].moveTo(new RoomPosition(x, y, targetRoom));
+    } else {
+      console.log("Creep " + creepname + " not found");
+    }
   }
 
 
   public static attackById(targetId: string) {
-    const target = Game.getObjectById(targetId) as Creep | PowerCreep | Structure;
-    Attack.attack(target);
+    const target = Game.getObjectById(targetId) as (Creep | PowerCreep | Structure | null);
+    if (target) {
+      Attack.attack(target);
+    }
   }
 
   public static attack(target: Creep | PowerCreep | Structure) {

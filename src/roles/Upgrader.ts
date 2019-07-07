@@ -66,20 +66,13 @@ export class Upgrader extends BaseCreep {
       }
 
       // withdraw storage
-      if (this.memory.upgraderUseStorageMin !== undefined) {
-        const storage = this.room.find(FIND_MY_STRUCTURES, {
-          filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > this.memory.upgraderUseStorageMin!!
-        });
-
-        if (storage.length) {
-          if (this.withdraw(storage[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.moveTo(storage[0], { maxRooms: 1, visualizePathStyle: { stroke: '#ffffff' } });
-          }
-
-          return;
+      if (this.memory.upgraderUseStorageMin !== undefined && this.room.memory.storage && this.room.memory.storage.store.energy > this.memory.upgraderUseStorageMin) {
+        if (this.withdraw(this.room.memory.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          this.moveTo(this.room.memory.storage, { maxRooms: 1, visualizePathStyle: { stroke: '#ffffff' } });
         }
+        return;
       }
-      
+
       // harvest
       const source = FindSourceUtil.findSource(this);
       if (this.harvest(source) === ERR_NOT_IN_RANGE) {

@@ -28,6 +28,7 @@ export abstract class BaseCreep extends Creep {
         const exitDir = this.room.findExitTo(this.memory.room) as (FIND_EXIT_TOP | FIND_EXIT_RIGHT | FIND_EXIT_BOTTOM | FIND_EXIT_LEFT);
         const exit = this.pos.findClosestByRange(exitDir);
         this.moveTo(exit!!, { reusePath: 15, visualizePathStyle: { stroke: '#ffaa00' } });
+        this.memory.waitingRepair = true;
       }
     }
   }

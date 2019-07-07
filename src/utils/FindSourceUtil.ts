@@ -1,5 +1,5 @@
 export class FindSourceUtil {
-  private static harvesterLimiteMap: any = {'5bbcac809099fc012e635913': 1};
+  private static harvesterLimiteMap: any = { '5bbcac809099fc012e635913': 1 };
 
   public static findSource(creep: Creep): Source {
     /*const creeps = Game.creeps;
@@ -21,7 +21,8 @@ export class FindSourceUtil {
       const source = Game.getObjectById(creep.memory.harvestSource) as Source;
 
       // if current source no more energy, find another one
-      if (source === undefined || source.energy === 0) {
+      // creep is still far from source and source is cached > 35 ticks ago, revalidate source
+      if (source === undefined || source.energy === 0 || (creep.memory.cacheTime && Game.time - creep.memory.cacheTime > 5 && creep.pos.getRangeTo(source) > 3 && !FindSourceUtil.validateSource(source))) {
         FindSourceUtil.clear(creep);
         return FindSourceUtil.findSource(creep);
       }
@@ -32,23 +33,7 @@ export class FindSourceUtil {
     else {
       // find sources which have energy
       const sources = creep.room.find(FIND_SOURCES, {
-        filter: s => {
-          if (s.energy === 0) {
-            return false;
-          }
-
-          const x = s.pos.x;
-          const y = s.pos.y;
-
-          const left = x === 0 ? 0 : x - 1;
-          const right = x === 49 ? 49 : x + 1;
-          const top = y === 0 ? 0 : y - 1;
-          const bottom = y === 49 ? 49 : y + 1;
-
-          const harvesterLimite = FindSourceUtil.harvesterLimiteMap.hasOwnProperty(s.id) ? FindSourceUtil.harvesterLimiteMap[s.id] : 4;
-
-          return creep.room.lookForAtArea(LOOK_CREEPS, top, left, bottom, right, true).length < harvesterLimite;
-        }
+        filter: s => FindSourceUtil.validateSource(s)
       });
 
       // if found, return a random one
@@ -56,6 +41,7 @@ export class FindSourceUtil {
         const source = sources[Game.time % sources.length];
         creep.memory.harvesting = true;
         creep.memory.harvestSource = source.id;
+        creep.memory.cacheTime = Game.time;
         return source;
       }
       // if no source has energy, return the first source of the room
@@ -65,8 +51,27 @@ export class FindSourceUtil {
     }
   }
 
+  private static validateSource(s: Source) {
+    if (s === undefined || s === null || s.energy === 0) {
+      return false;
+    }
+
+    const x = s.pos.x;
+    const y = s.pos.y;
+
+    const left = x === 0 ? 0 : x - 1;
+    const right = x === 49 ? 49 : x + 1;
+    const top = y === 0 ? 0 : y - 1;
+    const bottom = y === 49 ? 49 : y + 1;
+
+    const harvesterLimite = FindSourceUtil.harvesterLimiteMap.hasOwnProperty(s.id) ? FindSourceUtil.harvesterLimiteMap[s.id] : 4;
+
+    return s.room.lookForAtArea(LOOK_CREEPS, top, left, bottom, right, true).length < harvesterLimite;
+  }
+
   public static clear(creep: Creep) {
     creep.memory.harvesting = false;
-    creep.memory.harvestSource = undefined;
+    delete creep.memory.harvestSource;
+    delete creep.memory.cacheTime
   }
 }

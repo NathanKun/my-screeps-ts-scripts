@@ -3,7 +3,7 @@ import { BaseCreep } from "./BaseCreep";
 import { Collector } from "./Collector";
 
 export class Maintainer extends BaseCreep {
-  private static REPAIR_RATIO: number = 0.8;
+  private static REPAIR_RATIO: number = 1;
 
   protected run() {
     // find if there is a collector work
@@ -27,9 +27,9 @@ export class Maintainer extends BaseCreep {
       FindSourceUtil.clear(this);
     }
 
-    if (this.memory.reparing === undefined){
-        this.memory.reparing = false;
-        this.memory.reparingTarget = undefined;
+    if (this.memory.reparing === undefined) {
+      this.memory.reparing = false;
+      this.memory.reparingTarget = undefined;
     }
 
     if (this.memory.reparing) {
@@ -45,34 +45,27 @@ export class Maintainer extends BaseCreep {
       }
 
       if (this.memory.reparingTarget === undefined) {
-        // rampart
-        /*let targets = this.room.find(FIND_STRUCTURES, {
+        // roads
+        let targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
-            return (structure.structureType === STRUCTURE_RAMPART && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
+            return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
           }
-        }).sort((s1, s2) => s1.hits - s2.hits);
+        }).sort((s1, s2) => s1.hits / s1.hitsMax - s2.hits / s2.hitsMax);
 
-        // wall
+        // rampart & wall
         if (targets.length === 0) {
           targets = this.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-              return (structure.structureType === STRUCTURE_WALL && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
+              return ((structure.structureType === STRUCTURE_RAMPART || structure.structureType === STRUCTURE_WALL) && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
             }
           }).sort((s1, s2) => s1.hits - s2.hits);
-        }*/
-        // roads
-        // if (targets.length === 0) {
-          const targets = this.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-              return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
-            }
-          }).sort((s1, s2) => s1.hits / s1.hitsMax - s2.hits / s2.hitsMax);
-        // }
+        }
 
         if (targets.length) {
           target = targets[0];
           this.memory.reparingTarget = target.id;
         }
+
         // nothing needs to be repaired, upgrade controller
         else {
           if (this.upgradeController(this.room.controller!!) === ERR_NOT_IN_RANGE) {

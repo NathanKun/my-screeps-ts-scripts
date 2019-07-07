@@ -91,11 +91,11 @@ export class Harvester extends BaseCreep {
             if (mem) {
               if (mem.containers && mem.containers.length) {
                 targets = mem.containers.map(id => Game.getObjectById(id) as (null | StructureContainer))
-                  .filter(s => s !== null && (s.store.energy / s.storeCapacity) < 0.95 && this.pos.getRangeTo(s) < 10) as StructureContainer[];
+                  .filter(s => s !== null && (s.storeCapacity - s.store.energy) > this.carry.energy && this.pos.getRangeTo(s) < 10) as StructureContainer[];
               }
               if (targets.length === 0 && mem.links && mem.links.length) {
                 targets = mem.links.map(id => Game.getObjectById(id) as (null | StructureLink))
-                  .filter(s => s !== null && (s.energy / s.energyCapacity) < 0.95 && this.pos.getRangeTo(s) < 10) as StructureLink[];
+                  .filter(s => s !== null && (s.energyCapacity - s.energy) > this.carry.energy && this.pos.getRangeTo(s) < 10) as StructureLink[];
               }
             }
           }
@@ -210,7 +210,7 @@ export class Harvester extends BaseCreep {
     for (const roomLinks of this.roomLinks) {
       if (roomLinks.room.name === this.room.name) {
         for (const links of roomLinks.links) {
-          if (links.sender && links.senderType && links.senderType === "cityCenter" && links.sender.energy < links.sender.energyCapacity) {
+          if (links.sender && links.senderType && links.senderType === "cityCenter" && (links.sender.energy / links.sender.energyCapacity) < 0.8) {
             res.push(links.sender);
           }
         }

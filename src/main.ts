@@ -31,11 +31,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE
+        CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
       ]
     },
     harvesterExt: {
@@ -54,19 +53,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
       ]
     },
     upgrader: {
-      count: 3,
+      count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        WORK, CARRY, MOVE
       ],
       upgraderUseStorageMin: 100000
     },
@@ -92,7 +89,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     },
     claimer: {
       count: 1,
-      parts: [CLAIM, MOVE],
+      parts: [CLAIM, CLAIM, MOVE],
       claimerRoom: 'W9S6',
       claimerAction: 'reserve'
     }
@@ -102,32 +99,36 @@ export const loop = ErrorMapper.wrapLoop(() => {
     harvester: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+      ]
     },
     harvesterExt: {
       count: 4,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        CARRY, CARRY,
+        CARRY, CARRY, CARRY, CARRY, CARRY,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+        MOVE, MOVE, MOVE, MOVE, MOVE
+      ],
       harvestRoom: 'W8S5',
       canAttack: false
     },
     builder: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
         CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        , MOVE],
     },
     upgrader: {
-      count: 2,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -154,7 +155,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     },
     claimer: {
       count: 1,
-      parts: [CLAIM, MOVE],
+      parts: [CLAIM, CLAIM, MOVE],
       claimerRoom: 'W8S5',
       claimerAction: 'reserve'
     }
@@ -172,11 +173,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
       count: 4,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
-        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+        ATTACK,
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         MOVE, MOVE, MOVE, MOVE, MOVE],
       harvestRoom: 'W7S6',
-      canAttack: false,
+      canAttack: true,
       harvesterExtPrimaryTransferTargets: {
         links: ["5d1bef377df56e6464adbd1c"]
       }
@@ -189,7 +191,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
     },
     upgrader: {
-      count: 1,
+      count: 2,
       parts: [
         WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -215,7 +217,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     },
     claimer: {
       count: 1,
-      parts: [CLAIM, MOVE],
+      parts: [CLAIM, CLAIM, MOVE],
       claimerRoom: 'W7S6',
       claimerAction: 'reserve'
     }
@@ -314,7 +316,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
           sender: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
           senderType: "cityCenter"
-        }, {
+        }/*, {
           sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
           senderType: "cityCenter"
@@ -322,7 +324,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
           sender: Game.getObjectById('5d03e47bc2ac6453595fe392') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
           senderType: "cityCenter"
-        }
+        }*/
       ]
     },
     {

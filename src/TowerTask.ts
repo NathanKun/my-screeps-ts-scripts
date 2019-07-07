@@ -10,7 +10,7 @@ export class TowerTask {
     }
 
     // heal
-    // stop healing if energy < 100
+    // stop healing if energy < 350
     towers = towers.filter(t => t.energy >= 350);
     if (towers.length === 0) {
       return;
@@ -26,8 +26,8 @@ export class TowerTask {
     }
 
     // repair
-    // stop repairing if energy < 200
-    towers = towers.filter(t => t.energy >= 350);
+    // stop repairing if energy < 500
+    towers = towers.filter(t => t.energy >= 500);
     if (towers.length === 0) {
       return;
     }
