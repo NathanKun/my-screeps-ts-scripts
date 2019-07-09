@@ -24,9 +24,9 @@ export class SpawnHelper {
     const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name);
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawns[0].room.name);
     const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawns[0].room.name);
-    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.room.name === spawnParam.spawns[0].room.name);
-    const collectors = _.filter(Game.creeps, (creep) => creep.memory.role === 'collector' && creep.room.name === spawnParam.spawns[0].room.name);
     const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name);
+    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.memory.fullMaintainer && creep.room.name === spawnParam.spawns[0].room.name);
+    const collectors = _.filter(Game.creeps, (creep) => (creep.memory.role === 'collector' || creep.memory.role === 'maintainer') && creep.memory.fullMaintainer === false && creep.room.name === spawnParam.spawns[0].room.name);
 
     spawnParam.spawns[0].room.memory.harvester = harvesters.length;
     spawnParam.spawns[0].room.memory.harvesterExt = harvesterExts.length;
@@ -43,27 +43,6 @@ export class SpawnHelper {
       } else {
         spawnParam.builder.count = 0;
         spawnParam.upgrader.count += 1;
-      }
-    }
-
-    const spawnMaintainerRatio = 0.5
-    if (spawnParam.maintainer.count === -1 && spawnParam.collector.count === -1) {
-      if (maintainers.length + collectors.length >= 1) {
-        spawnParam.maintainer.count = 0;
-        spawnParam.collector.count = 0;
-      } else {
-        spawnParam.maintainer.count = 0;
-        spawnParam.collector.count = 1;
-      }
-    }
-    /* Auto spawn maintainer */
-    else if (spawnParam.maintainer.count === -1) {
-      if (spawnParam.spawns[0].room.find(FIND_STRUCTURES, {
-        filter: s => s.structureType === STRUCTURE_ROAD && ((s.hits / s.hitsMax) < spawnMaintainerRatio)
-      }).length !== 0) {
-        spawnParam.maintainer.count = 1;
-      } else {
-        spawnParam.maintainer.count = 0;
       }
     }
 
@@ -205,7 +184,9 @@ export class SpawnHelper {
           memory: {
             role: 'maintainer',
             room: spawnParam.spawns[0].room.name,
-            spawnTime: Game.time
+            spawnTime: Game.time,
+            collectorWithdrawTargets: spawnParam.collector.collectorWithdrawTargets,
+            fullMaintainer: true
           }
         });
       return;
@@ -221,7 +202,8 @@ export class SpawnHelper {
             role: 'collector',
             room: spawnParam.spawns[0].room.name,
             spawnTime: Game.time,
-            collectorWithdrawTargets: spawnParam.collector.collectorWithdrawTargets
+            collectorWithdrawTargets: spawnParam.collector.collectorWithdrawTargets,
+            fullMaintainer: false
           }
         });
       return;

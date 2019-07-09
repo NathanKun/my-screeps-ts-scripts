@@ -88,6 +88,7 @@ interface CreepBrithMemory {
   canAttack?: boolean;
   collectorWithdrawTargets?: CollectorWithdrawTargets;
   harvesterExtPrimaryTransferTargets?: CollectorWithdrawTargets;
+  fullMaintainer?: boolean;
 }
 
 interface SpawnParam {

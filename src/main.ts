@@ -68,7 +68,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 100000
     },
     maintainer: {
-      count: -1,
+      count: 0,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -78,7 +78,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -136,7 +136,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: -1,
+      count: 0,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -145,7 +145,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE],
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -199,14 +199,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
