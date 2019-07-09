@@ -143,6 +143,14 @@ export class Collector extends BaseCreep {
           }
         }
 
+        // terminal
+        if (targets.length === 0) {
+          const terminal = this.room.memory.terminal;
+          if (terminal) {
+            targets = [terminal];
+          }
+        }
+
         if (targets.length) {
           if (this.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             this.moveTo(targets[0], { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });

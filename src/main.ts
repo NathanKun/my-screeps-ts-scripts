@@ -230,7 +230,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[0]),
       hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5ced749d7f5e00234025f1c3",
-      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa"]
+      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa"],
+      terminal: "5d047c79f149a971a0d3a4be"
     },
     {
       room: Game.rooms['W9S5'],
@@ -238,7 +239,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5cfb3d17bcac0c0fd600f74d",
-      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e"]
+      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e"],
+      terminal: "5d24244044ff1d2a689d8a9d"
     },
     {
       room: Game.rooms['W8S6'],
@@ -246,7 +248,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[2]),
       hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5d1869d8df35e2635a0e1281",
-      towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"]
+      towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"],
+      terminal: ""
     }
   ];
 

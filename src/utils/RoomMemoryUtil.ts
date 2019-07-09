@@ -45,6 +45,15 @@ export class RoomMemoryUtil {
     // storege
     if (roomConfig.storage !== "") {
       room.memory.storage = Game.getObjectById(roomConfig.storage);
+    } else {
+      room.memory.storage = null;
+    }
+
+    // terminal
+    if (roomConfig.terminal !== "") {
+      room.memory.terminal = Game.getObjectById(roomConfig.terminal);
+    } else {
+      room.memory.terminal = null;
     }
 
     // towers
