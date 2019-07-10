@@ -95,10 +95,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const roomLinks = Parameters.roomLinks();
   LinkUtil.transfer(roomLinks);
   logCPU('link transfer')
-  // creeps work
-  const waitingRepairCreeps = new Map<string, BaseCreep[]>();
-  const beingRepairedCreeps = new Map<string, BaseCreep>();
 
+  // creeps work
   for (const name in Game.creeps) {
     try {
       const c = Game.creeps[name];
@@ -138,18 +136,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
       if (creep) {
         creep.work();
-
-        if (creep.memory.beingRepaired) {
-          beingRepairedCreeps.set(creep.room.name, creep);
-        }
-        else if (creep.memory.waitingRepair) {
-          let cRooms = waitingRepairCreeps.get(creep.room.name);
-          if (cRooms === undefined) {
-            cRooms = [];
-          }
-          cRooms.push(creep);
-          waitingRepairCreeps.set(creep.room.name, cRooms);
-        }
       }
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);
@@ -161,25 +147,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
   logCPU('creeps work')
-
-  // recycle creeps
-  for (const roomConfig of rooms) {
-    const roomName = roomConfig.room.name;
-    let beingRepairedCreep = beingRepairedCreeps.get(roomName);
-
-    if (beingRepairedCreep !== undefined && roomConfig.spawns.length) {
-      beingRepairedCreep.memory.toRecycle = true;
-      roomConfig.spawns[0].recycleCreep(beingRepairedCreep);
-      roomConfig.spawns[0].memory.renewingCreep = false;
-    }
-    // set beingRepairedCreep
-    else if (waitingRepairCreeps.has(roomName) && waitingRepairCreeps.get(roomName)!!.length) {
-      beingRepairedCreep = waitingRepairCreeps.get(roomName)!![0];
-      beingRepairedCreep.memory.beingRepaired = true;
-      beingRepairedCreep.memory.waitingRepair = false;
-    }
-  }
-  logCPU('creeps recycle')
 
   if (Parameters.observeRooms.length) {
     const obs = rooms[0].room.memory.observer;

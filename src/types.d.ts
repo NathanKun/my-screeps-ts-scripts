@@ -28,8 +28,6 @@ interface CreepMemory extends CreepBrithMemory {
   transferTarget?: string;
   collectorStatus?: string;
   collectorTarget?: string;
-  waitingRepair?: boolean;
-  beingRepaired?: boolean;
   toRecycle?: boolean;
   transferRoom?: string;
   upgraderLinkTarget?: string;

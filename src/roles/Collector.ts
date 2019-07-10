@@ -10,13 +10,13 @@ export class Collector extends BaseCreep {
 
   private droppedResources: Resource[];
   private tombstones: Tombstone[];
-  private withdrawableTarget: StructureLink | StructureContainer | null;
+  private withdrawableTarget: StructureLink | StructureContainer | StructureTerminal | null;
 
   constructor(creep: Creep) {
     super(creep);
-    this.droppedResources = Collector.findDroppedResources(this);
-    this.tombstones = Collector.findTombstones(this);
-    this.withdrawableTarget = Collector.findWithdrawale(this);
+    this.droppedResources = this.findDroppedResources();
+    this.tombstones = this.findTombstones();
+    this.withdrawableTarget = this.findWithdrawale();
   }
 
   protected run() {
@@ -199,21 +199,22 @@ export class Collector extends BaseCreep {
     creep.memory.role = 'maintainer';
   }
 
-  private static findDroppedResources(creep: BaseCreep): Resource[] {
-    return creep.room.find(FIND_DROPPED_RESOURCES, {
+  private findDroppedResources(): Resource[] {
+    return this.room.find(FIND_DROPPED_RESOURCES, {
       filter: r => r.resourceType === RESOURCE_ENERGY && r.amount > 30
     }).sort((r1, r2) => r2.amount - r1.amount);
   }
 
-  private static findTombstones(creep: BaseCreep): Tombstone[] {
-    return creep.room.find(FIND_TOMBSTONES, {
+  private findTombstones(): Tombstone[] {
+    return this.room.find(FIND_TOMBSTONES, {
       filter: t => t.store.energy > 0
     }).sort((t1, t2) => t1.ticksToDecay - t2.ticksToDecay);
   }
 
-  private static findWithdrawale(creep: Collector): StructureLink | StructureContainer | null {
-    const targets = creep.memory.collectorWithdrawTargets;
+  private findWithdrawale(): StructureLink | StructureContainer | StructureTerminal | null {
+    const targets = this.memory.collectorWithdrawTargets;
     if (targets) {
+      // containers
       if (targets.containers && targets.containers.length) {
         const target = Game.getObjectById(targets.containers[0]);
         /*
@@ -224,10 +225,18 @@ export class Collector extends BaseCreep {
           return target as StructureContainer;
         }
       }
+      // links
       else if (targets.links && targets.links.length) {
         const target = Game.getObjectById(targets.links[0]);
         if (target != null && ((target as StructureLink).energy / (target as StructureLink).energyCapacity >= 0.3)) {
           return target as StructureLink;
+        }
+      }
+      // terminal
+      else if (targets.terminal) {
+        const target = Game.getObjectById(targets.terminal);
+        if (target != null && ((target as StructureTerminal).store.energy > 0)) {
+          return target as StructureTerminal;
         }
       }
     }
