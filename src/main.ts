@@ -68,7 +68,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 100000
     },
     maintainer: {
-      count: -1,
+      count: 0,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -78,7 +78,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       ]
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -139,7 +139,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: -1,
+      count: 0,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -148,7 +148,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE],
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -202,14 +202,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       upgraderUseStorageMin: 30000
     },
     maintainer: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
     },
     collector: {
-      count: -1,
+      count: 1,
       parts: [
         WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -233,7 +233,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[0]),
       hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5ced749d7f5e00234025f1c3",
-      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa", "5d220538ad1ea5150aad34b3", "5d220bf6320b57371f109e9f", "5d2214948a9c3b645e92842e"]
+      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa", "5d220538ad1ea5150aad34b3", "5d220bf6320b57371f109e9f", "5d2214948a9c3b645e92842e"],
+      terminal: "5d047c79f149a971a0d3a4be"
     },
     {
       room: Game.rooms['W9S5'],
@@ -241,7 +242,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5cfb3d17bcac0c0fd600f74d",
-      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae"]
+      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae"],
+      terminal: "5d24244044ff1d2a689d8a9d"
     },
     {
       room: Game.rooms['W8S6'],
@@ -249,7 +251,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[2]),
       hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5d1869d8df35e2635a0e1281",
-      towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"]
+      towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"],
+      terminal: ""
     }
   ];
 

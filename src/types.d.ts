@@ -60,6 +60,7 @@ interface RoomMemory {
   notFullSpawns: StructureSpawn[];
   storage: StructureStorage | null;
   towers: StructureTower[];
+  terminal: StructureTerminal | null;
 }
 
 interface RoomConfig {
@@ -68,6 +69,7 @@ interface RoomConfig {
   hasHostile: boolean;
   collectorWithdrawStorageMode: boolean;
   storage: string;
+  terminal: string;
   towers: string[];
 }
 
@@ -86,6 +88,7 @@ interface CreepBrithMemory {
   canAttack?: boolean;
   collectorWithdrawTargets?: CollectorWithdrawTargets;
   harvesterExtPrimaryTransferTargets?: CollectorWithdrawTargets;
+  fullMaintainer?: boolean;
 }
 
 interface SpawnParam {

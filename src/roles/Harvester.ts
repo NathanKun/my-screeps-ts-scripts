@@ -130,6 +130,11 @@ export class Harvester extends BaseCreep {
             targets = this.findStorage();
           }
 
+          // find terminal
+          if (targets.length === 0) {
+            targets = this.findTerminal();
+          }
+
           if (targets.length > 0) {
             target = targets[0];
             // cache
@@ -194,6 +199,14 @@ export class Harvester extends BaseCreep {
     const storage = this.room.memory.storage;
     if (storage) {
       return [storage];
+    }
+    return [];
+  }
+
+  private findTerminal(): StructureTerminal[] {
+    const terminal = this.room.memory.terminal;
+    if (terminal) {
+      return [terminal];
     }
     return [];
   }
