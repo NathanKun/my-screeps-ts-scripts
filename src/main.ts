@@ -27,7 +27,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // spawn creeps params
   const spawnParams: SpawnParam[] = [{
-    spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1']],
+    spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']],
     harvester: {
       count: 1,
       parts: [
@@ -116,7 +116,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
         MOVE, MOVE, MOVE, MOVE, MOVE
       ],
       harvestRoom: 'W8S5',
-      canAttack: false
+      canAttack: false,
+      harvesterExtPrimaryTransferTargets: {
+        links: ["5d22efceaf7b0c634e1579b4"]
+      }
     },
     builder: {
       count: 1,
@@ -130,9 +133,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
     upgrader: {
       count: 1,
       parts: [
-        WORK, WORK, WORK, WORK, WORK,
+        WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
         CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       upgraderUseStorageMin: 30000
     },
     maintainer: {
@@ -230,15 +233,15 @@ export const loop = ErrorMapper.wrapLoop(() => {
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[0]),
       hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5ced749d7f5e00234025f1c3",
-      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa"]
+      towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa", "5d220538ad1ea5150aad34b3", "5d220bf6320b57371f109e9f", "5d2214948a9c3b645e92842e"]
     },
     {
       room: Game.rooms['W9S5'],
-      spawns: [Game.spawns['Spawn2']],
+      spawns: [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']],
       collectorWithdrawStorageMode: getCollectorWithdrawStorageMode(spawnParams[1]),
       hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0,
       storage: "5cfb3d17bcac0c0fd600f74d",
-      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e"]
+      towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae"]
     },
     {
       room: Game.rooms['W8S6'],
@@ -339,6 +342,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
           sender: Game.getObjectById('5d0a7d41308228440a39201d') as StructureLink,
           receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
           senderType: "cityCenter"
+        },
+        {
+          sender: Game.getObjectById('5d22efceaf7b0c634e1579b4') as StructureLink,
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
+          senderType: "nextToExit"
         }
       ]
     },

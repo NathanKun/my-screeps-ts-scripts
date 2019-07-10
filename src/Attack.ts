@@ -17,10 +17,11 @@ export class Attack {
         MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK // 650
       ]
     } else if (type === 'h') {
-      parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 100
-        TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, // 50
+      parts = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, // 500
         MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, // 500
-        HEAL, HEAL, HEAL, HEAL, HEAL // 250 * 5 = 1250
+        MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL, // 875
+        HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, // 1250
+        HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL // 250 * 5 = 1250
       ]
     } else if (type === 'def') {
       parts = [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, // 300
@@ -60,19 +61,28 @@ export class Attack {
   }
 
 
-  public static attackById(targetId: string) {
+  public static attackById(targetId: string, creepName: string = 'all') {
     const target = Game.getObjectById(targetId) as (Creep | PowerCreep | Structure | null);
     if (target) {
-      Attack.attack(target);
+      Attack.attack(target, creepName);
     }
   }
 
-  public static attack(target: Creep | PowerCreep | Structure) {
-    for (const name in Game.creeps) {
-      const creep = Game.creeps[name];
-      if (creep.memory.role === 'a') {
+  public static attack(target: Creep | PowerCreep | Structure, creepName: string = 'all') {
+    if (creepName === 'all') {
+      const creep = Game.creeps[creepName];
+      if (creep && creep.memory.role === 'a') {
         if (creep.attack(target) === ERR_NOT_IN_RANGE) {
           creep.moveTo(target);
+        }
+      }
+    } else {
+      for (const name in Game.creeps) {
+        const creep = Game.creeps[name];
+        if (creep.memory.role === 'a') {
+          if (creep.attack(target) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(target);
+          }
         }
       }
     }
