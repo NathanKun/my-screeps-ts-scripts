@@ -138,7 +138,7 @@ export class Collector extends BaseCreep {
         // storage
         if (targets.length === 0) {
           const storage = this.room.memory.storage;
-          if (storage) {
+          if (storage && storage.store.energy < storage.storeCapacity) {
             targets = [storage];
           }
         }

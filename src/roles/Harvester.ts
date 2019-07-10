@@ -197,7 +197,7 @@ export class Harvester extends BaseCreep {
 
   private findStorage(): StructureStorage[] {
     const storage = this.room.memory.storage;
-    if (storage) {
+    if (storage && storage.store.energy < storage.storeCapacity) {
       return [storage];
     }
     return [];
