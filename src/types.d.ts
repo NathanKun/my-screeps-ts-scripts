@@ -1,6 +1,7 @@
 interface Memory {
   uuid: number;
   log: any;
+  observeRoomsIndex: number;
 }
 
 // `global` extension samples

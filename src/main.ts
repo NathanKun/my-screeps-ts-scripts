@@ -12,6 +12,7 @@ import { ErrorMapper } from "utils/ErrorMapper";
 import { LinkUtil } from "utils/LinkUtil";
 import { RoomMemoryUtil } from "utils/RoomMemoryUtil";
 import { Parameters } from "Parameters";
+import { PowerBankAction } from "PowerBankAction";
 
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -187,14 +188,34 @@ export const loop = ErrorMapper.wrapLoop(() => {
         Memory.observeRoomsIndex = 0;
       }
 
-  console.log('Tick ended');
+      // observed room
+      const observedRoom = Game.rooms[Parameters.observeRooms[Memory.observeRoomsIndex]];
+      if (observedRoom) {
+        console.log("observedRoom = " + observedRoom.name);
+        const found = observedRoom.find(FIND_STRUCTURES, {
+          filter: s => s.structureType === STRUCTURE_POWER_BANK
+        });
 
+        // found, start power bank action
+        if (found.length) {
+          console.log("-----POWER BANK-----")
+          PowerBankAction.do(found[0] as StructurePowerBank);
+          console.log("-----POWER BANK END-----")
+        }
+        // not found, index++
+        else {
+          Memory.observeRoomsIndex++;
+          if (Parameters.observeRooms.length === Memory.observeRoomsIndex) {
+            Memory.observeRoomsIndex = 0;
+          }
+        }
+      }
 
-  function getCollectorWithdrawStorageMode(spawnParam: SpawnParam): boolean {
-    const spawn = spawnParam.spawns[0];
-    if (!spawn) {
-      return false;
+      // observe next room
+      obs.observeRoom(Parameters.observeRooms[Memory.observeRoomsIndex]);
     }
+  }
+  logCPU('power bank observe')
 
 
   console.log('Tick ended');
