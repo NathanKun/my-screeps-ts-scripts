@@ -118,7 +118,7 @@ export class PowerBankAction {
   public static do(bank: StructurePowerBank, spawns: StructureSpawn[]) {
     if (bank) {
       try {
-        //PowerBankAction.internalDo(bank, spawns);
+        // PowerBankAction.internalDo(bank, spawns);
       } catch (e) {
         const outText = ErrorMapper.sourceMappedStackTrace(e);
         Game.notify('Game.time = ' + Game.time + '\n' + 'Error in TowerTask ' + bank.id +

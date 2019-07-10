@@ -117,7 +117,7 @@ export class Parameters {
         upgraderUseStorageMin: 30000
       },
       maintainer: {
-        count: 0,
+        count: 1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -164,7 +164,7 @@ export class Parameters {
         harvestRoom: 'W7S6',
         canAttack: true,
         harvesterExtPrimaryTransferTargets: {
-          links: ["5d1bef377df56e6464adbd1c"]
+          links: ["5d1bef377df56e6464adbd1c", "5d25b240d2b78a5d2a18d093"]
         }
       },
       builder: {

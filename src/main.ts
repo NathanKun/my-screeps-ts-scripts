@@ -1,4 +1,6 @@
 import { Attack } from "Attack";
+import { Parameters } from "Parameters";
+import { PowerBankAction } from "PowerBankAction";
 import { BaseCreep } from "roles/BaseCreep";
 import { Builder } from "roles/Builder";
 import { Claimer } from "roles/Claimer";
@@ -11,8 +13,6 @@ import { TowerTask } from "TowerTask";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { LinkUtil } from "utils/LinkUtil";
 import { RoomMemoryUtil } from "utils/RoomMemoryUtil";
-import { Parameters } from "Parameters";
-import { PowerBankAction } from "PowerBankAction";
 
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -199,7 +199,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // found, start power bank action
         if (found.length) {
           console.log("-----POWER BANK-----")
-          PowerBankAction.do(found[0] as StructurePowerBank);
+          PowerBankAction.do(found[0] as StructurePowerBank, rooms[0].spawns);
           console.log("-----POWER BANK END-----")
         }
         // not found, index++

@@ -127,28 +127,34 @@ export class Collector extends BaseCreep {
         let targets: AnyStructure[] = [...this.room.memory.notFullExtensions, ...this.room.memory.notFullSpawns]
           .sort((s1, s2) => this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
 
-        // tower
+        // find low energy towers
         if (targets.length === 0) {
-          targets = this.room.memory.towers.filter(structure => {
-            return structure.structureType === STRUCTURE_TOWER &&
-              structure.energy < 850;
-          }).sort((s1, s2) => s1.energy - s2.energy);
+          targets = this.findTowers(500);
         }
 
-        // storage
+        // find high energy towers
         if (targets.length === 0) {
-          const storage = this.room.memory.storage;
-          if (storage && storage.store.energy < storage.storeCapacity) {
-            targets = [storage];
-          }
+          targets = this.findTowers(850);
         }
 
-        // terminal
+        // find power spawn
         if (targets.length === 0) {
-          const terminal = this.room.memory.terminal;
-          if (terminal) {
-            targets = [terminal];
-          }
+          targets = this.findPowerSpawn();
+        }
+
+        // find storages
+        if (targets.length === 0) {
+          targets = this.findStorage();
+        }
+
+        // find terminal
+        if (targets.length === 0) {
+          targets = this.findTerminal();
+        }
+
+        // find nuker
+        if (targets.length === 0) {
+          targets = this.findNuker();
         }
 
         if (targets.length) {

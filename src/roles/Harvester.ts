@@ -125,6 +125,11 @@ export class Harvester extends BaseCreep {
             targets = this.findTowers(850);
           }
 
+          // find power spawn
+          if (targets.length === 0) {
+            targets = this.findPowerSpawn();
+          }
+
           // find storages
           if (targets.length === 0) {
             targets = this.findStorage();
@@ -133,6 +138,11 @@ export class Harvester extends BaseCreep {
           // find terminal
           if (targets.length === 0) {
             targets = this.findTerminal();
+          }
+
+          // find nuker
+          if (targets.length === 0) {
+            targets = this.findNuker();
           }
 
           if (targets.length > 0) {
@@ -185,39 +195,7 @@ export class Harvester extends BaseCreep {
     }
   }
 
-  private findExtensions(): StructureExtension[] {
-    return this.room.memory.notFullExtensions.sort((s1, s2) =>
-      this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
-  }
-
-  private findSpawns(): StructureSpawn[] {
-    return this.room.memory.notFullSpawns.sort((s1, s2) =>
-      this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
-  }
-
-  private findStorage(): StructureStorage[] {
-    const storage = this.room.memory.storage;
-    if (storage && storage.store.energy < storage.storeCapacity) {
-      return [storage];
-    }
-    return [];
-  }
-
-  private findTerminal(): StructureTerminal[] {
-    const terminal = this.room.memory.terminal;
-    if (terminal) {
-      return [terminal];
-    }
-    return [];
-  }
-
-  private findTowers(maxEnergy: number): StructureTower[] {
-    return this.room.memory.towers.filter(
-      structure => structure.structureType === STRUCTURE_TOWER && structure.energy <= maxEnergy
-    ).sort((s1, s2) => s1.energy - s2.energy);
-  }
-
-  private findCityCenterSenderLinks(): StructureLink[] {
+  protected findCityCenterSenderLinks(): StructureLink[] {
     const res: StructureLink[] = []
 
     for (const roomLinks of this.roomLinks) {
