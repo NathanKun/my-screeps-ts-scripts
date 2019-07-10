@@ -61,6 +61,9 @@ interface RoomMemory {
   storage: StructureStorage | null;
   towers: StructureTower[];
   terminal: StructureTerminal | null;
+  powerSpawn: StructurePowerSpawn | null;
+  nuker: StructureNuker | null;
+  observer: StructureObserver | null;
 }
 
 interface RoomConfig {
@@ -71,6 +74,9 @@ interface RoomConfig {
   storage: string;
   terminal: string;
   towers: string[];
+  powerSpawn: string;
+  nuker: string;
+  observer: string;
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
@@ -115,5 +121,6 @@ interface RoomLinks {
 
 interface CollectorWithdrawTargets {
   links?: string[],
-  containers?: string[]
+  containers?: string[],
+  terminal?: string;
 }

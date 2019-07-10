@@ -284,22 +284,18 @@ export class SpawnHelper {
     console.log(claimer);
   }
 
-  private static internalSpawn(spawnParams: SpawnParam[]) {
-    for (const spawnParam of spawnParams) {
-      SpawnHelper.internalSpawnOne(spawnParam);
-    }
-
-    SpawnHelper.printStat(spawnParams);
-  }
-
   public static spawn(spawnParams: SpawnParam[]) {
-    try {
-      SpawnHelper.internalSpawn(spawnParams);
-    } catch (e) {
-      console.log('Error in SpawnHelper.spwan: ' + e);
-      const outText = ErrorMapper.sourceMappedStackTrace(e);
-      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' +
-        '\n' + e + '\n' + outText);
+    for (const spawnParam of spawnParams) {
+      try {
+        SpawnHelper.internalSpawnOne(spawnParam);
+      } catch (e) {
+        console.log('Error in SpawnHelper.spwan: ' + e);
+        const outText = ErrorMapper.sourceMappedStackTrace(e);
+        Game.notify('Game.time = ' + Game.time + '\n' + 'Error in SpawnHelper.spwan' +
+          '\n' + e + '\n' + outText);
+      }
     }
+    SpawnHelper.printStat(spawnParams);
+
   }
 }

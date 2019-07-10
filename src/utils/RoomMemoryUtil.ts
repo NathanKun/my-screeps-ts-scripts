@@ -2,7 +2,6 @@ export class RoomMemoryUtil {
   public static initRoomMemory(roomConfig: RoomConfig) {
     const room = roomConfig.room;
     room.memory = {} as RoomMemory;
-
     RoomMemoryUtil.energy(room);
     RoomMemoryUtil.structures(room, roomConfig);
   }
@@ -58,5 +57,26 @@ export class RoomMemoryUtil {
 
     // towers
     room.memory.towers = roomConfig.towers.map(id => Game.getObjectById(id)).filter(t => t != null) as StructureTower[];
+
+    // power spawns
+    if (roomConfig.powerSpawn !== "") {
+      room.memory.powerSpawn = Game.getObjectById(roomConfig.powerSpawn);
+    } else {
+      room.memory.powerSpawn = null;
+    }
+
+    // power spawns
+    if (roomConfig.nuker !== "") {
+      room.memory.nuker = Game.getObjectById(roomConfig.nuker);
+    } else {
+      room.memory.nuker = null;
+    }
+
+    // power spawns
+    if (roomConfig.observer !== "") {
+      room.memory.observer = Game.getObjectById(roomConfig.observer);
+    } else {
+      room.memory.observer = null;
+    }
   }
 }
