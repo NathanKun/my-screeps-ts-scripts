@@ -52,13 +52,13 @@ export class SpawnHelper {
 
     if (max <= 0) {
       max = 0;
-      if (spawnParam.maintainer.count - maintainers.length > max) {
-        max = spawnParam.maintainer.count - maintainers.length;
-        toSpawn = "maintainer";
-      }
-      else if (spawnParam.harvesterExt.count - harvesterExts.length > max) {
+      if (spawnParam.harvesterExt.count - harvesterExts.length > max) {
         max = spawnParam.harvesterExt.count - harvesterExts.length;
         toSpawn = "harvesterExt";
+      }
+      else if (spawnParam.collector.count - collectors.length > max) {
+        max = spawnParam.collector.count - collectors.length;
+        toSpawn = "collector";
       }
       else if (spawnParam.claimer.count - claimers.length > max) {
         max = spawnParam.claimer.count - claimers.length;
@@ -72,9 +72,9 @@ export class SpawnHelper {
         max = spawnParam.upgrader.count - upgraders.length;
         toSpawn = "upgrader";
       }
-      else if (spawnParam.collector.count - collectors.length > max) {
-        max = spawnParam.collector.count - collectors.length;
-        toSpawn = "collector";
+      else if (spawnParam.maintainer.count - maintainers.length > max) {
+        max = spawnParam.maintainer.count - maintainers.length;
+        toSpawn = "maintainer";
       }
     }
 
