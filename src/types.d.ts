@@ -2,6 +2,7 @@ interface Memory {
   uuid: number;
   log: any;
   observeRoomsIndex: number;
+  powerbank: PowerBankActionMemory;
 }
 
 // `global` extension samples
@@ -96,6 +97,7 @@ interface CreepBrithMemory {
   collectorWithdrawTargets?: CollectorWithdrawTargets;
   harvesterExtPrimaryTransferTargets?: CollectorWithdrawTargets;
   fullMaintainer?: boolean;
+  powerbankHealerTarget?: string; // power bank attacker's name
 }
 
 interface SpawnParam {
@@ -124,4 +126,9 @@ interface CollectorWithdrawTargets {
   links?: string[],
   containers?: string[],
   terminal?: string;
+}
+
+interface PowerBankActionMemory {
+  path: RoomPosition[];
+  start: RoomPosition;
 }
