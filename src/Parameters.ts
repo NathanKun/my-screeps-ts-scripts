@@ -28,7 +28,7 @@ export class Parameters {
         harvestRoom: 'W9S6'
       },
       builder: {
-        count: 1,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           WORK, WORK, WORK, WORK, WORK, WORK, WORK,
@@ -100,7 +100,7 @@ export class Parameters {
         }
       },
       builder: {
-        count: 1,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,

@@ -36,9 +36,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
   Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
 
   // rooms[0].collectorWithdrawStorageMode = true;
-  // rooms[1].collectorWithdrawStorageMode = true;
   logCPU('spawnParams')
 
+  // init rooms
   const rooms = Parameters.rooms();
   for (const roomConfig of rooms) {
     roomConfig.collectorWithdrawStorageMode = Parameters.getCollectorWithdrawStorageMode(roomConfig.room.memory.spawnParam);
@@ -84,6 +84,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
     // tower defense & repair
     TowerTask.run(roomConfig.room.memory.towers);
+
+    // process power
+    if (roomConfig.room.memory.powerSpawn && roomConfig.room.memory.powerSpawn.power) {
+      roomConfig.room.memory.powerSpawn.processPower();
+    }
   }
   logCPU('room init')
 
@@ -148,6 +153,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
   logCPU('creeps work')
 
+  // search power bank
   if (Parameters.observeRooms.length) {
     const obs = rooms[0].room.memory.observer;
     if (obs) {
@@ -159,14 +165,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
       const observedRoom = Game.rooms[Parameters.observeRooms[Memory.observeRoomsIndex]];
       if (observedRoom) {
         console.log("observedRoom = " + observedRoom.name);
-        const found = observedRoom.find(FIND_STRUCTURES, {
+        const bank = observedRoom.find(FIND_STRUCTURES, {
           filter: s => s.structureType === STRUCTURE_POWER_BANK
-        });
+        }) as StructurePowerBank[];
+        const power = observedRoom.find(FIND_DROPPED_RESOURCES, {
+          filter: s => s.resourceType === RESOURCE_POWER
+        }) as Resource<RESOURCE_POWER>[];
 
         // found, start power bank action
-        if (found.length) {
+        if (bank.length || power.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
           console.log("-----POWER BANK-----")
-          PowerBankAction.do(found[0] as StructurePowerBank, rooms[0].spawns);
+          PowerBankAction.do(bank, power, rooms[0].spawns);
           console.log("-----POWER BANK END-----")
         }
         // not found, index++
@@ -182,7 +191,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       obs.observeRoom(Parameters.observeRooms[Memory.observeRoomsIndex]);
     }
   }
-  logCPU('power bank observe')
+  logCPU('power bank action')
 
 
   console.log('Tick ended');

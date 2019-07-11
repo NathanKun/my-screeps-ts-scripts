@@ -112,7 +112,7 @@ interface SpawnParam {
 interface LinkPair {
   sender: StructureLink;
   receiver: StructureLink;
-  senderType: "nextToExit" | "cityCenter"
+  senderType: "nextToExit" | "cityCenter";
 }
 
 interface RoomLinks {
@@ -129,4 +129,7 @@ interface CollectorWithdrawTargets {
 interface PowerBankActionMemory {
   path: RoomPosition[];
   start: RoomPosition;
+  end: RoomPosition;
+  carrierNeed: number;
+  finished: boolean;
 }

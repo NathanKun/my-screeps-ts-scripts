@@ -127,7 +127,7 @@ export class Harvester extends BaseCreep {
 
           // find power spawn
           if (targets.length === 0) {
-            targets = this.findPowerSpawn();
+            targets = this.findNotFullPowerSpawn();
           }
 
           // find storages
@@ -137,12 +137,12 @@ export class Harvester extends BaseCreep {
 
           // find terminal
           if (targets.length === 0) {
-            targets = this.findTerminal();
+            targets = this.findNotFullTerminal();
           }
 
           // find nuker
           if (targets.length === 0) {
-            targets = this.findNuker();
+            targets = this.findNotFullNuker();
           }
 
           if (targets.length > 0) {
