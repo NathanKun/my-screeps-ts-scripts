@@ -37,6 +37,8 @@ export class PowerBankAction {
         Memory.powerbank.path = PowerBankAction.findPath(bank);
         Memory.powerbank.carrierNeed = Math.ceil(bank.power / 1250);
         Memory.powerbank.finished = false;
+        Memory.powerbank.poweraSpawnedIndex = 0;
+        Memory.powerbank.powerhSpawnedIndex = 0;
       } else {
         throw new Error("Memory.powerbank === undefined && bank === null")
       }
@@ -63,8 +65,14 @@ export class PowerBankAction {
 
   private static findPath(bank: StructurePowerBank) {
     console.log('Find power bank path start: ' + Game.cpu.getUsed());
-    const res = PathFinder.search(Memory.powerbank.start, bank.pos);
+    const res = PathFinder.search(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName), bank.pos, {
+      maxOps: 50000,
+      maxRooms: 64
+    });
     console.log('Find power bank path end  : ' + Game.cpu.getUsed());
+    console.log(res.cost)
+    console.log(res.incomplete)
+    console.log(res.ops)
     return res.path;
   }
 
@@ -76,20 +84,22 @@ export class PowerBankAction {
       if (bank) {
         for (let i = 1; i <= 4; i++) {
           const a = Game.creeps['powera_' + i];
-          if (a === undefined) {
+          if (a === undefined && Memory.powerbank.poweraSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.poweraBody, 'powera_' + i,
-              { memory: { role: 'powera', room: spawns[0].room.name, spawnTime: Game.time } });
+              { memory: { role: 'powera', room: spawns[0].room.name, spawnTime: Game.time, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
+              Memory.powerbank.poweraSpawnedIndex = i;
               Game.notify('Spawn powera_' + i);
             }
             return;
           }
 
           const h = Game.creeps['powerh_' + i];
-          if (h === undefined) {
+          if (h === undefined && Memory.powerbank.powerhSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.powerhBody, 'powerh_' + i,
-              { memory: { role: 'powerh', room: spawns[0].room.name, spawnTime: Game.time, powerbankHealerTarget: 'powera_' + i } });
+              { memory: { role: 'powerh', room: spawns[0].room.name, spawnTime: Game.time, powerbankHealerTarget: 'powera_' + i, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
+              Memory.powerbank.powerhSpawnedIndex = i;
               Game.notify('Spawn powerh_' + i);
             }
             return;
@@ -103,7 +113,7 @@ export class PowerBankAction {
           const c = Game.creeps['powerc_' + i];
           if (c === undefined) {
             const res = spawns[0].spawnCreep(this.powercBody, 'powerc_' + i,
-              { memory: { role: 'powerc', room: spawns[0].room.name, spawnTime: Game.time } });
+              { memory: { role: 'powerc', room: spawns[0].room.name, spawnTime: Game.time, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
               Game.notify('Spawn powerh_' + i);
             }
@@ -151,12 +161,15 @@ export class PowerBankAction {
     // creep in start room
     if (c.room.name === Memory.powerbank.start.roomName) {
       // at start point => move by cached path
-      if (c.pos.x === Memory.powerbank.start.x && c.pos.y === Memory.powerbank.start.y) {
-        c.moveByPath(Memory.powerbank.path);
+      if (c.pos.x === Memory.powerbank.path!![0].x && c.pos.y === Memory.powerbank.path!![0].y) {
+        const path = c.memory.powerbankPath!!.map(p => new RoomPosition(p.x, p.y, p.roomName));
+        const res = c.moveByPath(path);
+        console.log(c.name + " move by path " + res);
       }
       // not at start point => move to start point
       else {
-        c.moveTo(Memory.powerbank.start);
+        const res = c.moveTo(new RoomPosition(Memory.powerbank.path!![0].x, Memory.powerbank.path!![0].y, Memory.powerbank.path!![0].roomName));
+        console.log(c.name + " move to start " + res);
       }
     }
     // a or h creep is close to power bank
@@ -179,7 +192,9 @@ export class PowerBankAction {
     // creep in half way
     else {
       // move by cached path
-      c.moveByPath(Memory.powerbank.path);
+      const path = c.memory.powerbankPath!!.map(p => new RoomPosition(p.x, p.y, p.roomName));
+      const res = c.moveByPath(path);
+      console.log(c.name + " move by path " + res);
     }
   }
 

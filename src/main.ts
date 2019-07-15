@@ -31,9 +31,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
   logCPU('delete memory')
 
   const spawnParams = Parameters.spawnParams();
-  Game.rooms['W9S7'].memory.spawnParam = spawnParams[0];
-  Game.rooms['W9S5'].memory.spawnParam = spawnParams[1];
-  Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
+  spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
+  spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']];
+  spawnParams[2].spawns = [Game.spawns['Spawn3']];
 
   // rooms[0].collectorWithdrawStorageMode = true;
   logCPU('spawnParams')
@@ -41,6 +41,13 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // init rooms
   const rooms = Parameters.rooms();
   for (const roomConfig of rooms) {
+
+    // init room memory
+    RoomMemoryUtil.initRoomMemory(roomConfig);
+    Game.rooms['W9S7'].memory.spawnParam = spawnParams[0];
+    Game.rooms['W9S5'].memory.spawnParam = spawnParams[1];
+    Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
+
     roomConfig.collectorWithdrawStorageMode = Parameters.getCollectorWithdrawStorageMode(roomConfig.room.memory.spawnParam);
 
     // structure being attack
@@ -78,9 +85,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
         }
       }
     }
-
-    // init room memory
-    RoomMemoryUtil.initRoomMemory(roomConfig);
 
     // tower defense & repair
     TowerTask.run(roomConfig.room.memory.towers);
@@ -175,7 +179,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // found, start power bank action
         if (bank.length || power.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
           console.log("-----POWER BANK-----")
-          PowerBankAction.do(bank, power, rooms[0].spawns);
+          //PowerBankAction.do(bank, power, rooms[0].spawns);
           console.log("-----POWER BANK END-----")
         }
         // not found, index++
@@ -193,6 +197,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
   logCPU('power bank action')
 
+  Attack.attackById('5bcb6c43be9c135918381909', 'powera_1');
+  Attack.attackById('5bcb6c43be9c135918381909', 'powera_2');
 
   console.log('Tick ended');
 

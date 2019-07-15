@@ -12,7 +12,7 @@ export abstract class BaseCreep extends Creep {
   private dyingCheck() {
     if ((this.ticksToLive && this.ticksToLive < 75) || this.memory.toRecycle) {
       if (this.room.name === this.memory.room) {
-        const spawn = this.room.memory.spawnParam.spawns[0];
+        const spawn = Game.spawns[this.room.memory.spawnParam.spawns[0].name];
         if (this.pos.getRangeTo(spawn) > 1) {
           this.moveTo(spawn);
         } else {

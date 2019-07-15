@@ -5,7 +5,7 @@ export class Parameters {
   // spawn creeps params
   public static spawnParams(): SpawnParam[] {
     return [{
-      spawns: [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']],
+      spawns: [],
       harvester: {
         count: 1,
         parts: [
@@ -73,7 +73,7 @@ export class Parameters {
       }
     },
     {
-      spawns: [Game.spawns['Spawn2']],
+      spawns: [],
       harvester: {
         count: 1,
         parts: [
@@ -145,7 +145,7 @@ export class Parameters {
       }
     },
     {
-      spawns: [Game.spawns['Spawn3']],
+      spawns: [],
       harvester: {
         count: 1,
         parts: [
@@ -329,7 +329,8 @@ export class Parameters {
 
       return ((energy / capacity < 0.2) ||
         spawn.room.memory.harvester < spawnParam.harvester.count ||
-        spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count)
+        spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count ||
+        (Memory.powerbank && Memory.powerbank.start.roomName === spawn.room.name && (energy / capacity < 0.8)))
         && storageNotEmpty;
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);

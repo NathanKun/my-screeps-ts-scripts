@@ -78,13 +78,9 @@ export class Attack {
         }
       }
     } else {
-      for (const name in Game.creeps) {
-        const creep = Game.creeps[name];
-        if (creep.memory.role === 'a') {
-          if (creep.attack(target) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(target);
-          }
-        }
+      const creep = Game.creeps[creepName];
+      if (creep.attack(target) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(target);
       }
     }
   }

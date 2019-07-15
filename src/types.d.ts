@@ -33,6 +33,7 @@ interface CreepMemory extends CreepBrithMemory {
   upgraderLinkTarget?: string;
   cacheTime?: number;
   withdrawStorageMode?: boolean;
+  powerbankPath?: RoomPosition[];
 }
 
 interface SpawnMemory {
@@ -132,4 +133,6 @@ interface PowerBankActionMemory {
   end: RoomPosition;
   carrierNeed: number;
   finished: boolean;
+  poweraSpawnedIndex: number;
+  powerhSpawnedIndex: number;
 }
