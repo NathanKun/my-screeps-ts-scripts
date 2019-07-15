@@ -26,29 +26,38 @@ export class PowerBankAction {
     CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY // 500
   ]
 
-  private static internalDo(bank: StructurePowerBank | null, power: null | Resource<RESOURCE_POWER>, spawns: StructureSpawn[]) {
-    // cache path, init memory
-    if (Memory.powerbank === undefined) {
-      if (bank) {
-        Game.notify('Power bank action started');
-        Memory.powerbank = {} as PowerBankActionMemory;
-        Memory.powerbank.start = new RoomPosition(14, 1, 'W9S7');
-        Memory.powerbank.end = bank.pos;
-        Memory.powerbank.path = PowerBankAction.findPath(bank);
-        Memory.powerbank.carrierNeed = Math.ceil(bank.power / 1250);
-        Memory.powerbank.finished = false;
-        Memory.powerbank.poweraSpawnedIndex = 0;
-        Memory.powerbank.powerhSpawnedIndex = 0;
-      } else {
-        throw new Error("Memory.powerbank === undefined && bank === null")
-      }
-    }
-
+  private static internalDo(spawns: StructureSpawn[]) {
+    // finished, clean up
     if (Memory.powerbank.finished) {
-      PowerBankAction.cleanupMemory();
+      delete Memory['powerbank'];
       Game.notify('Power bank action finished');
       return;
     }
+
+    const observer = spawns[0].room.memory.observer!!;
+
+    // find path
+    if (Memory.powerbank.findingPath) {
+      PowerBankAction.findPath(observer);
+      return;
+    }
+
+    // path found, start observation of the bank room
+    observer.observeRoom(Memory.powerbank.end.roomName);
+    const room = Game.rooms[Memory.powerbank.end.roomName];
+
+    if (room === undefined) {
+      return;
+    }
+
+    // find bank / power
+    const bank = Game.getObjectById(Memory.powerbank.bankId) as (StructurePowerBank | null);
+    const powers = room.find(FIND_DROPPED_RESOURCES, {
+      filter: s => s.resourceType === RESOURCE_POWER
+    }) as Resource<RESOURCE_POWER>[];
+
+    const power = powers.length ? powers[0] : null;
+
 
     // spawn 4 attacker-healer pairs, and carriers
     PowerBankAction.spawn(spawns, bank, power);
@@ -63,17 +72,101 @@ export class PowerBankAction {
     PowerBankAction.back(bank, power);
   }
 
-  private static findPath(bank: StructurePowerBank) {
-    console.log('Find power bank path start: ' + Game.cpu.getUsed());
-    const res = PathFinder.search(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName), bank.pos, {
-      maxOps: 50000,
-      maxRooms: 64
-    });
-    console.log('Find power bank path end  : ' + Game.cpu.getUsed());
-    console.log(res.cost)
-    console.log(res.incomplete)
-    console.log(res.ops)
-    return res.path;
+  private static findPath(observer: StructureObserver) {
+    // simple find pat without visibility
+    if (Memory.powerbank.roomStructures === undefined) {
+      PathFinder.search(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName),
+        { pos: Memory.powerbank.end, range: 1 },
+        {
+          maxOps: 50000,
+          maxRooms: 64,
+          plainCost: 2,
+          swampCost: 10,
+          roomCallback: (roomName) => {
+            const room = Game.rooms[roomName];
+            if (!room) {
+              Memory.powerbank.pathRooms.push(roomName);
+            }
+            return new PathFinder.CostMatrix;
+          }
+        }
+      );
+
+      Memory.powerbank.roomStructures = {};
+      observer.observeRoom(Memory.powerbank.pathRooms[0]);
+      console.log('Find Path start');
+    } else {
+      let count = 0;
+      // observe rooms in path, cache structures of rooms
+      for (let index = 0; index < Memory.powerbank.pathRooms.length; index++) {
+        const roomName = Memory.powerbank.pathRooms[index];
+        if (Memory.powerbank.roomStructures!!.hasOwnProperty(roomName)) {
+          count++;
+          continue;
+        }
+        const room = Game.rooms[roomName];
+        if (room) {
+          Memory.powerbank.roomStructures!![roomName] = room.find(FIND_STRUCTURES);
+          if (index + 1 < Memory.powerbank.pathRooms.length) {
+            observer.observeRoom(Memory.powerbank.pathRooms[index + 1]);
+          }
+          console.log('Finding Path: room = ' + roomName + " index = " + index);
+          break;
+        }
+      }
+
+      if (count < Memory.powerbank.pathRooms.length) {
+        return;
+      }
+
+      // cache completed, re-search path with rooms visibility
+      const path = PathFinder.search(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName),
+        { pos: Memory.powerbank.end, range: 1 },
+        {
+          maxOps: 50000,
+          maxRooms: 64,
+          plainCost: 2,
+          swampCost: 10,
+          roomCallback: (roomName) => {
+            const costs = new PathFinder.CostMatrix;
+
+            let roomStructures = Memory.powerbank.roomStructures!![roomName];
+            if (!roomStructures) {
+              const room = Game.rooms[roomName];
+              if (!room) {
+                Game.notify('Error while find path to power bank. RoomStructure of room ' + roomName + ' not found, and the room is not visible');
+                return costs;
+              }
+              roomStructures = room.find(FIND_STRUCTURES);
+            }
+
+            roomStructures.forEach((struct) => {
+              if (struct.structureType === STRUCTURE_ROAD) {
+                // Favor roads over plain tiles
+                costs.set(struct.pos.x, struct.pos.y, 1);
+              } else if (struct.structureType !== STRUCTURE_CONTAINER &&
+                (struct.structureType !== STRUCTURE_RAMPART || !struct.my)) {
+                // Can't walk through non-walkable buildings
+                costs.set(struct.pos.x, struct.pos.y, 0xff);
+              }
+            });
+
+            return costs;
+          }
+        }
+      );
+
+      console.log('Find Path End');
+      console.log('    cost = ' + path.cost);
+      console.log('    incomplete = ' + path.incomplete);
+      console.log('    ops = ' + path.ops);
+      console.log('    path.length = ' + path.path.length);
+
+      Memory.powerbank.path = path.path;
+      delete Memory.powerbank.pathRooms;
+      delete Memory.powerbank.roomStructures;
+      Memory.powerbank.findingPath = false;
+    }
   }
 
   private static spawn(pSpawns: StructureSpawn[], bank: StructurePowerBank | null, power: null | Resource<RESOURCE_POWER>) {
@@ -82,7 +175,7 @@ export class PowerBankAction {
     if (spawns.length) {
       // attakers and healers
       if (bank) {
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 1; i++) {
           const a = Game.creeps['powera_' + i];
           if (a === undefined && Memory.powerbank.poweraSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.poweraBody, 'powera_' + i,
@@ -250,20 +343,12 @@ export class PowerBankAction {
     }
   }
 
-  private static cleanupMemory() {
-    delete Memory['powerbank'];
-  }
-
-  public static do(pBank: StructurePowerBank[], pPower: Resource<RESOURCE_POWER>[], spawns: StructureSpawn[]) {
-    if (pBank.length || pPower.length) {
-      try {
-        let bank = pBank.length ? pBank[0] : null;
-        let power = pPower.length ? pPower[0] : null;
-        PowerBankAction.internalDo(bank, power, spawns);
-      } catch (e) {
-        const outText = ErrorMapper.sourceMappedStackTrace(e);
-        Game.notify('Game.time = ' + Game.time + '\n' + 'Error in Power Bank Action' + '\n' + e + '\n' + outText);
-      }
+  public static do(spawns: StructureSpawn[]) {
+    try {
+      PowerBankAction.internalDo(spawns);
+    } catch (e) {
+      const outText = ErrorMapper.sourceMappedStackTrace(e);
+      Game.notify('Game.time = ' + Game.time + '\n' + 'Error in Power Bank Action' + '\n' + e + '\n' + outText);
     }
   }
 }

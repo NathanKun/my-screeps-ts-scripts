@@ -23,12 +23,15 @@ export const loop = ErrorMapper.wrapLoop(() => {
   logCPU('start')
 
   // Automatically delete memory of missing creeps
-  for (const name in Memory.creeps) {
-    if (!(name in Game.creeps)) {
-      delete Memory.creeps[name];
+  if (Game.time - Memory.lastPurgeMemory > 100) {
+    for (const name in Memory.creeps) {
+      if (!(name in Game.creeps)) {
+        delete Memory.creeps[name];
+      }
     }
+    Memory.lastPurgeMemory = Game.time;
+    logCPU('delete memory')
   }
-  logCPU('delete memory')
 
   const spawnParams = Parameters.spawnParams();
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
@@ -171,48 +174,65 @@ export const loop = ErrorMapper.wrapLoop(() => {
         Memory.observeRoomsIndex = 0;
       }
 
-      // observed room
-      const observedRoom = Game.rooms[Parameters.observeRooms[Memory.observeRoomsIndex]];
-      if (observedRoom) {
-        console.log("observedRoom = " + observedRoom.name);
-        const bank = observedRoom.find(FIND_STRUCTURES, {
-          filter: s => s.structureType === STRUCTURE_POWER_BANK
-        }) as StructurePowerBank[];
-        const power = observedRoom.find(FIND_DROPPED_RESOURCES, {
-          filter: s => s.resourceType === RESOURCE_POWER
-        }) as Resource<RESOURCE_POWER>[];
+      let startPowerBankAction = !!Memory.powerbank;
 
-        // found, start power bank action
-        if (bank.length || power.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
-          console.log("-----POWER BANK-----")
-          PowerBankAction.do(bank, power, rooms[0].spawns);
-          console.log("-----POWER BANK END-----")
-        }
-        // not found, index++
-        else {
-          Memory.observeRoomsIndex++;
-          if (Parameters.observeRooms.length === Memory.observeRoomsIndex) {
-            Memory.observeRoomsIndex = 0;
+      if (!startPowerBankAction) {
+
+        // observed room
+        const observedRoom = Game.rooms[Parameters.observeRooms[Memory.observeRoomsIndex]];
+        if (observedRoom) {
+          console.log("observedRoom = " + observedRoom.name);
+
+          const bank = observedRoom.find(FIND_STRUCTURES, {
+            filter: s => s.structureType === STRUCTURE_POWER_BANK
+          }) as StructurePowerBank[];
+
+          // found, start power bank action
+          if (bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
+            Memory.powerbank = {
+              bankId: bank[0].id,
+              start: new RoomPosition(14, 1, 'W9S7'),
+              end: bank[0].pos,
+              path: [],
+              pathRooms: [],
+              findingPath: true,
+              carrierNeed: Math.ceil(bank[0].power / 1250),
+              finished: false,
+              poweraSpawnedIndex: 0,
+              powerhSpawnedIndex: 0
+            }
+            startPowerBankAction = true;
+          }
+          // not found, index++
+          else {
+            Memory.observeRoomsIndex++;
+            if (Parameters.observeRooms.length === Memory.observeRoomsIndex) {
+              Memory.observeRoomsIndex = 0;
+            }
           }
         }
+
+        // observe next room
+        obs.observeRoom(Parameters.observeRooms[Memory.observeRoomsIndex]);
       }
 
-      // observe next room
-      obs.observeRoom(Parameters.observeRooms[Memory.observeRoomsIndex]);
+      if (startPowerBankAction) {
+        console.log("-----POWER BANK-----")
+        PowerBankAction.do(rooms[0].spawns);
+        console.log("-----POWER BANK END-----")
+      }
     }
+    logCPU('power bank action');
   }
-  logCPU('power bank action');
-
 
 
   console.log('Tick ended');
 
 
-
   function logCPU(job: string) {
-    /*const newCpu = Game.cpu.getUsed();
+    const newCpu = Game.cpu.getUsed();
     console.log('cpu use ' + (newCpu - cpu) + ' for ' + job);
-    cpu = newCpu;*/
+    cpu = newCpu;
   }
 
 });

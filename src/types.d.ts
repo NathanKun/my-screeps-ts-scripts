@@ -3,6 +3,7 @@ interface Memory {
   log: any;
   observeRoomsIndex: number;
   powerbank: PowerBankActionMemory;
+  lastPurgeMemory: number;
 }
 
 // `global` extension samples
@@ -128,11 +129,21 @@ interface CollectorWithdrawTargets {
 }
 
 interface PowerBankActionMemory {
+  bankId: string;
+
   path: RoomPosition[];
+  findingPath: boolean;
+  roomStructures?: PowerBankActionRoomStructures;
+  pathRooms: string[]; // room names which path pass through
+
   start: RoomPosition;
   end: RoomPosition;
   carrierNeed: number;
   finished: boolean;
   poweraSpawnedIndex: number;
   powerhSpawnedIndex: number;
+}
+
+interface PowerBankActionRoomStructures {
+  [room: string]: AnyStructure[];
 }
