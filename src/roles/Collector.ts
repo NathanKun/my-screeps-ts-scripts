@@ -226,14 +226,14 @@ export class Collector extends BaseCreep {
         }
       }
       // links
-      else if (targets.links && targets.links.length) {
+      if (targets.links && targets.links.length) {
         const target = Game.getObjectById(targets.links[0]);
         if (target != null && ((target as StructureLink).energy / (target as StructureLink).energyCapacity >= 0.3)) {
           return target as StructureLink;
         }
       }
       // terminal
-      else if (targets.terminal) {
+      if (targets.terminal) {
         const target = Game.getObjectById(targets.terminal);
         if (target != null && ((target as StructureTerminal).store.energy > 0)) {
           return target as StructureTerminal;

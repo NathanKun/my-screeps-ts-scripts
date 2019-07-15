@@ -42,7 +42,7 @@ export abstract class BaseCreep extends Creep {
   }
 
   protected findStorage(): StructureStorage[] {
-    const storage = this.room.memory.storage;
+    const storage = this.room.storage;
     if (storage) {
       return [storage];
     }
@@ -50,7 +50,7 @@ export abstract class BaseCreep extends Creep {
   }
 
   protected findNotFullTerminal(): StructureTerminal[] {
-    const terminal = this.room.memory.terminal;
+    const terminal = this.room.terminal;
     if (terminal && terminal.store.energy < terminal.storeCapacity) {
       return [terminal];
     }

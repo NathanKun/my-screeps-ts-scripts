@@ -210,8 +210,21 @@ export class SpawnHelper {
 
     /* claimer */
     else if (toSpawn === "claimer") {
+      let reservationTick = 0;
+      if (spawnParam.claimer.claimerRoom && Game.rooms[spawnParam.claimer.claimerRoom]) {
+        const ctrller = Game.rooms[spawnParam.claimer.claimerRoom].controller;
+        if (ctrller && ctrller.reservation) {
+          reservationTick = ctrller.reservation.ticksToEnd
+        }
+      }
+
+      const parts = [...spawnParam.claimer.parts];
+      if (spawnParam.claimer.claimerAction === 'reserve' && reservationTick < 4000) {
+        parts.push(CLAIM);
+      }
+
       notSpawningSpawns[0].spawnCreep(
-        spawnParam.claimer.parts,
+        parts,
         'Claimer' + Game.time,
         {
           memory: {

@@ -93,6 +93,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
     if (roomConfig.room.memory.powerSpawn && roomConfig.room.memory.powerSpawn.power) {
       roomConfig.room.memory.powerSpawn.processPower();
     }
+
+    // room 1 send energy to room 3
+    const t1 = rooms[0].room.terminal;
+    if (t1 && t1.store.energy === t1.storeCapacity) {
+      t1.send(RESOURCE_ENERGY, 260000, 'W8S6');
+    }
   }
   logCPU('room init')
 
@@ -179,7 +185,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // found, start power bank action
         if (bank.length || power.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
           console.log("-----POWER BANK-----")
-          //PowerBankAction.do(bank, power, rooms[0].spawns);
+          PowerBankAction.do(bank, power, rooms[0].spawns);
           console.log("-----POWER BANK END-----")
         }
         // not found, index++
@@ -195,17 +201,18 @@ export const loop = ErrorMapper.wrapLoop(() => {
       obs.observeRoom(Parameters.observeRooms[Memory.observeRoomsIndex]);
     }
   }
-  logCPU('power bank action')
+  logCPU('power bank action');
 
-  Attack.attackById('5bcb6c43be9c135918381909', 'powera_1');
-  Attack.attackById('5bcb6c43be9c135918381909', 'powera_2');
+
 
   console.log('Tick ended');
 
+
+
   function logCPU(job: string) {
-    const newCpu = Game.cpu.getUsed();
+    /*const newCpu = Game.cpu.getUsed();
     console.log('cpu use ' + (newCpu - cpu) + ' for ' + job);
-    cpu = newCpu;
+    cpu = newCpu;*/
   }
 
 });

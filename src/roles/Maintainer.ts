@@ -3,7 +3,9 @@ import { BaseCreep } from "./BaseCreep";
 import { Collector } from "./Collector";
 
 export class Maintainer extends BaseCreep {
-  private static REPAIR_RATIO: number = 1;
+  private static REPAIR_RATIO: number = 0.9;
+  public static readonly WALL_REPAIRE_MAX_HITS = 400000;
+  public static readonly RAMPART_REPAIRE_MAX_HITS = 600000;
 
   protected run() {
     if (this.memory.fullMaintainer === false) {
@@ -58,7 +60,8 @@ export class Maintainer extends BaseCreep {
         if (targets.length === 0) {
           targets = this.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-              return ((structure.structureType === STRUCTURE_RAMPART || structure.structureType === STRUCTURE_WALL) && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
+              return ((structure.structureType === STRUCTURE_RAMPART && structure.hits < Maintainer.RAMPART_REPAIRE_MAX_HITS * Maintainer.REPAIR_RATIO) ||
+                (structure.structureType === STRUCTURE_WALL && structure.hits < Maintainer.WALL_REPAIRE_MAX_HITS * Maintainer.REPAIR_RATIO));
             }
           }).sort((s1, s2) => s1.hits - s2.hits);
         }

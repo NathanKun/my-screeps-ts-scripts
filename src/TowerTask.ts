@@ -1,4 +1,5 @@
 import { ErrorMapper } from "utils/ErrorMapper";
+import { Maintainer } from "roles/Maintainer";
 
 export class TowerTask {
   private static runInternal(towers: StructureTower[]) {
@@ -45,8 +46,8 @@ export class TowerTask {
         }
         // do not repair walls >= 300 000 and ramparts with hits >= 500 000
         else if (
-          ((structure.structureType === STRUCTURE_WALL && structure.hits >= 300000) ||
-            (structure.structureType === STRUCTURE_RAMPART && structure.hits >= 500000))
+          ((structure.structureType === STRUCTURE_WALL && structure.hits >= Maintainer.WALL_REPAIRE_MAX_HITS * 0.8) ||
+            (structure.structureType === STRUCTURE_RAMPART && structure.hits >= Maintainer.RAMPART_REPAIRE_MAX_HITS * 0.8))
         ) {
           return false;
         } else {
@@ -57,25 +58,24 @@ export class TowerTask {
 
     if (structures.length) {
       const sortedStructures = _.sortBy(structures, s => {
-        let res = s.hits / s.hitsMax;
-        if (s.hitsMax <= 10000) {
-          // not changed
-        } else if (s.hitsMax > 10000 && s.hitsMax <= 1000000) {
-          res *= 100;
-        } else if (s.hitsMax > 1000000 && s.hitsMax <= 100000000) {
-          res *= 1000;
-        } else {
-          res *= 100000;
+        let hitsMax;
+
+        switch (s.structureType) {
+          case STRUCTURE_WALL:
+            hitsMax = Maintainer.WALL_REPAIRE_MAX_HITS;
+            break;
+          case STRUCTURE_RAMPART:
+            hitsMax = Maintainer.RAMPART_REPAIRE_MAX_HITS;
+            break;
+          default:
+            hitsMax = s.hitsMax;
+            break;
         }
-        // console.log(s.structureType + "  \t  " + s.hits + "  \t  " + s.hitsMax + "  \t  " + res);
-        return res;
+
+        return s.hits / hitsMax;
       });
-      /*sortedStructures.forEach((s, i) => {
-        console.log(s.structureType + "  \t  " + s.hits + "  \t  " + s.hitsMax + "  \t  " + i);
-      });*/
-      const target = sortedStructures[0];
-      towers.forEach(t => t.repair(target));
-      return;
+
+      towers.forEach(t => t.repair(sortedStructures[0]));
     }
   }
 

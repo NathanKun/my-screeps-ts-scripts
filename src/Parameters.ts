@@ -67,7 +67,7 @@ export class Parameters {
       },
       claimer: {
         count: 1,
-        parts: [CLAIM, CLAIM, MOVE],
+        parts: [CLAIM, MOVE],
         claimerRoom: 'W9S6',
         claimerAction: 'reserve'
       }
@@ -109,7 +109,7 @@ export class Parameters {
           , MOVE],
       },
       upgrader: {
-        count: 1,
+        count: 3,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -139,7 +139,7 @@ export class Parameters {
       },
       claimer: {
         count: 1,
-        parts: [CLAIM, CLAIM, MOVE],
+        parts: [CLAIM, MOVE],
         claimerRoom: 'W8S5',
         claimerAction: 'reserve'
       }
@@ -175,7 +175,7 @@ export class Parameters {
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       },
       upgrader: {
-        count: 2,
+        count: 3,
         parts: [
           WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -196,12 +196,13 @@ export class Parameters {
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         collectorWithdrawTargets: {
-          links: ["5d1bcab6b88799384c5fc414"]
+          links: ["5d1bcab6b88799384c5fc414"],
+          terminal: "5d278ec3d2b78a5d2a199272"
         }
       },
       claimer: {
         count: 1,
-        parts: [CLAIM, CLAIM, MOVE],
+        parts: [CLAIM, MOVE], // auto add 1 CLAIM if reservation tick < 4000 (see SpawnHelper.internalSpawnOne(:  claimer part)
         claimerRoom: 'W7S6',
         claimerAction: 'reserve'
       }
@@ -327,7 +328,7 @@ export class Parameters {
         filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > 0
       }).length > 0;
 
-      return ((energy / capacity < 0.2) ||
+      return ((energy / capacity < 0.3) ||
         spawn.room.memory.harvester < spawnParam.harvester.count ||
         spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count ||
         (Memory.powerbank && Memory.powerbank.start.roomName === spawn.room.name && (energy / capacity < 0.8)))
