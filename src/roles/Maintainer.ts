@@ -49,8 +49,15 @@ export class Maintainer extends BaseCreep {
       }
 
       if (this.memory.reparingTarget === undefined) {
-        // roads
+        // containers
         let targets = this.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+            return (structure.structureType === STRUCTURE_CONTAINER && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
+          }
+        }).sort((s1, s2) => s1.hits / s1.hitsMax - s2.hits / s2.hitsMax);
+
+        // roads
+        targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_ROAD && structure.hits < structure.hitsMax * Maintainer.REPAIR_RATIO);
           }

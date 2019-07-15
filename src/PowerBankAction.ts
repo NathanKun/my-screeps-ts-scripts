@@ -54,9 +54,23 @@ export class PowerBankAction {
     const bank = Game.getObjectById(Memory.powerbank.bankId) as (StructurePowerBank | null);
     const powers = room.find(FIND_DROPPED_RESOURCES, {
       filter: s => s.resourceType === RESOURCE_POWER
-    }) as Resource<RESOURCE_POWER>[];
+    }) as Array<Resource<RESOURCE_POWER>>;
 
     const power = powers.length ? powers[0] : null;
+
+    if (!bank && !power) {
+      let cFound = false;
+      for (let i = 1; i <= Memory.powerbank.carrierNeed; i++) {
+        const c = Game.creeps['powerc_' + i];
+        if (c) {
+          cFound = true;
+          break;
+        }
+      }
+      if (!cFound) {
+        Memory.powerbank.finished = true;
+      }
+    }
 
 
     // spawn 4 attacker-healer pairs, and carriers
@@ -331,12 +345,25 @@ export class PowerBankAction {
         if (c.room.name !== Memory.powerbank.start.roomName) {
           c.moveTo(Memory.powerbank.start, { reusePath: 50 });
         } else {
-          const res = c.transfer(c.room.memory.powerSpawn!!, RESOURCE_POWER);
-          if (res === ERR_NOT_IN_RANGE) {
-            c.moveTo(c.room.memory.powerSpawn!!);
-          } else if (res === OK) {
-            Game.notify(c.name + 'transfered power!');
-            c.suicide();
+          let target: StructurePowerSpawn | StructureContainer | null = c.room.memory.powerSpawn;
+          if (!target || target.power === target.powerCapacity) {
+            const containers = c.room.find(FIND_STRUCTURES, {
+              filter: s => s.structureType === STRUCTURE_CONTAINER && (!s.store.power || s.store.power < s.storeCapacity)
+            }) as StructureContainer[];
+            if (containers.length) {
+              target = containers[0];
+            }
+          }
+          if (target) {
+            const res = c.transfer(target, RESOURCE_POWER);
+            if (res === ERR_NOT_IN_RANGE) {
+              c.moveTo(c.room.memory.powerSpawn!!);
+            } else if (res === OK) {
+              Game.notify(c.name + 'transfered power!');
+              c.suicide();
+            }
+          } else {
+            Game.notify(c.name + ' has power ' + c.carry.power + ' but no power spawn and container available.')
           }
         }
       }

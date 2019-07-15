@@ -6,6 +6,7 @@ export class Collector extends BaseCreep {
   private static STATUS_COLLECTING_TOMBSTONE = "collectingTombstone";
   private static STATUS_COLLECTING_WITHDRAWABLE = "collectingWithdrawable";
   private static STATUS_TRANSFERING = "transfering";
+  private static STATUS_TRANSFERING_POWER = "transferingPower";
   private static STATUS_WITHDRAWING = "withdrawing";
 
   private droppedResources: Resource[];
@@ -56,8 +57,10 @@ export class Collector extends BaseCreep {
         }
       }
     } else {
-      if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
-        this.memory.collectorStatus = Collector.STATUS_IDLE
+      if (this.carry.power && this.carry.power > 0) {
+        this.memory.collectorStatus = Collector.STATUS_TRANSFERING_POWER;
+      } else if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
+        this.memory.collectorStatus = Collector.STATUS_IDLE;
       } else if (!this.memory.collectorStatus) {
         this.memory.collectorStatus = Collector.STATUS_IDLE;
       } else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING && this.carry.energy === 0) {
@@ -107,8 +110,14 @@ export class Collector extends BaseCreep {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
         }
-        if (this.withdraw(this.withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+        if (this.withdrawableTarget.structureType === STRUCTURE_CONTAINER) {
+          if (this.withdraw(this.withdrawableTarget, RESOURCE_POWER) === ERR_NOT_IN_RANGE) {
+            this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+          }
+        } else {
+          if (this.withdraw(this.withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+          }
         }
       }
 
@@ -164,6 +173,17 @@ export class Collector extends BaseCreep {
           return;
         }
       }
+      else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING_POWER) {
+        const powerSpawn = this.room.memory.powerSpawn;
+
+        if (powerSpawn) {
+          if (this.transfer(powerSpawn, RESOURCE_POWER) === ERR_NOT_IN_RANGE) {
+            this.moveTo(powerSpawn, { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
+          }
+        } else {
+          Game.notify("Collector has power but no power spawn found. room = " + this.room.name);
+        }
+      }
     }
   }
 
@@ -200,6 +220,14 @@ export class Collector extends BaseCreep {
   }
 
   private findDroppedResources(): Resource[] {
+    const powers = this.room.find(FIND_DROPPED_RESOURCES, {
+      filter: r => r.resourceType === RESOURCE_POWER
+    }).sort((r1, r2) => r2.amount - r1.amount);
+
+    if (powers.length) {
+      return powers;
+    }
+
     return this.room.find(FIND_DROPPED_RESOURCES, {
       filter: r => r.resourceType === RESOURCE_ENERGY && r.amount > 30
     }).sort((r1, r2) => r2.amount - r1.amount);
@@ -218,10 +246,10 @@ export class Collector extends BaseCreep {
       if (targets.containers && targets.containers.length) {
         const target = Game.getObjectById(targets.containers[0]);
         /*
-         * IMPORTANT: this look only StructureContainer.store.energy
+         * IMPORTANT: this look only StructureContainer.store.power
          * But not other resources.
          */
-        if (target != null && (target as StructureContainer).store.energy !== 0) {
+        if (target != null && (target as StructureContainer).store.power !== 0) {
           return target as StructureContainer;
         }
       }

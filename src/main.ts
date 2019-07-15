@@ -188,13 +188,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
           }) as StructurePowerBank[];
 
           // found, start power bank action
-          if (bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
+          if ((bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) &&
+            bank[0].ticksToDecay > 4500) {
             Memory.powerbank = {
               bankId: bank[0].id,
               start: new RoomPosition(14, 1, 'W9S7'),
               end: bank[0].pos,
               path: [],
-              pathRooms: [],
+              pathRooms: [bank[0].pos.roomName],
               findingPath: true,
               carrierNeed: Math.ceil(bank[0].power / 1250),
               finished: false,
