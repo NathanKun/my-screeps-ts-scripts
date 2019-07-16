@@ -215,6 +215,53 @@ export class Parameters {
         claimerRoom: 'W7S6',
         claimerAction: 'reserve'
       }
+    },
+    {
+      spawns: [],
+      harvester: {
+        count: 1,
+        parts: [
+          WORK,
+          CARRY,
+          MOVE],
+      },
+      harvesterExt: {
+        count: 0,
+        parts: [],
+        harvestRoom: 'W6S7',
+        canAttack: true,
+        harvesterExtPrimaryTransferTargets: {}
+      },
+      builder: {
+        count: 1,
+        parts: [
+          WORK,
+          CARRY,
+          MOVE],
+      },
+      upgrader: {
+        count: 2,
+        parts: [
+          WORK,
+          CARRY,
+          MOVE],
+        upgraderUseStorageMin: 30000
+      },
+      maintainer: {
+        count: 0,
+        parts: []
+      },
+      collector: {
+        count: 1,
+        parts: [WORK, CARRY, MOVE],
+        collectorWithdrawTargets: {}
+      },
+      claimer: {
+        count: 0,
+        parts: [CLAIM, MOVE], // auto add 1 CLAIM if reservation tick < 4000 (see SpawnHelper.internalSpawnOne(:  claimer part)
+        claimerRoom: 'W6S7',
+        claimerAction: 'reserve'
+      }
     }]
   }
 
@@ -253,6 +300,18 @@ export class Parameters {
         hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d1869d8df35e2635a0e1281",
         towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"],
+        terminal: "5d278ec3d2b78a5d2a199272",
+        powerSpawn: "",
+        nuker: "",
+        observer: ""
+      },
+      {
+        room: Game.rooms['W7S7'],
+        spawns: [Game.spawns['Spawn4']],
+        collectorWithdrawStorageMode: false,
+        hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
+        storage: "",
+        towers: [],
         terminal: "",
         powerSpawn: "",
         nuker: "",
@@ -317,6 +376,10 @@ export class Parameters {
           senderType: "nextToExit"
         }
       ]
+    },
+    {
+      room: Game.rooms['W7S7'],
+      links: []
     }
     ]
   }

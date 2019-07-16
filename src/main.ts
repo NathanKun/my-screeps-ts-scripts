@@ -37,6 +37,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
   spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']];
   spawnParams[2].spawns = [Game.spawns['Spawn3']];
+  spawnParams[3].spawns = [Game.spawns['Spawn4']];
 
   // rooms[0].collectorWithdrawStorageMode = true;
   logCPU('spawnParams')
@@ -50,6 +51,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
     Game.rooms['W9S7'].memory.spawnParam = spawnParams[0];
     Game.rooms['W9S5'].memory.spawnParam = spawnParams[1];
     Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
+    Game.rooms['W7S7'].memory.spawnParam = spawnParams[3];
 
     roomConfig.collectorWithdrawStorageMode = Parameters.getCollectorWithdrawStorageMode(roomConfig.room.memory.spawnParam);
 
