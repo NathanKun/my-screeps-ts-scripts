@@ -36,7 +36,8 @@ export class Collector extends BaseCreep {
         const targets = this.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
             return (structure.structureType === STRUCTURE_EXTENSION ||
-              structure.structureType === STRUCTURE_SPAWN) &&
+              structure.structureType === STRUCTURE_SPAWN ||
+              structure.structureType === STRUCTURE_POWER_SPAWN) &&
               structure.energy < structure.energyCapacity;
           }
         }).sort((s1, s2) =>
@@ -65,13 +66,19 @@ export class Collector extends BaseCreep {
         this.memory.collectorStatus = Collector.STATUS_IDLE;
       } else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING && this.carry.energy === 0) {
         this.memory.collectorStatus = Collector.STATUS_IDLE;
+      } else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING_POWER && !this.carry.power) {
+        this.memory.collectorStatus = Collector.STATUS_IDLE;
       } else if (this.carry.energy === this.carryCapacity) {
         this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
       }
 
       // Idle
       if (this.memory.collectorStatus === Collector.STATUS_IDLE) {
-        Collector.findCollectable(this);
+        if (this.carry.energy) {
+          this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+        } else {
+          Collector.findCollectable(this);
+        }
       }
 
       // Collecting Resource
@@ -177,7 +184,7 @@ export class Collector extends BaseCreep {
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING_POWER) {
         const powerSpawn = this.room.memory.powerSpawn;
         let target;
-        if (powerSpawn && powerSpawn.power < powerSpawn.powerCapacity) {
+        if (powerSpawn && powerSpawn.power === 0) {
           target = powerSpawn;
         } else {
           const containers = this.findContainers().filter(
@@ -260,8 +267,8 @@ export class Collector extends BaseCreep {
             s =>
               s !== null &&
               (s.store.energy > 0 ||
-                (s.store.power && s.store.power > 0 && s.room.find(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_POWER_SPAWN && s.energy > 0 }))
-              ) // s has energy, or, s has power and power spwan in room of s has energy
+                (s.store.power && s.store.power > 0 && s.room.find(FIND_STRUCTURES, { filter: sp => sp.structureType === STRUCTURE_POWER_SPAWN && sp.energy > 0 && sp.power === 0 }).length)
+              ) // container has energy, or, container has power and power spwan in room of container (has energy and has no power)
           );
         /*
          * IMPORTANT: this look only StructureContainer.store.power and .energy

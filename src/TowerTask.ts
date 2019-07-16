@@ -1,5 +1,5 @@
-import { ErrorMapper } from "utils/ErrorMapper";
 import { Maintainer } from "roles/Maintainer";
+import { ErrorMapper } from "utils/ErrorMapper";
 
 export class TowerTask {
   private static runInternal(towers: StructureTower[]) {
@@ -44,7 +44,6 @@ export class TowerTask {
           (structure.hits / structure.hitsMax) > 0.5) {
           return false;
         }
-        // do not repair walls >= 300 000 and ramparts with hits >= 500 000
         else if (
           ((structure.structureType === STRUCTURE_WALL && structure.hits >= Maintainer.WALL_REPAIRE_MAX_HITS * 0.8) ||
             (structure.structureType === STRUCTURE_RAMPART && structure.hits >= Maintainer.RAMPART_REPAIRE_MAX_HITS * 0.8))

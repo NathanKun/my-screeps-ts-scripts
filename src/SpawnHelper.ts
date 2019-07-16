@@ -1,3 +1,4 @@
+import { Maintainer } from "roles/Maintainer";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 /*
@@ -20,10 +21,10 @@ export class SpawnHelper {
       return;
     }
 
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.room.name === spawnParam.spawns[0].room.name);
+    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.memory.room === spawnParam.spawns[0].room.name);
     const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name);
-    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.room.name === spawnParam.spawns[0].room.name);
-    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.room.name === spawnParam.spawns[0].room.name);
+    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.memory.room === spawnParam.spawns[0].room.name);
+    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.memory.room === spawnParam.spawns[0].room.name);
     const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name);
     const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.memory.fullMaintainer && creep.room.name === spawnParam.spawns[0].room.name);
     const collectors = _.filter(Game.creeps, (creep) => (creep.memory.role === 'collector' || creep.memory.role === 'maintainer') && creep.memory.fullMaintainer === false && creep.room.name === spawnParam.spawns[0].room.name);
@@ -42,6 +43,35 @@ export class SpawnHelper {
         spawnParam.builder.count = 2;
       } else {
         spawnParam.builder.count = 0;
+      }
+    }
+
+    /* Auto spawn maintainer */
+    if (spawnParam.maintainer.count === -1) {
+      const structures = spawnParam.spawns[0].room.find(FIND_STRUCTURES, {
+        filter: s => {
+          let hitsMax;
+
+          switch (s.structureType) {
+            case STRUCTURE_WALL:
+              hitsMax = Maintainer.WALL_REPAIRE_MAX_HITS;
+              break;
+            case STRUCTURE_RAMPART:
+              hitsMax = Maintainer.RAMPART_REPAIRE_MAX_HITS;
+              break;
+            default:
+              hitsMax = s.hitsMax;
+              break;
+          }
+
+          return s.hits < (hitsMax / 2);
+        }
+      });
+
+      if (structures.length) {
+        spawnParam.maintainer.count = 1;
+      } else {
+        spawnParam.maintainer.count = 0;
       }
     }
 

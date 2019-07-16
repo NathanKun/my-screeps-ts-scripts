@@ -46,7 +46,7 @@ export class Parameters {
         upgraderUseStorageMin: 100000
       },
       maintainer: {
-        count: 0,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -87,7 +87,7 @@ export class Parameters {
         ]
       },
       harvesterExt: {
-        count: 4,
+        count: 3,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -107,20 +107,24 @@ export class Parameters {
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-          , MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
       },
       upgrader: {
-        count: 3,
+        count: 2,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
-        count: 1,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -173,9 +177,11 @@ export class Parameters {
       builder: {
         count: 1,
         parts: [
-          WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE],
       },
       upgrader: {
         count: 3,
@@ -186,7 +192,7 @@ export class Parameters {
         upgraderUseStorageMin: 30000
       },
       maintainer: {
-        count: 1,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -331,11 +337,30 @@ export class Parameters {
         filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > 0
       }).length > 0;
 
-      return ((energy / capacity < 0.3) ||
-        spawn.room.memory.harvester < spawnParam.harvester.count ||
-        spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count ||
-        (Memory.powerbank && Memory.powerbank.start.roomName === spawn.room.name && (energy / capacity < 0.8)))
-        && storageNotEmpty;
+      if (!storageNotEmpty) {
+        return false;
+      }
+
+      if (energy / capacity < 0.8) {
+        return true;
+      }
+
+      if (spawn.room.memory.harvester < spawnParam.harvester.count || spawn.room.memory.harvesterExt < spawnParam.harvesterExt.count) {
+        return true;
+      }
+
+      if (Memory.powerbank && Memory.powerbank.start.roomName === spawn.room.name && (energy / capacity < 0.8)) {
+        return true;
+      }
+
+      // container has power && power spawn has no power and has not full energy
+      // so collector goes in withdraw mode, and fill power spawn, then, collector exit withdraw mode, and transfer container power to power spawn
+      if (spawn.room.find(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_CONTAINER && s.store.power }).length &&
+        spawn.room.find(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_POWER_SPAWN && s.power === 0 && s.energy < s.energyCapacity }).length) {
+        return true;
+      }
+
+      return false;
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);
       Game.notify('Game.time = ' + Game.time + '\n' +
