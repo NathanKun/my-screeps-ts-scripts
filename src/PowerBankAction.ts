@@ -189,7 +189,7 @@ export class PowerBankAction {
     if (spawns.length) {
       // attakers and healers
       if (bank) {
-        for (let i = 1; i <= 1; i++) {
+        for (let i = 1; i <= 3; i++) {
           const a = Game.creeps['powera_' + i];
           if (a === undefined && Memory.powerbank.poweraSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.poweraBody, 'powera_' + i,
@@ -215,14 +215,14 @@ export class PowerBankAction {
       }
 
       // carriers
-      if (power && (bank === null || (bank.hits / bank.hitsMax < 0.3))) {
+      if (power && (bank === null || ((bank.hits / bank.hitsMax) < 0.6))) {
         for (let i = 1; i <= Memory.powerbank.carrierNeed; i++) {
           const c = Game.creeps['powerc_' + i];
           if (c === undefined) {
             const res = spawns[0].spawnCreep(this.powercBody, 'powerc_' + i,
               { memory: { role: 'powerc', room: spawns[0].room.name, spawnTime: Game.time, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
-              Game.notify('Spawn powerh_' + i);
+              Game.notify('Spawn powerc_' + i);
             }
             return;
           }
@@ -334,7 +334,7 @@ export class PowerBankAction {
     if (res === ERR_NOT_IN_RANGE) {
       c.moveTo(power);
     } else if (res === OK) {
-      Game.notify(c.name + ' picked up power ' + c.carry.power);
+      Game.notify(c.name + ' picked up power');
     }
   }
 
@@ -343,7 +343,7 @@ export class PowerBankAction {
       const c = Game.creeps['powerc_' + i];
       if (c && ((c.carry.power === c.carryCapacity) || (bank === null && power === null))) {
         if (c.room.name !== Memory.powerbank.start.roomName) {
-          c.moveTo(Memory.powerbank.start, { reusePath: 50 });
+          console.log(c.moveTo(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName), { reusePath: 50 }));
         } else {
           let target: StructurePowerSpawn | StructureContainer | null = c.room.memory.powerSpawn;
           if (!target || target.power === target.powerCapacity) {

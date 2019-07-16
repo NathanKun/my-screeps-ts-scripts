@@ -78,4 +78,10 @@ export abstract class BaseCreep extends Creep {
       structure => structure.structureType === STRUCTURE_TOWER && structure.energy <= maxEnergy
     ).sort((s1, s2) => s1.energy - s2.energy);
   }
+
+  protected findContainers(): StructureContainer[] {
+    return this.room.find(FIND_STRUCTURES, {
+      filter: s => s.structureType === STRUCTURE_CONTAINER
+    }) as StructureContainer[];
+  }
 }

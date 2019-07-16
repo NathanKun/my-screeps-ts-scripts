@@ -111,7 +111,8 @@ export class Collector extends BaseCreep {
           return;
         }
         if (this.withdrawableTarget.structureType === STRUCTURE_CONTAINER) {
-          if (this.withdraw(this.withdrawableTarget, RESOURCE_POWER) === ERR_NOT_IN_RANGE) {
+          const resourceType = this.withdrawableTarget.store.energy > 0 ? RESOURCE_ENERGY : RESOURCE_POWER;
+          if (this.withdraw(this.withdrawableTarget, resourceType) === ERR_NOT_IN_RANGE) {
             this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
           }
         } else {
@@ -175,13 +176,22 @@ export class Collector extends BaseCreep {
       }
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING_POWER) {
         const powerSpawn = this.room.memory.powerSpawn;
+        let target;
+        if (powerSpawn && powerSpawn.power < powerSpawn.powerCapacity) {
+          target = powerSpawn;
+        } else {
+          const containers = this.findContainers().filter(
+            c => (!c.store.power && c.store.energy < c.storeCapacity) ||
+              (c.store.power && c.store.energy + c.store.power < c.storeCapacity));
+          target = containers[0];
+        }
 
-        if (powerSpawn) {
-          if (this.transfer(powerSpawn, RESOURCE_POWER) === ERR_NOT_IN_RANGE) {
-            this.moveTo(powerSpawn, { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
+        if (target) {
+          if (this.transfer(target, RESOURCE_POWER) === ERR_NOT_IN_RANGE) {
+            this.moveTo(target, { reusePath: 2, visualizePathStyle: { stroke: '#ffaa00' } });
           }
         } else {
-          Game.notify("Collector has power but no power spawn found. room = " + this.room.name);
+          console.log("Collector has power but no where to transfer. room = " + this.room.name);
         }
       }
     }
@@ -244,13 +254,24 @@ export class Collector extends BaseCreep {
     if (targets) {
       // containers
       if (targets.containers && targets.containers.length) {
-        const target = Game.getObjectById(targets.containers[0]);
+        const containers = targets.containers
+          .map(id => Game.getObjectById(id) as (StructureContainer | null))
+          .filter(
+            s =>
+              s !== null &&
+              (s.store.energy > 0 ||
+                (s.store.power && s.store.power > 0 && s.room.find(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_POWER_SPAWN && s.energy > 0 }))
+              ) // s has energy, or, s has power and power spwan in room of s has energy
+          );
         /*
-         * IMPORTANT: this look only StructureContainer.store.power
+         * IMPORTANT: this look only StructureContainer.store.power and .energy
          * But not other resources.
          */
-        if (target != null && (target as StructureContainer).store.power !== 0) {
-          return target as StructureContainer;
+        if (containers.length) {
+          const target = containers[0];
+          if (target != null && ((target as StructureContainer).store.power !== 0) || (target as StructureContainer).store.energy !== 0) {
+            return target as StructureContainer;
+          }
         }
       }
       // links

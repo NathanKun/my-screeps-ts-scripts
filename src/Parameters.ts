@@ -63,7 +63,10 @@ export class Parameters {
           CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE
-        ]
+        ],
+        collectorWithdrawTargets: {
+          containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
+        }
       },
       claimer: {
         count: 1,
