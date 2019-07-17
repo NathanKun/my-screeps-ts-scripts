@@ -219,7 +219,7 @@ export class Parameters {
     {
       spawns: [],
       harvester: {
-        count: 1,
+        count: 2,
         parts: [
           WORK,
           CARRY,
@@ -233,7 +233,7 @@ export class Parameters {
         harvesterExtPrimaryTransferTargets: {}
       },
       builder: {
-        count: 1,
+        count: 2,
         parts: [
           WORK,
           CARRY,

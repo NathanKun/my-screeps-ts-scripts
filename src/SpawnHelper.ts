@@ -21,13 +21,33 @@ export class SpawnHelper {
       return;
     }
 
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester' && creep.memory.room === spawnParam.spawns[0].room.name);
-    const harvesterExts = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name);
-    const builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder' && creep.memory.room === spawnParam.spawns[0].room.name);
-    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader' && creep.memory.room === spawnParam.spawns[0].room.name);
-    const claimers = _.filter(Game.creeps, (creep) => creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name);
-    const maintainers = _.filter(Game.creeps, (creep) => creep.memory.role === 'maintainer' && creep.memory.fullMaintainer && creep.room.name === spawnParam.spawns[0].room.name);
-    const collectors = _.filter(Game.creeps, (creep) => (creep.memory.role === 'collector' || creep.memory.role === 'maintainer') && creep.memory.fullMaintainer === false && creep.room.name === spawnParam.spawns[0].room.name);
+    const harvesters: Creep[] = [];
+    const harvesterExts: Creep[] = [];
+    const builders: Creep[] = [];
+    const upgraders: Creep[] = [];
+    const claimers: Creep[] = [];
+    const maintainers: Creep[] = [];
+    const collectors: Creep[] = [];
+
+    for (const n in Game.creeps) {
+      const creep = Game.creeps[n];
+
+      if (creep.memory.role === 'harvester' && creep.memory.room === spawnParam.spawns[0].room.name) {
+        harvesters.push(creep);
+      } else if (creep.memory.role === 'harvesterExt' && creep.memory.transferRoom === spawnParam.spawns[0].room.name) {
+        harvesterExts.push(creep);
+      } else if (creep.memory.role === 'builder' && creep.memory.room === spawnParam.spawns[0].room.name) {
+        builders.push(creep);
+      } else if (creep.memory.role === 'upgrader' && creep.memory.room === spawnParam.spawns[0].room.name) {
+        upgraders.push(creep);
+      } else if (creep.memory.role === 'claimer' && creep.memory.room === spawnParam.spawns[0].room.name) {
+        claimers.push(creep);
+      } else if (creep.memory.role === 'maintainer' && creep.memory.fullMaintainer && creep.room.name === spawnParam.spawns[0].room.name) {
+        maintainers.push(creep);
+      } else if ((creep.memory.role === 'collector' || creep.memory.role === 'maintainer') && creep.memory.fullMaintainer === false && creep.room.name === spawnParam.spawns[0].room.name) {
+        collectors.push(creep);
+      }
+    }
 
     spawnParam.spawns[0].room.memory.harvester = harvesters.length;
     spawnParam.spawns[0].room.memory.harvesterExt = harvesterExts.length;
