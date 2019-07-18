@@ -124,16 +124,31 @@ export const loop = ErrorMapper.wrapLoop(() => {
         continue;
       }
 
-      const creepRoom = _.filter(rooms, roomConfig => roomConfig.room.name === c.memory.room)[0];
+      //const creepRoom = _.filter(rooms, roomConfig => roomConfig.room.name === c.memory.room)[0];
+      let creepRoom;
+      switch (c.memory.room) {
+        case 'W9S7':
+          creepRoom = rooms[0];
+          break;
+        case 'W9S5':
+          creepRoom = rooms[1];
+          break;
+        case 'W8S6':
+          creepRoom = rooms[2];
+          break;
+        case 'W7S7':
+          creepRoom = rooms[3];
+          break;
+      }
 
       const role = c.memory.role;
       let creep: BaseCreep | null = null;
 
       if (role === 'harvester') {
-        creep = new Harvester(c, creepRoom.hasHostile, roomLinks);
+        creep = new Harvester(c, creepRoom ? creepRoom.hasHostile : false, roomLinks);
       }
       else if (role === 'harvesterExt') {
-        creep = new Harvester(c, creepRoom.hasHostile, roomLinks);
+        creep = new Harvester(c, creepRoom ? creepRoom.hasHostile : false, roomLinks);
       }
       else if (role === 'builder') {
         creep = new Builder(c);
@@ -146,8 +161,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
       else if (role === 'collector') {
         creep = new Collector(c);
-        creep.memory.withdrawStorageMode = creepRoom.collectorWithdrawStorageMode;
-        if (creepRoom.collectorWithdrawStorageMode) {
+        creep.memory.withdrawStorageMode = creepRoom ? creepRoom.collectorWithdrawStorageMode : false;
+        if (creep.memory.withdrawStorageMode) {
           creep.say("Withdraw")
         }
       } else if (role === 'claimer') {
@@ -156,6 +171,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
       if (creep) {
         creep.work();
+        // logCPU(creep.name)
       }
     } catch (e) {
       const outText = ErrorMapper.sourceMappedStackTrace(e);

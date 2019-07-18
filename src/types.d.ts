@@ -38,7 +38,7 @@ interface CreepMemory extends CreepBrithMemory {
 }
 
 interface SpawnMemory {
-  renewingCreep: boolean;
+  //renewingCreep: boolean;
 }
 
 interface RoomMemory {

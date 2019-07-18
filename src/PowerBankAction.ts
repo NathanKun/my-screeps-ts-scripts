@@ -189,7 +189,7 @@ export class PowerBankAction {
     if (spawns.length) {
       // attakers and healers
       if (bank) {
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 4; i++) {
           const a = Game.creeps['powera_' + i];
           if (a === undefined && Memory.powerbank.poweraSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.poweraBody, 'powera_' + i,
@@ -215,7 +215,7 @@ export class PowerBankAction {
       }
 
       // carriers
-      if (power && (bank === null || ((bank.hits / bank.hitsMax) < 0.6))) {
+      if (power || !bank || (bank.hits / bank.hitsMax) < 0.3) {
         for (let i = 1; i <= Memory.powerbank.carrierNeed; i++) {
           const c = Game.creeps['powerc_' + i];
           if (c === undefined) {

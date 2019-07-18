@@ -32,15 +32,8 @@ export class Collector extends BaseCreep {
       }
 
       if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
-        // spawns and extensions
-        const targets = this.room.find(FIND_STRUCTURES, {
-          filter: (structure) => {
-            return (structure.structureType === STRUCTURE_EXTENSION ||
-              structure.structureType === STRUCTURE_SPAWN ||
-              structure.structureType === STRUCTURE_POWER_SPAWN) &&
-              structure.energy < structure.energyCapacity;
-          }
-        }).sort((s1, s2) =>
+        // spawns, extensions, and power spawn
+        const targets = [...this.findExtensions(), ...this.findSpawns(), ...this.findNotFullPowerSpawn()].sort((s1, s2) =>
           this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
 
         if (targets.length) {
@@ -50,9 +43,7 @@ export class Collector extends BaseCreep {
           return;
         }
       } else if (this.memory.collectorStatus === Collector.STATUS_WITHDRAWING) {
-        const storages = this.room.find(FIND_STRUCTURES, {
-          filter: s => s.structureType === STRUCTURE_STORAGE
-        });
+        const storages = this.findStorage();
         if (storages.length && this.withdraw(storages[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           this.moveTo(storages[0], { visualizePathStyle: { stroke: '#66ccff' } });
         }
@@ -237,16 +228,8 @@ export class Collector extends BaseCreep {
   }
 
   private findDroppedResources(): Resource[] {
-    const powers = this.room.find(FIND_DROPPED_RESOURCES, {
-      filter: r => r.resourceType === RESOURCE_POWER
-    }).sort((r1, r2) => r2.amount - r1.amount);
-
-    if (powers.length) {
-      return powers;
-    }
-
     return this.room.find(FIND_DROPPED_RESOURCES, {
-      filter: r => r.resourceType === RESOURCE_ENERGY && r.amount > 30
+      filter: r => (r.resourceType === RESOURCE_ENERGY || r.resourceType === RESOURCE_POWER) && r.amount > 30
     }).sort((r1, r2) => r2.amount - r1.amount);
   }
 
@@ -267,7 +250,7 @@ export class Collector extends BaseCreep {
             s =>
               s !== null &&
               (s.store.energy > 0 ||
-                (s.store.power && s.store.power > 0 && s.room.find(FIND_STRUCTURES, { filter: sp => sp.structureType === STRUCTURE_POWER_SPAWN && sp.energy > 0 && sp.power === 0 }).length)
+                (s.store.power && s.store.power > 0 && s.room.memory.powerSpawn && s.room.memory.powerSpawn.energy > 0 && s.room.memory.powerSpawn.power === 0)
               ) // container has energy, or, container has power and power spwan in room of container (has energy and has no power)
           );
         /*

@@ -5,7 +5,9 @@ export abstract class BaseCreep extends Creep {
 
   public work(): void {
     if (this.dyingCheck()) {
-      this.run();
+      if (!this.fatigue) {
+        this.run();
+      }
     }
   }
 

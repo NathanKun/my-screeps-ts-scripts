@@ -221,9 +221,9 @@ export class Parameters {
       harvester: {
         count: 2,
         parts: [
-          WORK,
-          CARRY,
-          MOVE],
+          WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE],
       },
       harvesterExt: {
         count: 0,
@@ -235,16 +235,16 @@ export class Parameters {
       builder: {
         count: 2,
         parts: [
-          WORK,
-          CARRY,
-          MOVE],
+          WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE],
       },
       upgrader: {
-        count: 2,
+        count: 4,
         parts: [
-          WORK,
-          CARRY,
-          MOVE],
+          WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
@@ -253,7 +253,10 @@ export class Parameters {
       },
       collector: {
         count: 1,
-        parts: [WORK, CARRY, MOVE],
+        parts: [
+          WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE],
         collectorWithdrawTargets: {}
       },
       claimer: {
