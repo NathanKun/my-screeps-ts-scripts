@@ -196,7 +196,7 @@ export class PowerBankAction {
               { memory: { role: 'powera', room: spawns[0].room.name, spawnTime: Game.time, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
               Memory.powerbank.poweraSpawnedIndex = i;
-              Game.notify('Spawn powera_' + i);
+              // Game.notify('Spawn powera_' + i);
             }
             return;
           }
@@ -207,7 +207,7 @@ export class PowerBankAction {
               { memory: { role: 'powerh', room: spawns[0].room.name, spawnTime: Game.time, powerbankHealerTarget: 'powera_' + i, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
               Memory.powerbank.powerhSpawnedIndex = i;
-              Game.notify('Spawn powerh_' + i);
+              // Game.notify('Spawn powerh_' + i);
             }
             return;
           }
@@ -218,11 +218,12 @@ export class PowerBankAction {
       if (power || !bank || (bank.hits / bank.hitsMax) < 0.3) {
         for (let i = 1; i <= Memory.powerbank.carrierNeed; i++) {
           const c = Game.creeps['powerc_' + i];
-          if (c === undefined) {
+          if (c === undefined && Memory.powerbank.powercSpawnedIndex < i) {
             const res = spawns[0].spawnCreep(this.powercBody, 'powerc_' + i,
               { memory: { role: 'powerc', room: spawns[0].room.name, spawnTime: Game.time, powerbankPath: Memory.powerbank.path } });
             if (res === OK) {
-              Game.notify('Spawn powerc_' + i);
+              // Game.notify('Spawn powerc_' + i);
+              Memory.powerbank.powercSpawnedIndex++;
             }
             return;
           }
@@ -270,13 +271,11 @@ export class PowerBankAction {
       // at start point => move by cached path
       if (c.pos.x === Memory.powerbank.path!![0].x && c.pos.y === Memory.powerbank.path!![0].y) {
         const path = c.memory.powerbankPath!!.map(p => new RoomPosition(p.x, p.y, p.roomName));
-        const res = c.moveByPath(path);
-        console.log(c.name + " move by path " + res);
+        c.moveByPath(path);
       }
       // not at start point => move to start point
       else {
-        const res = c.moveTo(new RoomPosition(Memory.powerbank.path!![0].x, Memory.powerbank.path!![0].y, Memory.powerbank.path!![0].roomName));
-        console.log(c.name + " move to start " + res);
+        c.moveTo(new RoomPosition(Memory.powerbank.path!![0].x, Memory.powerbank.path!![0].y, Memory.powerbank.path!![0].roomName));
       }
     }
     // a or h creep is close to power bank
@@ -300,8 +299,7 @@ export class PowerBankAction {
     else {
       // move by cached path
       const path = c.memory.powerbankPath!!.map(p => new RoomPosition(p.x, p.y, p.roomName));
-      const res = c.moveByPath(path);
-      console.log(c.name + " move by path " + res);
+      c.moveByPath(path);
     }
   }
 
@@ -334,7 +332,7 @@ export class PowerBankAction {
     if (res === ERR_NOT_IN_RANGE) {
       c.moveTo(power);
     } else if (res === OK) {
-      Game.notify(c.name + ' picked up power');
+      // Game.notify(c.name + ' picked up power');
     }
   }
 
@@ -343,12 +341,16 @@ export class PowerBankAction {
       const c = Game.creeps['powerc_' + i];
       if (c && ((c.carry.power === c.carryCapacity) || (bank === null && power === null))) {
         if (c.room.name !== Memory.powerbank.start.roomName) {
-          console.log(c.moveTo(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName), { reusePath: 50 }));
+          c.moveTo(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName), { reusePath: 50 });
         } else {
+          if (!c.carry.power) {
+            c.suicide();
+          }
+
           let target: StructurePowerSpawn | StructureContainer | null = c.room.memory.powerSpawn;
           if (!target || target.power === target.powerCapacity) {
             const containers = c.room.find(FIND_STRUCTURES, {
-              filter: s => s.structureType === STRUCTURE_CONTAINER && (!s.store.power || s.store.power < s.storeCapacity)
+              filter: s => s.structureType === STRUCTURE_CONTAINER && (!s.store.power || (s.store.energy + s.store.power) < s.storeCapacity)
             }) as StructureContainer[];
             if (containers.length) {
               target = containers[0];
@@ -357,10 +359,7 @@ export class PowerBankAction {
           if (target) {
             const res = c.transfer(target, RESOURCE_POWER);
             if (res === ERR_NOT_IN_RANGE) {
-              c.moveTo(c.room.memory.powerSpawn!!);
-            } else if (res === OK) {
-              Game.notify(c.name + 'transfered power!');
-              c.suicide();
+              c.moveTo(target);
             }
           } else {
             Game.notify(c.name + ' has power ' + c.carry.power + ' but no power spawn and container available.')

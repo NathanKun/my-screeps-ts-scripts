@@ -1,6 +1,7 @@
 import { Attack } from "Attack";
 import { Parameters } from "Parameters";
 import { PowerBankAction } from "PowerBankAction";
+import { PowerCreepTask } from "PowerCreepTask";
 import { BaseCreep } from "roles/BaseCreep";
 import { Builder } from "roles/Builder";
 import { Claimer } from "roles/Claimer";
@@ -124,7 +125,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
         continue;
       }
 
-      //const creepRoom = _.filter(rooms, roomConfig => roomConfig.room.name === c.memory.room)[0];
       let creepRoom;
       switch (c.memory.room) {
         case 'W9S7':
@@ -218,7 +218,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
               carrierNeed: Math.ceil(bank[0].power / 1250),
               finished: false,
               poweraSpawnedIndex: 0,
-              powerhSpawnedIndex: 0
+              powerhSpawnedIndex: 0,
+              powercSpawnedIndex: 0
             }
             startPowerBankAction = true;
           }
@@ -243,6 +244,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
     logCPU('power bank action');
   }
+
+  PowerCreepTask.do();
+  logCPU('power creep task');
+
 
 
   console.log('Tick ended');

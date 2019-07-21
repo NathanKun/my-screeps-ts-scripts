@@ -33,12 +33,12 @@ export abstract class BaseCreep extends Creep {
 
   protected abstract run(): void;
 
-  protected findExtensions(): StructureExtension[] {
+  protected findNotFullExtensions(): StructureExtension[] {
     return this.room.memory.notFullExtensions.sort((s1, s2) =>
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
 
-  protected findSpawns(): StructureSpawn[] {
+  protected findNotFullSpawns(): StructureSpawn[] {
     return this.room.memory.notFullSpawns.sort((s1, s2) =>
       this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
   }
@@ -82,8 +82,7 @@ export abstract class BaseCreep extends Creep {
   }
 
   protected findContainers(): StructureContainer[] {
-    return this.room.find(FIND_STRUCTURES, {
-      filter: s => s.structureType === STRUCTURE_CONTAINER
-    }) as StructureContainer[];
+    const containers = this.room.memory.containers;
+    return containers ? containers : [];
   }
 }

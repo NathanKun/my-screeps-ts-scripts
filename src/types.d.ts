@@ -37,9 +37,9 @@ interface CreepMemory extends CreepBrithMemory {
   powerbankPath?: RoomPosition[];
 }
 
-interface SpawnMemory {
-  //renewingCreep: boolean;
-}
+/*interface SpawnMemory {
+  renewingCreep: boolean;
+}*/
 
 interface RoomMemory {
   energy: number;
@@ -66,6 +66,7 @@ interface RoomMemory {
   powerSpawn: StructurePowerSpawn | null;
   nuker: StructureNuker | null;
   observer: StructureObserver | null;
+  containers: StructureContainer[] | null;
 }
 
 interface RoomConfig {
@@ -79,6 +80,7 @@ interface RoomConfig {
   powerSpawn: string;
   nuker: string;
   observer: string;
+  containers: string[];
 }
 
 type ClaimerAction = 'attack' | 'reserve' | 'claim';
@@ -142,6 +144,7 @@ interface PowerBankActionMemory {
   finished: boolean;
   poweraSpawnedIndex: number;
   powerhSpawnedIndex: number;
+  powercSpawnedIndex: number;
 }
 
 interface PowerBankActionRoomStructures {

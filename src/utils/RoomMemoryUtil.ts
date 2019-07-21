@@ -78,5 +78,8 @@ export class RoomMemoryUtil {
     } else {
       room.memory.observer = null;
     }
+
+    // containers
+    room.memory.containers = roomConfig.containers.map(id => Game.getObjectById(id)).filter(t => t != null) as StructureContainer[];
   }
 }

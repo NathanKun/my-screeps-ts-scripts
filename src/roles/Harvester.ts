@@ -102,12 +102,12 @@ export class Harvester extends BaseCreep {
 
           // find extensions
           if (targets.length === 0) {
-            targets = this.findExtensions();
+            targets = this.findNotFullExtensions();
           }
 
           // find spawns
           if (targets.length === 0) {
-            targets = this.findSpawns();
+            targets = this.findNotFullSpawns();
           }
 
           // find low energy towers

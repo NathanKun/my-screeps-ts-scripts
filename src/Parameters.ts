@@ -7,12 +7,13 @@ export class Parameters {
     return [{
       spawns: [],
       harvester: {
-        count: 1,
+        count: 2,
         parts: [
-          WORK, WORK, WORK, WORK, WORK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
         ]
       },
       harvesterExt: {
@@ -63,10 +64,10 @@ export class Parameters {
           CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE
-        ],
+        ]/*,
         collectorWithdrawTargets: {
           containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
-        }
+        }*/
       },
       claimer: {
         count: 1,
@@ -221,9 +222,9 @@ export class Parameters {
       harvester: {
         count: 2,
         parts: [
-          WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       },
       harvesterExt: {
         count: 0,
@@ -233,18 +234,18 @@ export class Parameters {
         harvesterExtPrimaryTransferTargets: {}
       },
       builder: {
-        count: 2,
+        count: -1,
         parts: [
-          WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       },
       upgrader: {
-        count: 4,
+        count: 2,
         parts: [
-          WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
@@ -254,9 +255,9 @@ export class Parameters {
       collector: {
         count: 1,
         parts: [
-          WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         collectorWithdrawTargets: {}
       },
       claimer: {
@@ -282,7 +283,8 @@ export class Parameters {
         terminal: "5d047c79f149a971a0d3a4be",
         powerSpawn: "5d2286cb51c46e1504dad35e",
         nuker: "5d22e8fd320b57371f11008e",
-        observer: "5d22f0b171b41e2a5c874355"
+        observer: "5d22f0b171b41e2a5c874355",
+        containers: ["5d2cd4c26b36a240262ca76d", "5d2cd8d4937fab26cebd5327", "5d2ce08e83c0952690fb3514", "5d2cdca8b82aed7ab6b0153e", "5d2ce61998788e62449d6113"]
       },
       {
         room: Game.rooms['W9S5'],
@@ -294,7 +296,8 @@ export class Parameters {
         terminal: "5d24244044ff1d2a689d8a9d",
         powerSpawn: "",
         nuker: "",
-        observer: ""
+        observer: "",
+        containers: []
       },
       {
         room: Game.rooms['W8S6'],
@@ -306,19 +309,21 @@ export class Parameters {
         terminal: "5d278ec3d2b78a5d2a199272",
         powerSpawn: "",
         nuker: "",
-        observer: ""
+        observer: "",
+        containers: []
       },
       {
         room: Game.rooms['W7S7'],
         spawns: [Game.spawns['Spawn4']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
-        storage: "",
-        towers: [],
+        storage: "5d322a5fa92583627b4c6d10",
+        towers: ["5d306fe5ae29775e0163b4c3"],
         terminal: "",
         powerSpawn: "",
         nuker: "",
-        observer: ""
+        observer: "",
+        containers: []
       }
     ]
   }

@@ -33,7 +33,7 @@ export class Collector extends BaseCreep {
 
       if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         // spawns, extensions, and power spawn
-        const targets = [...this.findExtensions(), ...this.findSpawns(), ...this.findNotFullPowerSpawn()].sort((s1, s2) =>
+        const targets = [...this.findNotFullExtensions(), ...this.findNotFullSpawns(), ...this.findNotFullPowerSpawn()].sort((s1, s2) =>
           this.pos.getRangeTo(s1.pos.x, s1.pos.y) - this.pos.getRangeTo(s2.pos.x, s2.pos.y));
 
         if (targets.length) {
@@ -179,8 +179,16 @@ export class Collector extends BaseCreep {
           target = powerSpawn;
         } else {
           const containers = this.findContainers().filter(
-            c => (!c.store.power && c.store.energy < c.storeCapacity) ||
-              (c.store.power && c.store.energy + c.store.power < c.storeCapacity));
+            c => {
+              let total = c.store.energy;
+              if (c.store.power) {
+                total += c.store.power;
+              }
+              if (c.store.ops) {
+                total += c.store.ops;
+              }
+              return total < c.storeCapacity;
+            });
           target = containers[0];
         }
 
