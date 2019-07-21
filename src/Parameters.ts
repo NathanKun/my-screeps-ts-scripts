@@ -284,7 +284,7 @@ export class Parameters {
         powerSpawn: "5d2286cb51c46e1504dad35e",
         nuker: "5d22e8fd320b57371f11008e",
         observer: "5d22f0b171b41e2a5c874355",
-        containers: ["5d2cd4c26b36a240262ca76d", "5d2cd8d4937fab26cebd5327", "5d2ce08e83c0952690fb3514", "5d2cdca8b82aed7ab6b0153e", "5d2ce61998788e62449d6113"]
+        containers: ["5d2cd4c26b36a240262ca76d", "5d2cd8d4937fab26cebd5327", "5d2ce08e83c0952690fb3514", "5d2cdca8b82aed7ab6b0153e"]
       },
       {
         room: Game.rooms['W9S5'],

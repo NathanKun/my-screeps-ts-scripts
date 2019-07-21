@@ -349,10 +349,8 @@ export class PowerBankAction {
 
           let target: StructurePowerSpawn | StructureContainer | null = c.room.memory.powerSpawn;
           if (!target || target.power === target.powerCapacity) {
-            const containers = c.room.find(FIND_STRUCTURES, {
-              filter: s => s.structureType === STRUCTURE_CONTAINER && (!s.store.power || (s.store.energy + s.store.power) < s.storeCapacity)
-            }) as StructureContainer[];
-            if (containers.length) {
+            const containers = c.room.memory.containers;
+            if (containers && containers.length) {
               target = containers[0];
             }
           }
