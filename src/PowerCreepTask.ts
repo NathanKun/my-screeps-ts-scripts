@@ -58,6 +58,8 @@ export class PowerCreepTask {
             power1.moveTo(container);
           } else if (withdrawRes === ERR_NOT_ENOUGH_RESOURCES) {
             power1.withdraw(container, RESOURCE_POWER)
+          } else if (withdrawRes === ERR_FULL) {
+            power1.drop(RESOURCE_ENERGY, 110);
           }
         }
         return;
@@ -74,12 +76,19 @@ export class PowerCreepTask {
 
     // fill energy to power spawn
     if (powerSpawn1.energy < 500) {
-      // withdraw energy from storage
+      // withdraw energy from containers / storage
       if (!power1.carry.energy) {
-        const storage = power1.room.storage;
-        if (storage && storage.store.energy) {
-          if (power1.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            power1.moveTo(storage);
+        let target;
+        const targets = containers.filter(c => c.store.energy);
+        if (targets.length) {
+          target = targets[0];
+        }
+        if (!target) {
+          target = power1.room.storage;
+        }
+        if (target && target.store.energy) {
+          if (power1.withdraw(target, RESOURCE_ENERGY, power1.carryCapacity - carryAmount - 100) === ERR_NOT_IN_RANGE) {
+            power1.moveTo(target);
           }
         }
         return;
