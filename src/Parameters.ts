@@ -26,7 +26,10 @@ export class Parameters {
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE, MOVE, MOVE, MOVE, MOVE
         ],
-        harvestRoom: 'W9S6'
+        harvestRoom: 'W9S6',
+        harvesterExtPrimaryTransferTargets: {
+          links: ["", "", "", ""]
+        }
       },
       builder: {
         count: -1,
@@ -65,10 +68,11 @@ export class Parameters {
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-        ]/*,
+        ],
         collectorWithdrawTargets: {
-          containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
-        }*/
+          //containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
+          links: ["5cf53529ac644b09c5efd05c"]
+        }
       },
       claimer: {
         count: 1,
@@ -177,7 +181,7 @@ export class Parameters {
         }
       },
       builder: {
-        count: 1,
+        count: -1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -224,8 +228,9 @@ export class Parameters {
         count: 2,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       },
       harvesterExt: {
         count: 0,
@@ -245,8 +250,9 @@ export class Parameters {
         count: 2,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
@@ -257,8 +263,9 @@ export class Parameters {
         count: 1,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
         collectorWithdrawTargets: {}
       },
       claimer: {
@@ -319,7 +326,7 @@ export class Parameters {
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d322a5fa92583627b4c6d10",
-        towers: ["5d306fe5ae29775e0163b4c3"],
+        towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e"],
         terminal: "",
         powerSpawn: "",
         nuker: "",
@@ -388,7 +395,12 @@ export class Parameters {
     },
     {
       room: Game.rooms['W7S7'],
-      links: []
+      links: [
+        {
+          sender: Game.getObjectById('5d35c61ee6b1d77ce73eb9e7') as StructureLink,
+          receiver: Game.getObjectById('5d337855d787641a0fe30de0') as StructureLink,
+          senderType: "cityCenter"
+        },]
     }
     ]
   }
@@ -405,15 +417,11 @@ export class Parameters {
       const capacity = spawn.room.memory.energyCapacity;
       const energy = spawn.room.memory.energy;
 
-      const storageNotEmpty = spawn.room.find(FIND_MY_STRUCTURES, {
-        filter: s => s.structureType === STRUCTURE_STORAGE && s.store.energy > 0
-      }).length > 0;
-
-      if (!storageNotEmpty) {
+      if (!spawn.room.storage || !spawn.room.storage.store.energy) {
         return false;
       }
 
-      if (energy / capacity < 0.8) {
+      if (energy / capacity < 0.7) {
         return true;
       }
 

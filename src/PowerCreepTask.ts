@@ -13,7 +13,7 @@ export class PowerCreepTask {
     }
 
     // renew self
-    if (power1.ticksToLive && power1.ticksToLive < 100) {
+    if (power1.ticksToLive && power1.ticksToLive < 500) {
       if (power1.renew(powerSpawn1) === ERR_NOT_IN_RANGE) {
         power1.moveTo(powerSpawn1);
       }
@@ -25,20 +25,22 @@ export class PowerCreepTask {
     carryAmount += power1.carry.power ? power1.carry.power : 0;
 
     // gen ops
-    if (carryAmount + 2 <= power1.carryCapacity) {
-      const res = power1.usePower(PWR_GENERATE_OPS);
-      if (res === OK) {
-        // return;
+    const opsContainer = Game.getObjectById('5d2ce61998788e62449d6113') as StructureContainer;
+    if (opsContainer.store.ops && opsContainer.store.ops < opsContainer.storeCapacity) {
+      if (carryAmount + 2 <= power1.carryCapacity) {
+        const res = power1.usePower(PWR_GENERATE_OPS);
+        if (res === OK) {
+          // return;
+        }
       }
-    }
 
-    // transfer ops to container
-    if (power1.carry.ops && power1.carry.ops > 50) {
-      const container = Game.getObjectById('5d2ce61998788e62449d6113') as StructureContainer;
-      if (power1.transfer(container, RESOURCE_OPS) === ERR_NOT_IN_RANGE) {
-        power1.moveTo(container);
+      // transfer ops to container
+      if (power1.carry.ops && power1.carry.ops > 50) {
+        if (power1.transfer(opsContainer, RESOURCE_OPS) === ERR_NOT_IN_RANGE) {
+          power1.moveTo(opsContainer);
+        }
+        return;
       }
-      return;
     }
 
     // fill power to power spawn

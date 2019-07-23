@@ -54,8 +54,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
     Game.rooms['W8S6'].memory.spawnParam = spawnParams[2];
     Game.rooms['W7S7'].memory.spawnParam = spawnParams[3];
 
-    roomConfig.collectorWithdrawStorageMode = Parameters.getCollectorWithdrawStorageMode(roomConfig.room.memory.spawnParam);
-
     // structure being attack
     const spawn = roomConfig.spawns[0];
     if (spawn.room.find(FIND_MY_STRUCTURES, {
@@ -76,6 +74,8 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
     // no hostile, recycle def creep
     else {
+      roomConfig.collectorWithdrawStorageMode = Parameters.getCollectorWithdrawStorageMode(roomConfig.room.memory.spawnParam);
+
       // def creeps
       const defCreeps = _.filter(Game.creeps,
         (creep) => creep.memory.role === 'def' && creep.room.name === roomConfig.room.name);
@@ -237,9 +237,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       }
 
       if (startPowerBankAction) {
-        console.log("-----POWER BANK-----")
         PowerBankAction.do(rooms[0].spawns);
-        console.log("-----POWER BANK END-----")
       }
     }
     logCPU('power bank action');

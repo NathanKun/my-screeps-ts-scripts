@@ -274,9 +274,11 @@ export class Collector extends BaseCreep {
       }
       // links
       if (targets.links && targets.links.length) {
-        const target = Game.getObjectById(targets.links[0]);
-        if (target != null && ((target as StructureLink).energy / (target as StructureLink).energyCapacity >= 0.3)) {
-          return target as StructureLink;
+        const links = targets.links
+          .map(l => Game.getObjectById(l) as (StructureLink | null))
+          .filter(l => l !== null && l.energy / l.energyCapacity >= 0.3) as StructureLink[];
+        if (links.length) {
+          return links[0];
         }
       }
       // terminal
