@@ -18,11 +18,11 @@ export class FindSourceUtil {
 
     // already harvesting
     if (creep.memory.harvesting) {
-      const source = Game.getObjectById(creep.memory.harvestSource) as Source;
+      const source = Game.getObjectById(creep.memory.harvestSource) as (Source | null);
 
       // if current source no more energy, find another one
       // creep is still far from source and source is cached > 35 ticks ago, revalidate source
-      if (source === undefined || source.energy === 0 || (creep.memory.cacheTime && Game.time - creep.memory.cacheTime > 5 && creep.pos.getRangeTo(source) > 3 && !FindSourceUtil.validateSource(source))) {
+      if (source === null || source.energy === 0 || (creep.memory.cacheTime && Game.time - creep.memory.cacheTime > 5 && creep.pos.getRangeTo(source) > 3 && !FindSourceUtil.validateSource(source))) {
         FindSourceUtil.clear(creep);
         return FindSourceUtil.findSource(creep);
       }
