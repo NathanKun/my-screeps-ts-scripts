@@ -49,9 +49,9 @@ export class PowerCreepTask {
       return;
     }
 
-    if (powerSpawn1.power < 50 && carryAmount < power1.carryCapacity) {
+    if (powerSpawn1.power < 50) {
       // withdraw power from containers
-      if (!power1.carry.power) {
+      if (!power1.carry.power && carryAmount < power1.carryCapacity) {
         const targets = containers.filter(c => c.store.power);
         if (targets.length) {
           const container = targets[0];
@@ -77,7 +77,7 @@ export class PowerCreepTask {
     }
 
     // fill energy to power spawn
-    if (powerSpawn1.energy < 500) {
+    if (powerSpawn1.energy < 1500) {
       // withdraw energy from containers / storage
       if (!power1.carry.energy) {
         let target;

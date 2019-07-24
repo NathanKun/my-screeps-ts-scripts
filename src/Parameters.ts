@@ -28,7 +28,7 @@ export class Parameters {
         ],
         harvestRoom: 'W9S6',
         harvesterExtPrimaryTransferTargets: {
-          links: ["", "", "", ""]
+          links: ["5d372e697a1f04171f82597b", "5d3731d4cb855562844e876c", "5d3736521304ce627084d38b", "5d373cd85c57a23fff553d0a"]
         }
       },
       builder: {
@@ -70,7 +70,7 @@ export class Parameters {
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
         ],
         collectorWithdrawTargets: {
-          //containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
+          // containers: ['5d2cd8d4937fab26cebd5327', '5d2cdca8b82aed7ab6b0153e', '5d2cd4c26b36a240262ca76d', '5d2ce61998788e62449d6113', '5d2ce08e83c0952690fb3514']
           links: ["5cf53529ac644b09c5efd05c"]
         }
       },
@@ -347,15 +347,27 @@ export class Parameters {
           sender: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
           receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
           senderType: "cityCenter"
-        }/*, {
-          sender: Game.getObjectById('5cf543d960fc8009c45c72d3') as StructureLink,
-          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
-          senderType: "cityCenter"
-        }, {
-          sender: Game.getObjectById('5d03e47bc2ac6453595fe392') as StructureLink,
-          receiver: Game.getObjectById('5cf53c6d03632c664c611dce') as StructureLink,
-          senderType: "cityCenter"
-        }*/
+        },
+        {
+          sender: Game.getObjectById('5d372e697a1f04171f82597b') as StructureLink,
+          receiver: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d3731d4cb855562844e876c') as StructureLink,
+          receiver: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d3736521304ce627084d38b') as StructureLink,
+          receiver: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d373cd85c57a23fff553d0a') as StructureLink,
+          receiver: Game.getObjectById('5cf53529ac644b09c5efd05c') as StructureLink,
+          senderType: "nextToExit"
+        }
       ]
     },
     {

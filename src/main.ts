@@ -208,20 +208,23 @@ export const loop = ErrorMapper.wrapLoop(() => {
           // found, start power bank action
           if ((bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) &&
             bank[0].ticksToDecay > 4500 && bank[0].power >= 2500) {
-            Memory.powerbank = {
-              bankId: bank[0].id,
-              start: new RoomPosition(14, 1, 'W9S7'),
-              end: bank[0].pos,
-              path: [],
-              pathRooms: [bank[0].pos.roomName],
-              findingPath: true,
-              carrierNeed: Math.ceil(bank[0].power / 1250),
-              finished: false,
-              poweraSpawnedIndex: 0,
-              powerhSpawnedIndex: 0,
-              powercSpawnedIndex: 0
-            }
-            startPowerBankAction = true;
+              // if storage energy > 200 000, start power bank action
+              if (rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
+                Memory.powerbank = {
+                  bankId: bank[0].id,
+                  start: new RoomPosition(14, 1, 'W9S7'),
+                  end: bank[0].pos,
+                  path: [],
+                  pathRooms: [bank[0].pos.roomName],
+                  findingPath: true,
+                  carrierNeed: Math.ceil(bank[0].power / 1250),
+                  finished: false,
+                  poweraSpawnedIndex: 0,
+                  powerhSpawnedIndex: 0,
+                  powercSpawnedIndex: 0
+                }
+                startPowerBankAction = true;
+              }
           }
           // not found, index++
           else {
