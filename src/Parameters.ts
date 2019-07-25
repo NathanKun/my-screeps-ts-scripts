@@ -309,11 +309,11 @@ export class Parameters {
       },
       {
         room: Game.rooms['W8S6'],
-        spawns: [Game.spawns['Spawn3']],
+        spawns: [Game.spawns['Spawn3'], Game.spawns['Spawn3.1']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d1869d8df35e2635a0e1281",
-        towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb"],
+        towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb", "5d38b3017d75867abb818af7"],
         terminal: "5d278ec3d2b78a5d2a199272",
         powerSpawn: "",
         nuker: "",
@@ -400,6 +400,11 @@ export class Parameters {
         },
         {
           sender: Game.getObjectById('5d25b240d2b78a5d2a18d093') as StructureLink,
+          receiver: Game.getObjectById('5d1bcab6b88799384c5fc414') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d38c77cb82aed7ab6b52fe0') as StructureLink,
           receiver: Game.getObjectById('5d1bcab6b88799384c5fc414') as StructureLink,
           senderType: "nextToExit"
         }

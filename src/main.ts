@@ -207,7 +207,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
           // found, start power bank action
           if ((bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) &&
-            bank[0].ticksToDecay > 4500 && bank[0].power >= 2500) {
+            bank[0].ticksToDecay > 4500 && bank[0].power >= 3750) {
               // if storage energy > 200 000, start power bank action
               if (rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
                 Memory.powerbank = {
