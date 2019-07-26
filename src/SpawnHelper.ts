@@ -290,23 +290,23 @@ export class SpawnHelper {
   }
 
   private static printStat(spawnParams: SpawnParam[]) {
-    let room = '<tr><td>Room</td>';
-    let spawning = '<tr><td>Spawning</td>';
-    let nextSpawn = '<tr><td>Next Spawn</td>';
-    let harvester = '<tr><td>Harvesters</td>';
-    let harvesterExt = '<tr><td>HarvesterExts</td>';
-    let builder = '<tr><td>Builders</td>';
-    let upgrader = '<tr><td>Upgraders</td>';
-    let maintainer = '<tr><td>Maintainers</td>';
-    let collector = '<tr><td>Collectors</td>';
-    let claimer = '<tr><td>Claimers</td>';
+    let room = '<tr>' + td('Room');
+    let spawning = '<tr>' + td('Spawning');
+    let nextSpawn = '<tr>' + td('Next Spawn');
+    let harvester = '<tr>' + td('Harvesters');
+    let harvesterExt = '<tr>' + td('HarvesterExts');
+    let builder = '<tr>' + td('Builders');
+    let upgrader = '<tr>' + td('Upgraders');
+    let maintainer = '<tr>' + td('Maintainers');
+    let collector = '<tr>' + td('Collectors');
+    let claimer = '<tr>' + td('Claimers');
 
     for (const spawnParam of spawnParams) {
       if (spawnParam.spawns[0] === undefined) {
         continue;
       }
 
-      spawning += '<td>';
+      spawning += '<td style="padding: 5px; border:1px solid white;">';
       for (const spawn of spawnParam.spawns) {
         if (spawn.spawning) {
           spawning += Game.creeps[spawn.spawning.name].memory.role + '\t';
@@ -314,16 +314,16 @@ export class SpawnHelper {
       }
       spawning += '</td>';
 
-      nextSpawn += spawnParam.spawns[0].room.memory.toSpawn ? '<td>' + spawnParam.spawns[0].room.memory.toSpawn + '</td>' : '<td></td>';
+      nextSpawn += spawnParam.spawns[0].room.memory.toSpawn ? td(spawnParam.spawns[0].room.memory.toSpawn!!) : td('');
 
-      room += '<td>' + spawnParam.spawns[0].room.name + '</td>'
-      harvester += '<td>' + spawnParam.spawns[0].room.memory.harvester + '\t' + (spawnParam.harvester.count - spawnParam.spawns[0].room.memory.harvester) + '</td>';
-      harvesterExt += '<td>' + spawnParam.spawns[0].room.memory.harvesterExt + '\t' + (spawnParam.harvesterExt.count - spawnParam.spawns[0].room.memory.harvesterExt) + '</td>';
-      builder += '<td>' + spawnParam.spawns[0].room.memory.builder + '\t' + (spawnParam.builder.count - spawnParam.spawns[0].room.memory.builder) + '</td>';
-      upgrader += '<td>' + spawnParam.spawns[0].room.memory.upgrader + '\t' + (spawnParam.upgrader.count - spawnParam.spawns[0].room.memory.upgrader) + '</td>';
-      maintainer += '<td>' + spawnParam.spawns[0].room.memory.maintainer + '\t' + (spawnParam.maintainer.count - spawnParam.spawns[0].room.memory.maintainer) + '</td>';
-      collector += '<td>' + spawnParam.spawns[0].room.memory.collector + '\t' + (spawnParam.collector.count - spawnParam.spawns[0].room.memory.collector) + '</td>';
-      claimer += '<td>' + spawnParam.spawns[0].room.memory.claimer + '\t' + (spawnParam.claimer.count - spawnParam.spawns[0].room.memory.claimer) + '</td>';
+      room += td(spawnParam.spawns[0].room.name);
+      harvester += td(spawnParam.spawns[0].room.memory.harvester + '\t' + (spawnParam.harvester.count - spawnParam.spawns[0].room.memory.harvester));
+      harvesterExt += td(spawnParam.spawns[0].room.memory.harvesterExt + '\t' + (spawnParam.harvesterExt.count - spawnParam.spawns[0].room.memory.harvesterExt));
+      builder += td(spawnParam.spawns[0].room.memory.builder + '\t' + (spawnParam.builder.count - spawnParam.spawns[0].room.memory.builder));
+      upgrader += td(spawnParam.spawns[0].room.memory.upgrader + '\t' + (spawnParam.upgrader.count - spawnParam.spawns[0].room.memory.upgrader));
+      maintainer += td(spawnParam.spawns[0].room.memory.maintainer + '\t' + (spawnParam.maintainer.count - spawnParam.spawns[0].room.memory.maintainer));
+      collector += td(spawnParam.spawns[0].room.memory.collector + '\t' + (spawnParam.collector.count - spawnParam.spawns[0].room.memory.collector));
+      claimer += td(spawnParam.spawns[0].room.memory.claimer + '\t' + (spawnParam.claimer.count - spawnParam.spawns[0].room.memory.claimer));
     }
 
     room += '</tr>';
@@ -338,11 +338,15 @@ export class SpawnHelper {
     claimer += '</tr>';
 
     const table =
-      "<table class='spawn-log-table'><style type='text/css'>.spawn-log-table > td {padding: 5px; border:1px solid white;}</style><tbody>" +
+      "<table><tbody>" +
       room + spawning + nextSpawn + harvester + harvesterExt + builder + upgrader + maintainer + collector + claimer +
       "</tbody></table>"
 
     console.log(table);
+
+    function td(str: string): string {
+      return '<td style="padding: 5px; border:1px solid white;">' + str + '</td>';
+    }
   }
 
   public static spawn(spawnParams: SpawnParam[]) {
