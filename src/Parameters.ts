@@ -81,6 +81,11 @@ export class Parameters {
         claimerAction: 'reserve'
       }
     },
+
+
+
+
+
     {
       spawns: [],
       harvester: {
@@ -136,7 +141,8 @@ export class Parameters {
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE, MOVE],
+          MOVE, MOVE
+        ],
       },
       collector: {
         count: 1,
@@ -145,7 +151,8 @@ export class Parameters {
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE, MOVE],
+          MOVE, MOVE
+        ],
         collectorWithdrawTargets: {
           terminal: "5d24244044ff1d2a689d8a9d"
         }
@@ -157,27 +164,36 @@ export class Parameters {
         claimerAction: 'reserve'
       }
     },
+
+
+
+
+
     {
       spawns: [],
       harvester: {
         count: 1,
         parts: [
-          WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
       },
       harvesterExt: {
         count: 4,
         parts: [
-          WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          ATTACK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE, MOVE, MOVE, MOVE, MOVE],
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
         harvestRoom: 'W7S6',
         canAttack: true,
         harvesterExtPrimaryTransferTargets: {
-          links: ["5d1bef377df56e6464adbd1c", "5d25b240d2b78a5d2a18d093"]
+          links: ["5d1bef377df56e6464adbd1c", "5d25b240d2b78a5d2a18d093", "5d38c77cb82aed7ab6b52fe0"]
         }
       },
       builder: {
@@ -185,31 +201,41 @@ export class Parameters {
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE],
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
       },
       upgrader: {
-        count: 3,
+        count: 2,
         parts: [
-          WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
         count: -1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE
+        ]
       },
       collector: {
         count: 1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE
+        ],
         collectorWithdrawTargets: {
           links: ["5d1bcab6b88799384c5fc414"],
           terminal: "5d278ec3d2b78a5d2a199272"
@@ -222,6 +248,11 @@ export class Parameters {
         claimerAction: 'reserve'
       }
     },
+
+
+
+
+
     {
       spawns: [],
       harvester: {
