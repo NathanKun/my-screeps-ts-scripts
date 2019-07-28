@@ -89,8 +89,11 @@ export class PowerCreepTask {
           target = power1.room.storage;
         }
         if (target && target.store.energy) {
-          if (power1.withdraw(target, RESOURCE_ENERGY, power1.carryCapacity - carryAmount - 100) === ERR_NOT_IN_RANGE) {
+          const res = power1.withdraw(target, RESOURCE_ENERGY, power1.carryCapacity - carryAmount - 100);
+          if (res === ERR_NOT_IN_RANGE) {
             power1.moveTo(target);
+          } else if (res === ERR_NOT_ENOUGH_ENERGY) {
+            power1.withdraw(target, RESOURCE_ENERGY);
           }
         }
         return;
