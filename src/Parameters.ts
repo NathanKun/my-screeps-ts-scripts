@@ -297,7 +297,9 @@ export class Parameters {
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
           CARRY, CARRY,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
-        collectorWithdrawTargets: {}
+        collectorWithdrawTargets: {
+          terminal: "5d39829e8fef3a638864eef6"
+        }
       },
       claimer: {
         count: 0,
@@ -358,7 +360,7 @@ export class Parameters {
         hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d322a5fa92583627b4c6d10",
         towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e"],
-        terminal: "",
+        terminal: "5d39829e8fef3a638864eef6",
         powerSpawn: "",
         nuker: "",
         observer: "",
