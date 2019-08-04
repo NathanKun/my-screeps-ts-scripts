@@ -132,7 +132,7 @@ export class Harvester extends BaseCreep {
 
           // find storages
           if (targets.length === 0) {
-            targets = this.findStorage();
+            targets = this.findNotFullStorage();
           }
 
           // find terminal

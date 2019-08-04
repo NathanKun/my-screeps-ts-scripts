@@ -45,6 +45,14 @@ export abstract class BaseCreep extends Creep {
 
   protected findStorage(): StructureStorage[] {
     const storage = this.room.storage;
+    if (storage) {
+      return [storage];
+    }
+    return [];
+  }
+
+  protected findNotFullStorage(): StructureStorage[] {
+    const storage = this.room.storage;
     if (storage && storage.store.energy < storage.storeCapacity) {
       return [storage];
     }
