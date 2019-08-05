@@ -273,30 +273,43 @@ export class Parameters {
       builder: {
         count: -1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
       },
       upgrader: {
         count: 2,
         parts: [
-          WORK, WORK, WORK, WORK, WORK, WORK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
         upgraderUseStorageMin: 30000
       },
       maintainer: {
-        count: 0,
-        parts: []
+        count: -1,
+        parts: [
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE
+        ]
       },
       collector: {
         count: 1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK, WORK,
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE
+        ],
         collectorWithdrawTargets: {
           terminal: "5d39829e8fef3a638864eef6"
         }
@@ -355,11 +368,11 @@ export class Parameters {
       },
       {
         room: Game.rooms['W7S7'],
-        spawns: [Game.spawns['Spawn4']],
+        spawns: [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d322a5fa92583627b4c6d10",
-        towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e"],
+        towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e", "5d47a344a7e81e40c5323ee5"],
         terminal: "5d39829e8fef3a638864eef6",
         powerSpawn: "",
         nuker: "",
@@ -448,6 +461,16 @@ export class Parameters {
       links: [
         {
           sender: Game.getObjectById('5d35c61ee6b1d77ce73eb9e7') as StructureLink,
+          receiver: Game.getObjectById('5d337855d787641a0fe30de0') as StructureLink,
+          senderType: "cityCenter"
+        },
+        {
+          sender: Game.getObjectById('5d39a77e758e3f745340c647') as StructureLink,
+          receiver: Game.getObjectById('5d337855d787641a0fe30de0') as StructureLink,
+          senderType: "cityCenter"
+        },
+        {
+          sender: Game.getObjectById('5d47ae74903e412b1f4a0016') as StructureLink,
           receiver: Game.getObjectById('5d337855d787641a0fe30de0') as StructureLink,
           senderType: "cityCenter"
         },]
