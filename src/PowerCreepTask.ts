@@ -1,12 +1,18 @@
+import { MyPowerCreep } from "roles/PowerCreep";
+
 export class PowerCreepTask {
+  private static regenSources = ["5bbcac639099fc012e63560e", "5bbcac639099fc012e63560f"];
+
   public static do(): void {
     const powerSpawn1 = Game.rooms['W9S7'].memory.powerSpawn;
     if (!powerSpawn1) {
       return;
     }
 
+    const power1 = new MyPowerCreep('power_1');
+
+
     // spawn
-    const power1 = Game.powerCreeps['power_1'];
     if (!power1.room) {
       power1.spawn(powerSpawn1);
       return;
@@ -25,21 +31,31 @@ export class PowerCreepTask {
     carryAmount += power1.carry.power ? power1.carry.power : 0;
 
     // gen ops
+    if (carryAmount + 10 <= power1.carryCapacity && (!power1.carry.ops || power1.carry.ops < 100)) {
+      if (power1.canUsePower(PWR_GENERATE_OPS)) {
+        power1.usePower(PWR_GENERATE_OPS);
+        return;
+      }
+    }
+
+    // transfer ops to container
     const opsContainer = Game.getObjectById('5d2ce61998788e62449d6113') as StructureContainer;
     if (opsContainer.store.ops && opsContainer.store.ops < opsContainer.storeCapacity) {
-      if (carryAmount + 2 <= power1.carryCapacity) {
-        const res = power1.usePower(PWR_GENERATE_OPS);
-        if (res === OK) {
-          // return;
-        }
-      }
-
-      // transfer ops to container
       if (power1.carry.ops && power1.carry.ops > 50) {
         if (power1.transfer(opsContainer, RESOURCE_OPS) === ERR_NOT_IN_RANGE) {
           power1.moveTo(opsContainer);
         }
         return;
+      }
+    }
+
+    // gen source
+    if (power1.canUsePower(PWR_REGEN_SOURCE)) {
+      for (const id of PowerCreepTask.regenSources) {
+        if (power1.canRegenSource(id)) {
+          power1.regenSources(id);
+          return;
+        }
       }
     }
 

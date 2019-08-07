@@ -13,7 +13,6 @@ declare namespace NodeJS {
   }
 }
 
-// memory extension samples
 interface CreepMemory extends CreepBrithMemory {
   role: string;
   spawnTime: number;
@@ -149,4 +148,17 @@ interface PowerBankActionMemory {
 
 interface PowerBankActionRoomStructures {
   [room: string]: AnyStructure[];
+}
+
+interface PowerCreepMemory {
+  powerLastUsed: PowerLastUsed;
+  lastRegenSource: LastRegenSource;
+}
+
+interface PowerLastUsed {
+  [power: number]: number;
+}
+
+interface LastRegenSource {
+  [sourceId: string]: number;
 }
