@@ -36,7 +36,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   const spawnParams = Parameters.spawnParams();
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
-  spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']];
+  spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']]; // TODO: Spawn2.2
   spawnParams[2].spawns = [Game.spawns['Spawn3'], Game.spawns['Spawn3.1']];
   spawnParams[3].spawns = [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']];
 
@@ -208,23 +208,23 @@ export const loop = ErrorMapper.wrapLoop(() => {
           // found, start power bank action
           if ((bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) &&
             bank[0].ticksToDecay > 4500 && bank[0].power >= 3750) {
-              // if storage energy > 200 000, start power bank action
-              if (rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
-                Memory.powerbank = {
-                  bankId: bank[0].id,
-                  start: new RoomPosition(14, 1, 'W9S7'),
-                  end: bank[0].pos,
-                  path: [],
-                  pathRooms: [bank[0].pos.roomName],
-                  findingPath: true,
-                  carrierNeed: Math.ceil(bank[0].power / 1250),
-                  finished: false,
-                  poweraSpawnedIndex: 0,
-                  powerhSpawnedIndex: 0,
-                  powercSpawnedIndex: 0
-                }
-                startPowerBankAction = true;
+            // if storage energy > 200 000, start power bank action
+            if (rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
+              Memory.powerbank = {
+                bankId: bank[0].id,
+                start: new RoomPosition(14, 1, 'W9S7'),
+                end: bank[0].pos,
+                path: [],
+                pathRooms: [bank[0].pos.roomName],
+                findingPath: true,
+                carrierNeed: Math.ceil(bank[0].power / 1250),
+                finished: false,
+                poweraSpawnedIndex: 0,
+                powerhSpawnedIndex: 0,
+                powercSpawnedIndex: 0
               }
+              startPowerBankAction = true;
+            }
           }
           // not found, index++
           else {
@@ -248,7 +248,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   PowerCreepTask.do();
   logCPU('power creep task');
-
 
 
   console.log('Tick ended');

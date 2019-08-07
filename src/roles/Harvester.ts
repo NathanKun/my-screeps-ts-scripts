@@ -95,7 +95,7 @@ export class Harvester extends BaseCreep {
               }
               if (targets.length === 0 && mem.links && mem.links.length) {
                 targets = mem.links.map(id => Game.getObjectById(id) as (null | StructureLink))
-                  .filter(s => s !== null && (s.energyCapacity - s.energy) > this.carry.energy && this.pos.getRangeTo(s) < 10) as StructureLink[];
+                  .filter(s => s !== null && ((s.energyCapacity - s.energy) > this.carry.energy || (s.energyCapacity - s.energy) > 400) && this.pos.getRangeTo(s) < 10) as StructureLink[];
               }
             }
           }
