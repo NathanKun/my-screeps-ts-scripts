@@ -199,17 +199,34 @@ export const loop = ErrorMapper.wrapLoop(() => {
         // observed room
         const observedRoom = Game.rooms[Parameters.observeRooms[Memory.observeRoomsIndex]];
         if (observedRoom) {
+          let observeNext = true;
           console.log("observedRoom = " + observedRoom.name);
 
           const bank = observedRoom.find(FIND_STRUCTURES, {
             filter: s => s.structureType === STRUCTURE_POWER_BANK
           }) as StructurePowerBank[];
 
-          // found, start power bank action
-          if ((bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) &&
-            bank[0].ticksToDecay > 4500 && bank[0].power >= 3750) {
-            // if storage energy > 200 000, start power bank action
-            if (rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
+          // found power bank
+          if (bank.length || (Memory.powerbank && Memory.powerbank.finished === false)) {
+            // validate power bank
+            // ticks to decay > 4500
+            // power >= 3000
+            // have >= 2 empty terain next to the power bank for attack creeps
+            let valid = bank[0].ticksToDecay >= 4500 && bank[0].power >= 3000;
+
+            let wallCount = 0;
+            wallCount += new RoomPosition(bank[0].pos.x + 1, bank[0].pos.y + 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x + 1, bank[0].pos.y, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x + 1, bank[0].pos.y - 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x, bank[0].pos.y + 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x, bank[0].pos.y - 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x - 1, bank[0].pos.y + 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x - 1, bank[0].pos.y, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            wallCount += new RoomPosition(bank[0].pos.x - 1, bank[0].pos.y - 1, bank[0].room.name).lookFor(LOOK_TERRAIN)[0] === 'wall' ? 1 : 0;
+            valid = valid && wallCount <= 7;
+
+            // if power bank valid and room storage energy > 200 000, start power bank action
+            if (valid && rooms[0].room.storage && rooms[0].room.storage!!.store.energy > 200000) {
               Memory.powerbank = {
                 bankId: bank[0].id,
                 start: new RoomPosition(14, 1, 'W9S7'),
@@ -224,10 +241,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
                 powercSpawnedIndex: 0
               }
               startPowerBankAction = true;
+              observeNext = false;
             }
           }
-          // not found, index++
-          else {
+
+          // not found or not valid, index++
+          if (observeNext) {
             Memory.observeRoomsIndex++;
             if (Parameters.observeRooms.length === Memory.observeRoomsIndex) {
               Memory.observeRoomsIndex = 0;
