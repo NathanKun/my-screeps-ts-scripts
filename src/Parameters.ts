@@ -181,7 +181,8 @@ export class Parameters {
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY,
+          ATTACK, ATTACK,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
           MOVE, MOVE, MOVE, MOVE, MOVE
@@ -260,8 +261,16 @@ export class Parameters {
           MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE],
       },
       harvesterExt: {
-        count: 0,
-        parts: [],
+        count: 3,
+        parts: [
+          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+          CARRY, CARRY, CARRY,
+          ATTACK, ATTACK,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+          MOVE, MOVE, MOVE, MOVE, MOVE
+        ],
         harvestRoom: 'W6S7',
         canAttack: true,
         harvesterExtPrimaryTransferTargets: {}
@@ -311,7 +320,7 @@ export class Parameters {
         }
       },
       claimer: {
-        count: 0,
+        count: 1,
         parts: [CLAIM, MOVE], // auto add 1 CLAIM if reservation tick < 4000 (see SpawnHelper.internalSpawnOne(:  claimer part)
         claimerRoom: 'W6S7',
         claimerAction: 'reserve'
