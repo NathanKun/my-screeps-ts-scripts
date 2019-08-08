@@ -36,7 +36,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   const spawnParams = Parameters.spawnParams();
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
-  spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']]; // TODO: Spawn2.2
+  spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1'], Game.spawns['Spawn2.2']];
   spawnParams[2].spawns = [Game.spawns['Spawn3'], Game.spawns['Spawn3.1']];
   spawnParams[3].spawns = [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']];
 

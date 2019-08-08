@@ -110,7 +110,7 @@ export class Parameters {
         harvestRoom: 'W8S5',
         canAttack: false,
         harvesterExtPrimaryTransferTargets: {
-          links: ["5d22efceaf7b0c634e1579b4"]
+          links: ["5d4b9d6c0906206365449cb8", "5d4b88f8ea104379d9097392", "5d4b937914989673a627418a"]
         }
       },
       builder: {
@@ -329,7 +329,7 @@ export class Parameters {
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5ced749d7f5e00234025f1c3",
-        towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa", "5d220538ad1ea5150aad34b3", "5d220bf6320b57371f109e9f", "5d2214948a9c3b645e92842e"],
+        towers: ["5ce5ab4e9917085da40c257a", "5ceb0ce35a7eb776ba2e79fa", "5d220538ad1ea5150aad34b3", "5d220bf6320b57371f109e9f", "5d2214948a9c3b645e92842e", "5d03eab035873a443bfef3ea"],
         terminal: "5d047c79f149a971a0d3a4be",
         powerSpawn: "5d2286cb51c46e1504dad35e",
         nuker: "5d22e8fd320b57371f11008e",
@@ -338,11 +338,11 @@ export class Parameters {
       },
       {
         room: Game.rooms['W9S5'],
-        spawns: [Game.spawns['Spawn2'], Game.spawns['Spawn2.1']],// TODO: Spawn2.2
+        spawns: [Game.spawns['Spawn2'], Game.spawns['Spawn2.1'], Game.spawns['Spawn2.2']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn2'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5cfb3d17bcac0c0fd600f74d",
-        towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae"], // TODO: 3 new tower
+        towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae", "5d4ba717de98312b1d9a8583", "5d4b68c866d7ea40916099df", "5d4b722c6700154079e00c7e"],
         terminal: "5d24244044ff1d2a689d8a9d",
         powerSpawn: "",// TODO: power spawn
         nuker: "",// TODO: nuker
@@ -416,10 +416,25 @@ export class Parameters {
       room: Game.rooms['W9S5'],
       links: [
         {
-          sender: Game.getObjectById('5d22efceaf7b0c634e1579b4') as StructureLink,
-          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
+          sender: Game.getObjectById('5d4b9d6c0906206365449cb8') as StructureLink,
+          receiver: Game.getObjectById('5d4b793caab68c73d85bf42f') as StructureLink,
           senderType: "nextToExit"
-        } // TODO: 3 next to exit send to next to storage, which send to next to controller
+        },
+        {
+          sender: Game.getObjectById('5d4b88f8ea104379d9097392') as StructureLink,
+          receiver: Game.getObjectById('5d4b793caab68c73d85bf42f') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d4b937914989673a627418a') as StructureLink,
+          receiver: Game.getObjectById('5d4b793caab68c73d85bf42f') as StructureLink,
+          senderType: "nextToExit"
+        },
+        {
+          sender: Game.getObjectById('5d4b793caab68c73d85bf42f') as StructureLink,
+          receiver: Game.getObjectById('5d0090631fe8da31ef52469c') as StructureLink,
+          senderType: "cityCenter"
+        }
       ]
     },
     {
