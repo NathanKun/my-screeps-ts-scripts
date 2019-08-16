@@ -17,7 +17,7 @@ export class Parameters {
         ]
       },
       harvesterExt: {
-        count: 4,
+        count: 3,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
@@ -353,9 +353,9 @@ export class Parameters {
         storage: "5cfb3d17bcac0c0fd600f74d",
         towers: ["5cf6d44f1a35fd098d7d7ad5", "5d004c75c0d974664ad4d35e", "5d22dcdd64842a72e7e1d3ae", "5d4ba717de98312b1d9a8583", "5d4b68c866d7ea40916099df", "5d4b722c6700154079e00c7e"],
         terminal: "5d24244044ff1d2a689d8a9d",
-        powerSpawn: "",// TODO: power spawn
-        nuker: "",// TODO: nuker
-        observer: "",// TODO: observer
+        powerSpawn: "5d4c7201c04cb240a540a74f",
+        nuker: "5d4d38618cee062b5140bacb",
+        observer: "5d4d48d70ede552b35b2d819",
         containers: []
       },
       {

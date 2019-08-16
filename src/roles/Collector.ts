@@ -9,15 +9,12 @@ export class Collector extends BaseCreep {
   private static STATUS_TRANSFERING_POWER = "transferingPower";
   private static STATUS_WITHDRAWING = "withdrawing";
 
-  private droppedResources: Resource[];
-  private tombstones: Tombstone[];
-  private withdrawableTarget: StructureLink | StructureContainer | StructureTerminal | null;
+  private droppedResources: Resource[] = [];
+  private tombstones: Tombstone[] = [];
+  private withdrawableTarget: StructureLink | StructureContainer | StructureTerminal | null = null;
 
   constructor(creep: Creep) {
     super(creep);
-    this.droppedResources = this.findDroppedResources();
-    this.tombstones = this.findTombstones();
-    this.withdrawableTarget = this.findWithdrawale();
   }
 
   protected run() {
@@ -103,19 +100,19 @@ export class Collector extends BaseCreep {
       // Collecting withdrawable structure
       else if (this.memory.collectorStatus === Collector.STATUS_COLLECTING_WITHDRAWABLE) {
         this.say('🏃📦');
-
-        if (this.withdrawableTarget === null) {
+        const withdrawableTarget = Game.getObjectById(this.memory.collectorTarget) as Structure;
+        if (withdrawableTarget === null) {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
         }
-        if (this.withdrawableTarget.structureType === STRUCTURE_CONTAINER) {
-          const resourceType = this.withdrawableTarget.store.energy > 0 ? RESOURCE_ENERGY : RESOURCE_POWER;
-          if (this.withdraw(this.withdrawableTarget, resourceType) === ERR_NOT_IN_RANGE) {
-            this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+        if (withdrawableTarget.structureType === STRUCTURE_CONTAINER) {
+          const resourceType = (withdrawableTarget as StructureContainer).store.energy > 0 ? RESOURCE_ENERGY : RESOURCE_POWER;
+          if (this.withdraw(withdrawableTarget, resourceType) === ERR_NOT_IN_RANGE) {
+            this.moveTo(withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
           }
         } else {
-          if (this.withdraw(this.withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.moveTo(this.withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+          if (this.withdraw(withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            this.moveTo(withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
           }
         }
       }
@@ -123,9 +120,14 @@ export class Collector extends BaseCreep {
       // Transfering
       else if (this.memory.collectorStatus === Collector.STATUS_TRANSFERING) {
         // if no more collectable, change role to maintainer
-        if (!(this.droppedResources.length || this.tombstones.length || this.withdrawableTarget)) {
-          this.memory.role = 'maintainer';
-          return;
+        if (this.room.memory.energyPercentage < 0.5) {
+          this.droppedResources = this.findDroppedResources();
+          this.tombstones = this.findTombstones();
+          this.withdrawableTarget = this.findWithdrawale();
+          if (!(this.droppedResources.length || this.tombstones.length || this.withdrawableTarget)) {
+            this.memory.role = 'maintainer';
+            return;
+          }
         }
 
         this.say('🚚');
@@ -206,6 +208,9 @@ export class Collector extends BaseCreep {
   // call by Collector and Maintainer
   public static findCollectable(creep: Collector) {
     creep.memory.role = 'collector';
+    creep.droppedResources = creep.findDroppedResources();
+    creep.tombstones = creep.findTombstones();
+    creep.withdrawableTarget = creep.findWithdrawale();
 
     // find resource
     if (creep.droppedResources.length) {
@@ -222,6 +227,7 @@ export class Collector extends BaseCreep {
     }
 
     if (creep.withdrawableTarget) {
+      creep.memory.collectorTarget = creep.withdrawableTarget.id;
       creep.memory.collectorStatus = Collector.STATUS_COLLECTING_WITHDRAWABLE;
       return;
     }

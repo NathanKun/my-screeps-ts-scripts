@@ -32,8 +32,8 @@ export class Upgrader extends BaseCreep {
     else {
       // check if has link in memory and link has energy
       if (this.memory.upgraderLinkTarget) {
-        const link = Game.getObjectById(this.memory.upgraderLinkTarget);
-        if (link === null || (link as StructureLink).energy === 0) {
+        const link = Game.getObjectById(this.memory.upgraderLinkTarget) as (StructureLink | null);
+        if (link === null || link.energy === 0 || this.pos.getRangeTo(link) >= 10) {
           this.memory.upgraderLinkTarget = undefined;
         }
       }

@@ -20,6 +20,12 @@ import { RoomMemoryUtil } from "utils/RoomMemoryUtil";
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
+
+  if (Game.cpu.bucket < 50) {
+    console.log(`CPU bucket = ` + Game.cpu.bucket + ", skipped tick");
+    return;
+  }
+
   let cpu = Game.cpu.getUsed();
   logCPU('start')
 
@@ -104,11 +110,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
     // room 2 send energy to room 4
     const t1 = rooms[0].room.terminal;
     if (t1 && t1.store.energy === t1.storeCapacity) {
-      t1.send(RESOURCE_ENERGY, 260000, 'W8S6');
+      t1.send(RESOURCE_ENERGY, 270000, 'W8S6');
     }
-    const t2 = rooms[0].room.terminal;
+    const t2 = rooms[1].room.terminal;
     if (t2 && t2.store.energy === t2.storeCapacity) {
-      t2.send(RESOURCE_ENERGY, 260000, 'W7S7');
+      t2.send(RESOURCE_ENERGY, 270000, 'W8S6');
     }
   }
   logCPU('room init')
