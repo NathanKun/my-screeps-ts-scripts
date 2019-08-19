@@ -100,7 +100,7 @@ export class Collector extends BaseCreep {
       // Collecting withdrawable structure
       else if (this.memory.collectorStatus === Collector.STATUS_COLLECTING_WITHDRAWABLE) {
         this.say('🏃📦');
-        const withdrawableTarget = Game.getObjectById(this.memory.collectorTarget) as Structure;
+        const withdrawableTarget = Game.getObjectById(this.memory.collectorTarget) as (StructureContainer | StructureLink | StructureTerminal | null);
         if (withdrawableTarget === null) {
           this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
           return;
@@ -111,8 +111,12 @@ export class Collector extends BaseCreep {
             this.moveTo(withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
           }
         } else {
-          if (this.withdraw(withdrawableTarget, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+          const res = this.withdraw(withdrawableTarget, RESOURCE_ENERGY);
+          if (res === ERR_NOT_IN_RANGE) {
             this.moveTo(withdrawableTarget, { reusePath: 0, visualizePathStyle: { stroke: '#66ccff' } });
+          } else if (res === ERR_NOT_ENOUGH_RESOURCES) {
+            this.memory.collectorStatus = Collector.STATUS_TRANSFERING;
+            return;
           }
         }
       }
@@ -282,7 +286,7 @@ export class Collector extends BaseCreep {
       if (targets.links && targets.links.length) {
         const links = targets.links
           .map(l => Game.getObjectById(l) as (StructureLink | null))
-          .filter(l => l !== null && l.energy / l.energyCapacity >= 0.3) as StructureLink[];
+          .filter(l => l !== null && (l.energy / l.energyCapacity) >= 0.3) as StructureLink[];
         if (links.length) {
           return links[0];
         }
