@@ -4,6 +4,7 @@ interface Memory {
   observeRoomsIndex: number;
   powerbank: PowerBankActionMemory;
   lastPurgeMemory: number;
+  lastDoMarket: number;
 }
 
 // `global` extension samples

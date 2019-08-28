@@ -1,5 +1,11 @@
 export class MarketUtil {
   public static doMarket(rooms: RoomConfig[]): void {
+    if (Memory.lastDoMarket !== undefined && Game.time - Memory.lastDoMarket < 15) {
+      return;
+    }
+
+    Memory.lastDoMarket = Game.time;
+
     const terminals = (rooms
       .map(r => r.room.terminal)
       .filter(t => t && t.store.energy > 10000) as StructureTerminal[])
