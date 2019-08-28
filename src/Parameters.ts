@@ -352,15 +352,15 @@ export class Parameters {
       },
       {
         room: Game.rooms['W8S6'],
-        spawns: [Game.spawns['Spawn3'], Game.spawns['Spawn3.1']],
+        spawns: [Game.spawns['Spawn3'], Game.spawns['Spawn3.1'], Game.spawns['Spawn3.2']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn3'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d1869d8df35e2635a0e1281",
-        towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb", "5d38b3017d75867abb818af7"],
+        towers: ["5d17c3713a42dc03d2042956", "5d1bbb0b71b41e2a5c844bcb", "5d38b3017d75867abb818af7", "5d65d5418309b77a10597515", "5d65df0109062063654f541f", "5d65e8a3734d2c211a9d7ea5"],
         terminal: "5d278ec3d2b78a5d2a199272",
-        powerSpawn: "",
-        nuker: "",
-        observer: "",
+        powerSpawn: "5d64db08c04cb240a548e480",
+        nuker: "5d65b21e12fdad20d9d99340",
+        observer: "5d65c26c90e3aa2b1e1770ae",
         containers: []
       },
       {

@@ -13,6 +13,7 @@ import { SpawnHelper } from "SpawnHelper";
 import { TowerTask } from "TowerTask";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { LinkUtil } from "utils/LinkUtil";
+import { MarketUtil } from "utils/MarketUtil";
 import { RoomMemoryUtil } from "utils/RoomMemoryUtil";
 
 
@@ -43,7 +44,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   const spawnParams = Parameters.spawnParams();
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
   spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1'], Game.spawns['Spawn2.2']];
-  spawnParams[2].spawns = [Game.spawns['Spawn3'], Game.spawns['Spawn3.1']];
+  spawnParams[2].spawns = [Game.spawns['Spawn3'], Game.spawns['Spawn3.1'], Game.spawns['Spawn3.2']];
   spawnParams[3].spawns = [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']];
 
   // rooms[0].collectorWithdrawStorageMode = true;
@@ -278,6 +279,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   PowerCreepTask.do();
   logCPU('power creep task');
+
+  MarketUtil.doMarket(rooms);
+  logCPU('market util');
 
 
   console.log('Tick ended');
