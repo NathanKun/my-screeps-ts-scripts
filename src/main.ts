@@ -110,11 +110,11 @@ export const loop = ErrorMapper.wrapLoop(() => {
     // room 2 send energy to room 4
     const t1 = rooms[0].room.terminal;
     if (t1 && t1.store.energy === t1.storeCapacity) {
-      t1.send(RESOURCE_ENERGY, 270000, 'W8S6');
+      t1.send(RESOURCE_ENERGY, 270000, 'W7S7');
     }
     const t2 = rooms[1].room.terminal;
     if (t2 && t2.store.energy === t2.storeCapacity) {
-      t2.send(RESOURCE_ENERGY, 270000, 'W8S6');
+      t2.send(RESOURCE_ENERGY, 270000, 'W7S7');
     }
   }
   logCPU('room init')

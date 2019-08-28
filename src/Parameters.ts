@@ -204,13 +204,9 @@ export class Parameters {
         ],
       },
       upgrader: {
-        count: 2,
+        count: 1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE, MOVE, MOVE, MOVE, MOVE
+          WORK, CARRY, MOVE
         ],
         upgraderUseStorageMin: 30000
       },
@@ -286,13 +282,9 @@ export class Parameters {
         ],
       },
       upgrader: {
-        count: 2,
+        count: 1,
         parts: [
-          WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
-          MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-          MOVE, MOVE, MOVE, MOVE, MOVE
+          WORK, CARRY, MOVE
         ],
         upgraderUseStorageMin: 30000
       },
