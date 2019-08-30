@@ -365,15 +365,15 @@ export class Parameters {
       },
       {
         room: Game.rooms['W7S7'],
-        spawns: [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']],
+        spawns: [Game.spawns['Spawn4'], Game.spawns['Spawn4.1'], Game.spawns['Spawn4.2s']],
         collectorWithdrawStorageMode: false,
         hasHostile: Game.spawns['Spawn4'].room.find(FIND_HOSTILE_CREEPS).length > 0,
         storage: "5d322a5fa92583627b4c6d10",
-        towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e", "5d47a344a7e81e40c5323ee5"],
+        towers: ["5d306fe5ae29775e0163b4c3", "5d3366d057e7d21a1a40159e", "5d47a344a7e81e40c5323ee5", "5d66eb48c04cb240a549956d", "5d66f0c8636d162b66ab6b1f", "5d66f51242c42a63a045cb8c"],
         terminal: "5d39829e8fef3a638864eef6",
-        powerSpawn: "",
-        nuker: "",
-        observer: "",
+        powerSpawn: "5d67bdc45141741e277526b0",
+        nuker: "5d675ae342c42a63a045f423",
+        observer: "5d66fbb3dc8788211b68bc63",
         containers: []
       }
     ]

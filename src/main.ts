@@ -45,7 +45,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   spawnParams[0].spawns = [Game.spawns['Spawn1'], Game.spawns['Spawn1.1'], Game.spawns['Spawn1.2']];
   spawnParams[1].spawns = [Game.spawns['Spawn2'], Game.spawns['Spawn2.1'], Game.spawns['Spawn2.2']];
   spawnParams[2].spawns = [Game.spawns['Spawn3'], Game.spawns['Spawn3.1'], Game.spawns['Spawn3.2']];
-  spawnParams[3].spawns = [Game.spawns['Spawn4'], Game.spawns['Spawn4.1']];
+  spawnParams[3].spawns = [Game.spawns['Spawn4'], Game.spawns['Spawn4.1'], Game.spawns['Spawn4.2']];
 
   // rooms[0].collectorWithdrawStorageMode = true;
   logCPU('spawnParams')
@@ -109,14 +109,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
     // room 1 send energy to room 3
     // room 2 send energy to room 4
-    const t1 = rooms[0].room.terminal;
+    /*const t1 = rooms[0].room.terminal;
     if (t1 && t1.store.energy === t1.storeCapacity) {
       t1.send(RESOURCE_ENERGY, 270000, 'W7S7');
     }
     const t2 = rooms[1].room.terminal;
     if (t2 && t2.store.energy === t2.storeCapacity) {
       t2.send(RESOURCE_ENERGY, 270000, 'W7S7');
-    }
+    }*/
   }
   logCPU('room init')
 
