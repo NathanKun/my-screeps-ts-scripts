@@ -134,6 +134,7 @@ export class PowerBankAction {
       }
 
       // cache completed, re-search path with rooms visibility
+      let neeedMoreRoom = false;
       const path = PathFinder.search(new RoomPosition(Memory.powerbank.start.x, Memory.powerbank.start.y, Memory.powerbank.start.roomName),
         { pos: Memory.powerbank.end, range: 1 },
         {
@@ -149,6 +150,8 @@ export class PowerBankAction {
               const room = Game.rooms[roomName];
               if (!room) {
                 Game.notify('Error while find path to power bank. RoomStructure of room ' + roomName + ' not found, and the room is not visible');
+                Memory.powerbank.pathRooms.push(roomName);
+                neeedMoreRoom = true;
                 return costs;
               }
               roomStructures = room.find(FIND_STRUCTURES);
@@ -170,6 +173,10 @@ export class PowerBankAction {
         }
       );
 
+      if (neeedMoreRoom) {
+        return;
+      }
+
       console.log('Find Path End');
       console.log('    cost = ' + path.cost);
       console.log('    incomplete = ' + path.incomplete);
@@ -177,6 +184,9 @@ export class PowerBankAction {
       console.log('    path.length = ' + path.path.length);
 
       Memory.powerbank.path = path.path;
+      for (const r in Memory.powerbank.roomStructures) {
+        Game.notify("Memory.powerbank.roomStructures: " + r);
+      }
       delete Memory.powerbank.pathRooms;
       delete Memory.powerbank.roomStructures;
       Memory.powerbank.findingPath = false;
