@@ -7,7 +7,7 @@ export class Parameters {
     return [{
       spawns: [],
       harvester: {
-        count: 2,
+        count: 3,
         parts: [
           WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
           CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,

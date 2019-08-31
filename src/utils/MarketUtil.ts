@@ -11,6 +11,10 @@ export class MarketUtil {
       .filter(t => t && t.store.energy > 10000) as StructureTerminal[])
       .sort((t1, t2) => t2.store.energy - t1.store.energy);
 
+    if (!terminals.length) {
+      return;
+    }
+
     const sellOrders = Game.market.getAllOrders(
       (order) =>
         order.type === ORDER_BUY && order.resourceType === RESOURCE_ENERGY && order.price > 0.004

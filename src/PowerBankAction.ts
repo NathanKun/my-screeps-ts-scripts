@@ -126,6 +126,8 @@ export class PowerBankAction {
           }
           console.log('Finding Path: room = ' + roomName + " index = " + index);
           break;
+        } else {
+          observer.observeRoom(Memory.powerbank.pathRooms[index]);
         }
       }
 
