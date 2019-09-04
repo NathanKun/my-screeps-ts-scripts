@@ -18,6 +18,10 @@ export class Collector extends BaseCreep {
   }
 
   protected run() {
+    if (this.room.name !== this.memory.room) {
+      this.moveTo(new RoomPosition(20, 20, this.memory.room));
+    }
+
     if (this.memory.withdrawStorageMode) {
       this.say('withdraw');
       if (this.carry.energy === this.carryCapacity) {
