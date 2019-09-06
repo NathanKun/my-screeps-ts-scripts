@@ -30,7 +30,7 @@ export class PowerBankAction {
     // finished, clean up
     if (Memory.powerbank.finished) {
       delete Memory['powerbank'];
-      Game.notify('Power bank action finished');
+      // Game.notify('Power bank action finished');
       return;
     }
 
@@ -151,7 +151,7 @@ export class PowerBankAction {
             if (!roomStructures) {
               const room = Game.rooms[roomName];
               if (!room) {
-                Game.notify('Error while find path to power bank. RoomStructure of room ' + roomName + ' not found, and the room is not visible');
+                // Game.notify('Error while find path to power bank. RoomStructure of room ' + roomName + ' not found, and the room is not visible');
                 Memory.powerbank.pathRooms.push(roomName);
                 neeedMoreRoom = true;
                 return costs;
