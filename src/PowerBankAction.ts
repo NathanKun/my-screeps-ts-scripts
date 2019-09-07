@@ -186,9 +186,9 @@ export class PowerBankAction {
       console.log('    path.length = ' + path.path.length);
 
       Memory.powerbank.path = path.path;
-      for (const r in Memory.powerbank.roomStructures) {
-        Game.notify("Memory.powerbank.roomStructures: " + r);
-      }
+      // for (const r in Memory.powerbank.roomStructures) {
+      // Game.notify("Memory.powerbank.roomStructures: " + r);
+      // }
       delete Memory.powerbank.pathRooms;
       delete Memory.powerbank.roomStructures;
       Memory.powerbank.findingPath = false;
