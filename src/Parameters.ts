@@ -150,7 +150,6 @@ export class Parameters {
           MOVE, MOVE
         ],
         collectorWithdrawTargets: {
-          terminal: "5d24244044ff1d2a689d8a9d"
         }
       },
       claimer: {
@@ -230,8 +229,7 @@ export class Parameters {
           MOVE, MOVE
         ],
         collectorWithdrawTargets: {
-          links: ["5d1bcab6b88799384c5fc414"],
-          terminal: "5d278ec3d2b78a5d2a199272"
+          links: ["5d1bcab6b88799384c5fc414"]
         }
       },
       claimer: {
@@ -308,7 +306,6 @@ export class Parameters {
           MOVE, MOVE
         ],
         collectorWithdrawTargets: {
-          terminal: "5d39829e8fef3a638864eef6"
         }
       },
       claimer: {

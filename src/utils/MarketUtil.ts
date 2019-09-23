@@ -17,7 +17,7 @@ export class MarketUtil {
 
     const sellOrders = Game.market.getAllOrders(
       (order) =>
-        order.type === ORDER_BUY && order.resourceType === RESOURCE_ENERGY && order.price > 0.004
+        order.type === ORDER_BUY && order.resourceType === RESOURCE_ENERGY && order.price >= 0.004
     );
 
     for (const order of sellOrders) {
