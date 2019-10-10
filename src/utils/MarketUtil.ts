@@ -15,9 +15,15 @@ export class MarketUtil {
       return;
     }
 
+    let sellMinPrice = 0.004;
+
+    if (terminals[0].store.energy / terminals[0].storeCapacity >= 0.99) {
+      sellMinPrice = 0.001;
+    }
+
     const sellOrders = Game.market.getAllOrders(
       (order) =>
-        order.type === ORDER_BUY && order.resourceType === RESOURCE_ENERGY && order.price >= 0.004
+        order.type === ORDER_BUY && order.resourceType === RESOURCE_ENERGY && order.price >= sellMinPrice
     );
 
     for (const order of sellOrders) {
